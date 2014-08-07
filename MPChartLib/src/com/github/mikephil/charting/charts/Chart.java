@@ -19,6 +19,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Environment;
 import android.provider.MediaStore.Images;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -144,7 +145,7 @@ public abstract class Chart extends View {
     protected ColorTemplate mCt;
 
     /** description text that appears in the bottom right corner of the chart */
-    protected String mDescription = "Description.";
+    protected String mDescription;
 
     /** flag that indicates if the chart has been fed with data yet */
     protected boolean mDataNotSet = true;
@@ -704,10 +705,11 @@ public abstract class Chart extends View {
      * draws the description text in the bottom right corner of the chart
      */
     protected void drawDescription() {
-
-        mDrawCanvas
-                .drawText(mDescription, getWidth() - mOffsetRight - 10, getHeight() - mOffsetBottom
-                        - 10, mDescPaint);
+        if (!TextUtils.isEmpty(mDescription)) {
+          mDrawCanvas
+              .drawText(mDescription, getWidth() - mOffsetRight - 10, getHeight() - mOffsetBottom
+                  - 10, mDescPaint);
+        }
     }
 
     /**

@@ -1,6 +1,19 @@
 
 package com.xxmassdeveloper.mpchartexample.notimportant;
 
+import com.xxmassdeveloper.mpchartexample.BarChartActivity;
+import com.xxmassdeveloper.mpchartexample.BarChartActivityMultiDataset;
+import com.xxmassdeveloper.mpchartexample.DrawChartActivity;
+import com.xxmassdeveloper.mpchartexample.LineChartActivity;
+import com.xxmassdeveloper.mpchartexample.ListViewBarChartActivity;
+import com.xxmassdeveloper.mpchartexample.ListViewMultiChartActivity;
+import com.xxmassdeveloper.mpchartexample.MultiLineChartActivity;
+import com.xxmassdeveloper.mpchartexample.NeueChartActivity;
+import com.xxmassdeveloper.mpchartexample.PieChartActivity;
+import com.xxmassdeveloper.mpchartexample.R;
+import com.xxmassdeveloper.mpchartexample.ScatterChartActivity;
+import com.xxmassdeveloper.mpchartexample.fragments.SimpleChartDemo;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,18 +31,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.xxmassdeveloper.mpchartexample.BarChartActivity;
-import com.xxmassdeveloper.mpchartexample.BarChartActivityMultiDataset;
-import com.xxmassdeveloper.mpchartexample.DrawChartActivity;
-import com.xxmassdeveloper.mpchartexample.LineChartActivity;
-import com.xxmassdeveloper.mpchartexample.ListViewBarChartActivity;
-import com.xxmassdeveloper.mpchartexample.ListViewMultiChartActivity;
-import com.xxmassdeveloper.mpchartexample.MultiLineChartActivity;
-import com.xxmassdeveloper.mpchartexample.PieChartActivity;
-import com.xxmassdeveloper.mpchartexample.R;
-import com.xxmassdeveloper.mpchartexample.ScatterChartActivity;
-import com.xxmassdeveloper.mpchartexample.fragments.SimpleChartDemo;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
         setContentView(R.layout.activity_main);
 
         ArrayList<ContentItem> objects = new ArrayList<ContentItem>();
-
+        objects.add(new ContentItem("Neue Chart", "We want it."));
         objects.add(new ContentItem("Line Chart", "A simple demonstration of the linechart."));
         objects.add(new ContentItem("Bar Chart", "A simple demonstration of the bar chart."));
         objects.add(new ContentItem("Pie Chart", "A simple demonstration of the pie chart."));
@@ -59,7 +60,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
                 "Demonstration of charts inside Fragments. In this example the focus was on the design and look and feel of the chart."));
         objects.add(new ContentItem(
                 "BarChart inside ListView",
-                "Demonstrates the usage of a BarChart inside a ListView item."));       
+                "Demonstrates the usage of a BarChart inside a ListView item."));
         objects.add(new ContentItem(
                 "Multiple charts inside ListView",
                 "Demonstrates the usage of different chart types inside a ListView."));
@@ -79,48 +80,52 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
         switch (pos) {
             case 0:
+              i = new Intent(this, NeueChartActivity.class);
+              startActivity(i);
+              break;
+            case 1:
                 i = new Intent(this, LineChartActivity.class);
                 startActivity(i);
                 break;
-            case 1:
+            case 2:
                 i = new Intent(this, BarChartActivity.class);
                 startActivity(i);
                 break;
-            case 2:
+            case 3:
                 i = new Intent(this, PieChartActivity.class);
                 startActivity(i);
                 break;
-            case 3:
+            case 4:
                 i = new Intent(this, ScatterChartActivity.class);
                 startActivity(i);
                 break;
-            case 4:
+            case 5:
                 i = new Intent(this, MultiLineChartActivity.class);
                 startActivity(i);
 
                 break;
-            case 5:
+            case 6:
                 i = new Intent(this, BarChartActivityMultiDataset.class);
                 startActivity(i);
                 break;
-            case 6:
+            case 7:
                 i = new Intent(this, DrawChartActivity.class);
                 startActivity(i);
                 break;
-            case 7:
+            case 8:
                 i = new Intent(this, SimpleChartDemo.class);
                 startActivity(i);
                 break;
-            case 8:
+            case 9:
                 i = new Intent(this, ListViewBarChartActivity.class);
                 startActivity(i);
                 break;
-            case 9:
+            case 10:
                 i = new Intent(this, ListViewMultiChartActivity.class);
                 startActivity(i);
                 break;
         }
-        
+
         overridePendingTransition(R.anim.move_right_in_activity, R.anim.move_left_out_activity);
     }
 
