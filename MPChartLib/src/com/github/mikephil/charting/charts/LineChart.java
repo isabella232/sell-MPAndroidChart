@@ -274,8 +274,14 @@ public class LineChart extends BarLineChartBase {
             label = mDrawUnitInChart ? mFormatValue.format(val) + mUnit : mFormatValue.format(val);
           }
 
+          float yPosition = positions[j + 1];
+          if (j - 1 >= 0 && j + 3 < positions.length && positions[j - 1] < yPosition && positions[j + 3] < yPosition) {
+            yPosition += valOffset + mValuePaint.getTextSize();
+          } else {
+            yPosition -= valOffset;
+          }
           mDrawCanvas.drawText(label, positions[j],
-              positions[j + 1] - valOffset, mValuePaint);
+              yPosition, mValuePaint);
         }
       }
     }
