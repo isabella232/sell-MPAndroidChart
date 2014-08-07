@@ -32,7 +32,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class NeueChartActivity extends DemoBase implements OnChartValueSelectedListener {
-
+  private static final int MAX_VALS_PER_PAGE = 6;
   private LineChart mChart;
 
   @Override
@@ -84,6 +84,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setHighlightIndicatorEnabled(false);
     setData(30, 10, 30);
     mChart.setDrawLegend(false);
+    mChart.zoom(mChart.getDataCurrent().getXValCount() / MAX_VALS_PER_PAGE, 1.0f, mChart.getWidth() / 2, mChart.getHeight() / 2);
     mChart.invalidate();
   }
 
