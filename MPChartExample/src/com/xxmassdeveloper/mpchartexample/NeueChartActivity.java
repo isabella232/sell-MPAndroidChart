@@ -67,7 +67,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setDrawVerticalGrid(false);
     mChart.setGridColor(getResources().getColor(R.color.neue_grid));
     mChart.setDrawBorder(false);
-    mChart.setDrawLabelsInChart(true);
+    mChart.setDrawValueXLabelsInChart(true);
     mChart.getYLabels().setPosition(YLabelPosition.RIGHT);
     mChart.getPaint(Chart.PAINT_YLABEL).setColor(getResources().getColor(R.color.neue_text));
 
