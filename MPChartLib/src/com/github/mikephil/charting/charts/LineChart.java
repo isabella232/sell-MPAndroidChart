@@ -487,15 +487,13 @@ public class LineChart extends BarLineChartBase {
 
   @Override
   public Paint getPaint(int which) {
-    super.getPaint(which);
-
     switch (which) {
     case PAINT_CIRCLES_INNER:
       return mCirclePaintInner;
     case PAINT_HIGHLIGHT_LINE:
       return mHighlightPaint;
+    default:
+      return super.getPaint(which);
     }
-
-    return null;
   }
 }

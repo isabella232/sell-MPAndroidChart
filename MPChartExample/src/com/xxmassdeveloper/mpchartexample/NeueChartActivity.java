@@ -1,5 +1,6 @@
 package com.xxmassdeveloper.mpchartexample;
 
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
@@ -10,6 +11,7 @@ import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.XLabels;
+import com.github.mikephil.charting.utils.YLabels.YLabelPosition;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
 import android.graphics.Typeface;
@@ -58,13 +60,16 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setPinchZoom(true);
     mChart.setDrawFilled(false);
     mChart.setDrawXLabels(false);
-    mChart.setDrawYLabels(false);
+    mChart.setDrawYLabels(true);
+    mChart.setDrawAxisLabelsInChart(true);
     mChart.setDrawGridBackground(false);
     mChart.setBackgroundColor(getResources().getColor(R.color.neue_fill));
     mChart.setDrawVerticalGrid(false);
     mChart.setGridColor(getResources().getColor(R.color.neue_grid));
     mChart.setDrawBorder(false);
     mChart.setDrawLabelsInChart(true);
+    mChart.getYLabels().setPosition(YLabelPosition.RIGHT);
+    mChart.getPaint(Chart.PAINT_YLABEL).setColor(getResources().getColor(R.color.neue_text));
 
     MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
     mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());

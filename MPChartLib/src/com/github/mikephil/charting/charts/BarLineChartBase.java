@@ -148,6 +148,11 @@ public abstract class BarLineChartBase extends Chart {
    */
   protected Paint mYLabelPaint;
 
+  /*
+   * Offsets for axis descriptions
+   */
+  protected float mAxisYLabelWidth, mAxisXLabelHeight;
+
   /**
    * paint used for highlighting values
    */
@@ -179,6 +184,11 @@ public abstract class BarLineChartBase extends Chart {
    * flag indicating if the y-labels should be drawn or not
    */
   protected boolean mDrawYLabels = true;
+
+  /**
+   * flag indicating that axis labels should be drawn on top of the chart, not outside
+   */
+  protected boolean mDrawAxisLabelsInChart = false;
 
   /**
    * flag indicating if the x-labels should be drawn or not
@@ -312,11 +322,11 @@ public abstract class BarLineChartBase extends Chart {
 
     drawAdditional();
 
+    drawValues();
+
     drawXLabels();
 
     drawYLabels();
-
-    drawValues();
 
     drawLegend();
 
@@ -381,51 +391,45 @@ public abstract class BarLineChartBase extends Chart {
       }
     }
 
+    if (mYChartMin >= 0) {
+      mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, (int) mDeltaY + ".00" + mUnit);
+    } else {
+      mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, (int) (mDeltaY * -1) + ".00" + mUnit);
+    }
+
+    mAxisXLabelHeight = Utils.calcTextHeight(mXLabelPaint, "Q") * 2f;
+
     float yleft = 0f, yright = 0f;
     float xtop = 0f, xbottom = 0f;
 
     // offsets for y-labels
     if (mYLabels.getPosition() == YLabelPosition.LEFT) {
 
-      if (mYChartMin >= 0)
-        yleft = Utils.calcTextWidth(mYLabelPaint, (int) mDeltaY + ".00" + mUnit);
-      else
-        yleft = Utils.calcTextWidth(mYLabelPaint, (int) (mDeltaY * -1) + ".00" + mUnit);
+      yleft = mAxisYLabelWidth;
 
       mYLabelPaint.setTextAlign(Align.RIGHT);
     } else if (mYLabels.getPosition() == YLabelPosition.RIGHT) {
 
-      if (mYChartMin >= 0)
-        yright = Utils.calcTextWidth(mYLabelPaint, (int) mDeltaY + ".00" + mUnit);
-      else
-        yright = Utils.calcTextWidth(mYLabelPaint, (int) (mDeltaY * -1) + ".00" + mUnit);
+      yright = mAxisYLabelWidth;
 
       mYLabelPaint.setTextAlign(Align.LEFT);
     } else if (mYLabels.getPosition() == YLabelPosition.BOTH_SIDED) {
 
-      float width = 0f;
-
-      if (mYChartMin >= 0)
-        width = Utils.calcTextWidth(mYLabelPaint, (int) mDeltaY + ".00" + mUnit);
-      else
-        width = Utils.calcTextWidth(mYLabelPaint, (int) (mDeltaY * -1) + ".00" + mUnit);
-
-      yright = width;
-      yleft = width;
+      yleft = mAxisYLabelWidth;
+      yright = mAxisYLabelWidth;
     }
 
     // offsets for x-labels
     if (mXLabels.getPosition() == XLabelPosition.BOTTOM) {
 
-      xbottom = Utils.calcTextHeight(mXLabelPaint, "Q") * 2f;
+      xbottom = mAxisXLabelHeight;
     } else if (mXLabels.getPosition() == XLabelPosition.TOP) {
 
-      xtop = Utils.calcTextHeight(mXLabelPaint, "Q") * 2f;
+      xtop = mAxisXLabelHeight;
     } else if (mXLabels.getPosition() == XLabelPosition.BOTH_SIDED) {
 
-      float height = Utils.calcTextHeight(mXLabelPaint, "Q") * 2f;
-      xbottom = height;
-      xtop = height;
+      xbottom = mAxisXLabelHeight;
+      xtop = mAxisXLabelHeight;
     }
 
     if (mDrawLegend) {
@@ -438,7 +442,7 @@ public abstract class BarLineChartBase extends Chart {
         mOffsetTop = Math.max(mOffsetTop, mLegend.getOffsetTop());
       }
 
-      if (mDrawYLabels) {
+      if (mDrawYLabels && !mDrawAxisLabelsInChart) {
         // merge legend, label and chart offsets
         mOffsetLeft = Math.max(mOffsetLeft, yleft + mLegend.getOffsetLeft());
         mOffsetRight = Math.max(mOffsetRight, yright + mLegend.getOffsetRight());
@@ -448,12 +452,12 @@ public abstract class BarLineChartBase extends Chart {
       }
     } else {
 
-      if (mDrawXLabels) {
+      if (mDrawXLabels && !mDrawAxisLabelsInChart) {
         mOffsetBottom = Math.max(mOffsetBottom, xbottom);
         mOffsetTop = Math.max(mOffsetTop, xtop);
       }
 
-      if (mDrawYLabels) {
+      if (mDrawYLabels && !mDrawAxisLabelsInChart) {
         // merge chart and label offsets
         mOffsetLeft = Math.max(mOffsetLeft, yleft);
         mOffsetRight = Math.max(mOffsetRight, yright);
@@ -666,6 +670,10 @@ public abstract class BarLineChartBase extends Chart {
 
     float yoffset = Utils.convertDpToPixel(3.5f);
 
+    if (mDrawAxisLabelsInChart) {
+      yoffset -= mAxisXLabelHeight;
+    }
+
     if (mXLabels.getPosition() == XLabelPosition.TOP) {
 
       drawXLabels(getOffsetTop() - yoffset);
@@ -733,6 +741,10 @@ public abstract class BarLineChartBase extends Chart {
     transformPointArray(positions);
 
     float xoffset = Utils.convertDpToPixel(5f);
+
+    if (mDrawAxisLabelsInChart) {
+      xoffset -= mAxisYLabelWidth;
+    }
 
     // determine position and draw adequately
     if (mYLabels.getPosition() == YLabelPosition.LEFT) {
@@ -1521,6 +1533,14 @@ public abstract class BarLineChartBase extends Chart {
    */
   public void setDrawYLabels(boolean enabled) {
     mDrawYLabels = enabled;
+  }
+
+  /**
+   * set this to true to enable drawing axis labels in the chart
+   * @param enabled
+   */
+  public void setDrawAxisLabelsInChart(boolean enabled) {
+    mDrawAxisLabelsInChart = enabled;
   }
 
   /**
