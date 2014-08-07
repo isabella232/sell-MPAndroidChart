@@ -79,10 +79,8 @@ public class LineChart extends BarLineChartBase {
 
     mCircleSize = Utils.convertDpToPixel(mCircleSize);
 
-    mFilledPaint = new Paint();
+    mFilledPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     mFilledPaint.setStyle(Paint.Style.FILL);
-    mFilledPaint.setColor(mColorDarkBlue);
-    mFilledPaint.setAlpha(130); // alpha ~55%
 
     mCirclePaintInner = new Paint(Paint.ANTI_ALIAS_FLAG);
     mCirclePaintInner.setStyle(Paint.Style.FILL);
@@ -128,6 +126,35 @@ public class LineChart extends BarLineChartBase {
     ArrayList<DataSet> dataSets;
 
     dataSets = mCurrentData.getDataSets();
+
+    if (mDrawFilled) {
+      for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
+
+        DataSet dataSet = dataSets.get(i);
+        ArrayList<Entry> entries = dataSet.getYVals();
+
+        // if drawing filled is enabled
+        if (entries.size() > 0) {
+          Path filled = new Path();
+          filled.moveTo(entries.get(0).getXIndex(), entries.get(0).getVal());
+
+          // create a new path
+          for (int x = 1; x < entries.size(); x++) {
+
+            filled.lineTo(entries.get(x).getXIndex(), entries.get(x).getVal());
+          }
+
+          // close up
+          filled.lineTo(entries.get(entries.size() - 1).getXIndex(), mYChartMin);
+          filled.lineTo(entries.get(0).getXIndex(), mYChartMin);
+          filled.close();
+
+          transformPath(filled);
+
+          mDrawCanvas.drawPath(filled, mFilledPaint);
+        }
+      }
+    }
 
     for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
 
@@ -188,37 +215,6 @@ public class LineChart extends BarLineChartBase {
           mDrawCanvas.drawLine(valuePoints[j], valuePoints[j + 1], valuePoints[j + 2],
               valuePoints[j + 3], paint);
         }
-      }
-
-      // if drawing filled is enabled
-      if (mDrawFilled && entries.size() > 0) {
-        // mDrawCanvas.drawVertices(VertexMode.TRIANGLE_STRIP,
-        // valuePoints.length, valuePoints, 0,
-        // null, 0, null, 0, null, 0, 0, paint);
-
-        // filled is drawn with less alpha
-        paint.setAlpha(85);
-
-        Path filled = new Path();
-        filled.moveTo(entries.get(0).getXIndex(), entries.get(0).getVal());
-
-        // create a new path
-        for (int x = 1; x < entries.size(); x++) {
-
-          filled.lineTo(entries.get(x).getXIndex(), entries.get(x).getVal());
-        }
-
-        // close up
-        filled.lineTo(entries.get(entries.size() - 1).getXIndex(), mYChartMin);
-        filled.lineTo(entries.get(0).getXIndex(), mYChartMin);
-        filled.close();
-
-        transformPath(filled);
-
-        mDrawCanvas.drawPath(filled, paint);
-
-        // restore alpha
-        paint.setAlpha(255);
       }
     }
   }
@@ -473,14 +469,18 @@ public class LineChart extends BarLineChartBase {
 
   @Override
   public void setPaint(Paint p, int which) {
-    super.setPaint(p, which);
-
     switch (which) {
     case PAINT_CIRCLES_INNER:
       mCirclePaintInner = p;
       break;
     case PAINT_HIGHLIGHT_LINE:
       mHighlightPaint = p;
+      break;
+    case PAINT_FILLED:
+      mFilledPaint = p;
+      break;
+    default:
+      super.setPaint(p, which);
       break;
     }
   }
@@ -492,6 +492,8 @@ public class LineChart extends BarLineChartBase {
       return mCirclePaintInner;
     case PAINT_HIGHLIGHT_LINE:
       return mHighlightPaint;
+    case PAINT_FILLED:
+      return mFilledPaint;
     default:
       return super.getPaint(which);
     }

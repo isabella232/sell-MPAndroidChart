@@ -1332,6 +1332,11 @@ public abstract class Chart extends View {
    */
   public static final int PAINT_LEGEND_LABEL = 18;
 
+  /*
+   * paint used for filling graph
+   */
+  public static final int PAINT_FILLED = 19;
+
   /**
    * set a new paint object for the specified parameter in the chart e.g.
    * Chart.PAINT_VALUES

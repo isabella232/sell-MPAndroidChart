@@ -14,6 +14,9 @@ import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.YLabels.YLabelPosition;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
+import android.content.res.Resources;
+import android.graphics.LinearGradient;
+import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,13 +47,15 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
         R.color.neue_line
     }, this);
 
+    final Resources r = getResources();
+
     mChart = (LineChart) findViewById(R.id.chart1);
     mChart.setOffsets(0, 0, 0, 0);
     mChart.setStartAtZero(false);
     mChart.setHighlightEnabled(false);
     mChart.setHighlightIndicatorEnabled(false);
     mChart.setOnChartValueSelectedListener(this);
-    mChart.setValuePaintColor(getResources().getColor(R.color.neue_text));
+    mChart.setValuePaintColor(r.getColor(R.color.neue_text));
     mChart.setValueTypeface(Typeface.DEFAULT_BOLD);
     mChart.setColorTemplate(ct);
     mChart.setLineWidth(3f);
@@ -58,18 +63,19 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setTouchEnabled(true);
     mChart.setDragEnabled(true);
     mChart.setPinchZoom(true);
-    mChart.setDrawFilled(false);
+    mChart.setDrawFilled(true);
+    mChart.getPaint(Chart.PAINT_FILLED).setShader(new LinearGradient(0, 0, 0, mChart.getMeasuredHeight() / 2, r.getColor(R.color.neue_gradient_start), r.getColor(R.color.neue_gradient_end), TileMode.CLAMP));
     mChart.setDrawXLabels(false);
     mChart.setDrawYLabels(true);
     mChart.setDrawAxisLabelsInChart(true);
     mChart.setDrawGridBackground(false);
-    mChart.setBackgroundColor(getResources().getColor(R.color.neue_fill));
+    mChart.setBackgroundColor(r.getColor(R.color.neue_fill));
     mChart.setDrawVerticalGrid(false);
-    mChart.setGridColor(getResources().getColor(R.color.neue_grid));
+    mChart.setGridColor(r.getColor(R.color.neue_grid));
     mChart.setDrawBorder(false);
     mChart.setDrawValueXLabelsInChart(true);
     mChart.getYLabels().setPosition(YLabelPosition.RIGHT);
-    mChart.getPaint(Chart.PAINT_YLABEL).setColor(getResources().getColor(R.color.neue_text));
+    mChart.getPaint(Chart.PAINT_YLABEL).setColor(r.getColor(R.color.neue_text));
 
     MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
     mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());
