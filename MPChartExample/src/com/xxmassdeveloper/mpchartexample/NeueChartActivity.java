@@ -43,6 +43,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     }, this);
 
     mChart = (LineChart) findViewById(R.id.chart1);
+    mChart.setOffsets(0, 0, 0, 0);
     mChart.setStartAtZero(false);
     mChart.setHighlightEnabled(false);
     mChart.setHighlightIndicatorEnabled(false);
