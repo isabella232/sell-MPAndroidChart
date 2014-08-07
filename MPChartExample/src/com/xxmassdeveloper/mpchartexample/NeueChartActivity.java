@@ -1,4 +1,3 @@
-
 package com.xxmassdeveloper.mpchartexample;
 
 import com.github.mikephil.charting.charts.LineChart;
