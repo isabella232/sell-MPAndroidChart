@@ -271,17 +271,15 @@ public class LineChart extends BarLineChartBase {
 
           float val = entries.get(j / 2).getVal();
 
-          if (mDrawUnitInChart) {
-
-            mDrawCanvas.drawText(mFormatValue.format(val) + mUnit, positions[j],
-                positions[j + 1]
-                    - valOffset, mValuePaint);
+          String label;
+          if (mDrawLabelsInChart) {
+            label = mCurrentData.getXVals().get(j / 2);
           } else {
-
-            mDrawCanvas.drawText(mFormatValue.format(val), positions[j],
-                positions[j + 1] - valOffset,
-                mValuePaint);
+            label = mDrawUnitInChart ? mFormatValue.format(val) + mUnit : mFormatValue.format(val);
           }
+
+          mDrawCanvas.drawText(label, positions[j],
+              positions[j + 1] - valOffset, mValuePaint);
         }
       }
     }
@@ -327,8 +325,8 @@ public class LineChart extends BarLineChartBase {
 
           mDrawCanvas.drawCircle(positions[j], positions[j + 1], mCircleSize,
               mRenderPaint);
-          mDrawCanvas.drawCircle(positions[j], positions[j + 1], mCircleSize / 2,
-              mCirclePaintInner);
+            mDrawCanvas.drawCircle(positions[j], positions[j + 1], mCircleSize / 2,
+                mCirclePaintInner);
         }
       }
     }

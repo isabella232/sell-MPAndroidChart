@@ -49,8 +49,9 @@
     <color name="vordiplom_4">#8CEAFF</color>
     <color name="vordiplom_5">#FF8C9D</color>
 
-    <color name="neue_line">#99FFFFFF</color>
+    <color name="neue_line">#AAFFFFFF</color>
     <color name="neue_fill">#FF00b691</color>
     <color name="neue_grid">#33FFFFFF</color>
+    <color name="neue_text">#CCFFFFFF</color>
 
 </resources>

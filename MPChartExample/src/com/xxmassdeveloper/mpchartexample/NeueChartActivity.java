@@ -12,6 +12,7 @@ import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.XLabels;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,7 +20,11 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class NeueChartActivity extends DemoBase implements OnChartValueSelectedListener {
 
@@ -39,10 +44,14 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
 
     mChart = (LineChart) findViewById(R.id.chart1);
     mChart.setStartAtZero(false);
+    mChart.setHighlightEnabled(false);
+    mChart.setHighlightIndicatorEnabled(false);
     mChart.setOnChartValueSelectedListener(this);
+    mChart.setValuePaintColor(getResources().getColor(R.color.neue_text));
+    mChart.setValueTypeface(Typeface.DEFAULT_BOLD);
     mChart.setColorTemplate(ct);
-    mChart.setLineWidth(2f);
-    mChart.setCircleSize(3f);
+    mChart.setLineWidth(3f);
+    mChart.setCircleSize(5f);
     mChart.setTouchEnabled(true);
     mChart.setDragEnabled(true);
     mChart.setPinchZoom(true);
@@ -54,6 +63,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setDrawVerticalGrid(false);
     mChart.setGridColor(getResources().getColor(R.color.neue_grid));
     mChart.setDrawBorder(false);
+    mChart.setDrawLabelsInChart(true);
 
     MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
     mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());
@@ -186,8 +196,12 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
   private void setData(int count, float range, float rangeOffset) {
 
     ArrayList<String> xVals = new ArrayList<String>();
+    long ts = System.currentTimeMillis();
+    SimpleDateFormat sdf = new SimpleDateFormat("MMM dd", Locale.US);
+
     for (int i = 0; i < count; i++) {
-      xVals.add((i) + "");
+      xVals.add(sdf.format(new Date(ts)).toUpperCase());
+      ts += TimeUnit.DAYS.toMillis(2);
     }
 
     ArrayList<Entry> yVals = new ArrayList<Entry>();

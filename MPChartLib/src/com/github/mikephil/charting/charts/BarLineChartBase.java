@@ -92,6 +92,11 @@ public abstract class BarLineChartBase extends Chart {
   protected boolean mDrawUnitInChart = false;
 
   /**
+   * If true, labels instead of values are drawn on chart points
+   */
+  protected boolean mDrawLabelsInChart = false;
+
+  /**
    * flag that indicates if pinch-zoom is enabled. if true, both x and y axis
    * can be scaled with 2 fingers, if false, x and y axis can be scaled
    * separately
@@ -1402,6 +1407,16 @@ public abstract class BarLineChartBase extends Chart {
    */
   public void setDrawUnitsInChart(boolean enabled) {
     mDrawUnitInChart = enabled;
+  }
+
+  /**
+   * if set to true, labels are drawn instead of values in the chart, default:
+   * false
+   *
+   * @param enabled
+   */
+  public void setDrawLabelsInChart(boolean enabled) {
+    mDrawLabelsInChart = enabled;
   }
 
   /**
