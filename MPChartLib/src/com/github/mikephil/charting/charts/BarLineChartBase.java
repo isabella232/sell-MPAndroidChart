@@ -1107,42 +1107,21 @@ public abstract class BarLineChartBase extends Chart {
   }
 
   /**
-   * call this method to refresh the graph with a given touch matrix without
-   * calling invalidate()
-   *
-   * @param newTouchMatrix
-   * @return
-   */
-  public Matrix refreshTouchNoInvalidate(Matrix newTouchMatrix) {
-    mMatrixTouch.set(newTouchMatrix);
-
-    // make sure scale and translation are within their bounds
-    limitTransAndScale(mMatrixTouch);
-
-    newTouchMatrix.set(mMatrixTouch);
-    return newTouchMatrix;
-  }
-
-  /**
    * limits the maximum scale and X translation of the given matrix
    *
    * @param matrix
    */
+
+  protected float[] mTouchMatrixValues = new float[9];
   protected void limitTransAndScale(Matrix matrix) {
 
-    float[] vals = new float[9];
-    matrix.getValues(vals);
+    matrix.getValues(mTouchMatrixValues);
 
-    float curTransX = vals[Matrix.MTRANS_X];
-    float curScaleX = vals[Matrix.MSCALE_X];
+    float curTransX = mTouchMatrixValues[Matrix.MTRANS_X];
+    float curScaleX = mTouchMatrixValues[Matrix.MSCALE_X];
 
-    float curTransY = vals[Matrix.MTRANS_Y];
-    float curScaleY = vals[Matrix.MSCALE_Y];
-
-    // Log.i(LOG_TAG, "curTransX: " + curTransX + ", curScaleX: " +
-    // curScaleX);
-    // Log.i(LOG_TAG, "curTransY: " + curTransY + ", curScaleY: " +
-    // curScaleY);
+    float curTransY = mTouchMatrixValues[Matrix.MTRANS_Y];
+    float curScaleY = mTouchMatrixValues[Matrix.MSCALE_Y];
 
     // min scale-x is 1f
     mScaleX = Math.max(mMinScaleX, Math.min(getMaxScaleX(), curScaleX));
@@ -1159,20 +1138,37 @@ public abstract class BarLineChartBase extends Chart {
     float maxTransY = (float) mContentRect.height() * (mScaleY - 1f);
     float newTransY = Math.max(Math.min(curTransY, maxTransY), 0f);
 
-    // Log.i(LOG_TAG, "scale-X: " + mScaleX + ", maxTransX: " + maxTransX +
-    // ", newTransX: "
-    // + newTransX);
-    // Log.i(LOG_TAG, "scale-Y: " + mScaleY + ", maxTransY: " + maxTransY +
-    // ", newTransY: "
-    // + newTransY);
+    mTouchMatrixValues[Matrix.MTRANS_X] = newTransX;
+    mTouchMatrixValues[Matrix.MSCALE_X] = mScaleX;
 
-    vals[Matrix.MTRANS_X] = newTransX;
-    vals[Matrix.MSCALE_X] = mScaleX;
+    mTouchMatrixValues[Matrix.MTRANS_Y] = newTransY;
+    mTouchMatrixValues[Matrix.MSCALE_Y] = mScaleY;
 
-    vals[Matrix.MTRANS_Y] = newTransY;
-    vals[Matrix.MSCALE_Y] = mScaleY;
+    matrix.setValues(mTouchMatrixValues);
+  }
 
-    matrix.setValues(vals);
+  public float getCurrentTranslateY() {
+    return mTouchMatrixValues[Matrix.MTRANS_Y];
+  }
+
+  public float getMinTranslateY() {
+    return 0;
+  }
+
+  public float getMaxTranslateY() {
+    return (float) mContentRect.height() * (mScaleY - 1f);
+  }
+
+  public float getCurrentTranslateX() {
+    return mTouchMatrixValues[Matrix.MTRANS_X];
+  }
+
+  public float getMinTranslateX() {
+    return -(float) mContentRect.width() * (mScaleX - 1f);
+  }
+
+  public float getMaxTranslateX() {
+    return 0;
   }
 
   /**

@@ -9,14 +9,16 @@ import com.github.mikephil.charting.utils.PointD;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.Scroller;
 
-public class BarLineChartTouchListener extends SimpleOnGestureListener implements OnTouchListener {
+public class BarLineChartTouchListener extends SimpleOnGestureListener implements OnTouchListener, Runnable {
 
   private Matrix mMatrix = new Matrix();
   private Matrix mSavedMatrix = new Matrix();
@@ -62,20 +64,22 @@ public class BarLineChartTouchListener extends SimpleOnGestureListener implement
   private DrawingContext mDrawingContext;
   private GestureDetector mGestureDetector;
 
+  private Scroller mDragScroller;
+  private Handler mScrollHandler;
+
   public BarLineChartTouchListener(BarLineChartBase chart, Matrix start) {
     this.mChart = chart;
     this.mMatrix = start;
 
     mGestureDetector = new GestureDetector(chart.getContext(), this);
     mDrawingContext = new DrawingContext();
+    mDragScroller = new Scroller(chart.getContext());
+    mScrollHandler = new Handler();
   }
 
   @Override
   public boolean onTouch(View v, MotionEvent event) {
-
-    if (mTouchMode == NONE) {
-      mGestureDetector.onTouchEvent(event);
-    }
+    mGestureDetector.onTouchEvent(event);
 
     if (!mChart.isDragEnabled() && !mDrawingEnabled)
       return true;
@@ -414,11 +418,36 @@ public class BarLineChartTouchListener extends SimpleOnGestureListener implement
     Log.i("BarlineChartTouch", "Longpress, Zooming Out, x: " + trans.x + ", y: " + trans.y);
   }
 
-  ;
+  @Override
+  public boolean onDown(MotionEvent e) {
+    mDragScroller.forceFinished(true);
+    return super.onDown(e);
+  }
+
+  @Override
+  public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+    mTouchMode = NONE;
+    mDragScroller.fling((int) mChart.getCurrentTranslateX(), (int) mChart.getCurrentTranslateY(),
+        (int) (velocityX / mChart.getScaleX()) * 2, (int) (velocityY / mChart.getScaleY()) * 2,
+        (int) mChart.getMinTranslateX(), (int) mChart.getMaxTranslateX(),
+        (int) mChart.getMinTranslateY(), (int) mChart.getMaxTranslateY());
+    mScrollHandler.post(this);
+    return true;
+  }
+
+  @Override
+  public void run() {
+    if (mDragScroller.computeScrollOffset()) {
+      mMatrix.postTranslate(mDragScroller.getCurrX() - mChart.getCurrentTranslateX(), mDragScroller.getCurrY() - mChart.getCurrentTranslateY());
+      mMatrix = mChart.refreshTouch(mMatrix);
+    }
+    if (!mDragScroller.isFinished()) {
+      mScrollHandler.post(this);
+    }
+  }
 
   @Override
   public boolean onSingleTapUp(MotionEvent e) {
-    // ctx.showValue(e, matrix);
     return true;
   }
 }
