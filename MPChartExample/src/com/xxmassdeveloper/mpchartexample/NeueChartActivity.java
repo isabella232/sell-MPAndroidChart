@@ -1,6 +1,6 @@
 package com.xxmassdeveloper.mpchartexample;
 
-import com.github.mikephil.charting.charts.BarLineChartBase.BorderStyle;
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
@@ -10,140 +10,83 @@ import com.github.mikephil.charting.data.filter.Approximator.ApproximatorType;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
-import com.github.mikephil.charting.utils.Legend;
-import com.github.mikephil.charting.utils.Legend.LegendForm;
 import com.github.mikephil.charting.utils.XLabels;
+import com.github.mikephil.charting.utils.YLabels.YLabelPosition;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
+import android.content.res.Resources;
+import android.graphics.LinearGradient;
+import android.graphics.Shader.TileMode;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
-public class LineChartActivity extends DemoBase implements OnSeekBarChangeListener,
-    OnChartValueSelectedListener {
-
+public class NeueChartActivity extends DemoBase implements OnChartValueSelectedListener {
+  private static final int MAX_VALS_PER_PAGE = 6;
   private LineChart mChart;
-  private SeekBar mSeekBarX, mSeekBarY;
-  private TextView tvX, tvY;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    setContentView(R.layout.activity_linechart);
+    setContentView(R.layout.activity_neuechart);
 
-    tvX = (TextView) findViewById(R.id.tvXMax);
-    tvY = (TextView) findViewById(R.id.tvYMax);
-
-    mSeekBarX = (SeekBar) findViewById(R.id.seekBar1);
-    mSeekBarY = (SeekBar) findViewById(R.id.seekBar2);
-
-    mSeekBarX.setProgress(45);
-    mSeekBarY.setProgress(100);
-
-    mSeekBarY.setOnSeekBarChangeListener(this);
-    mSeekBarX.setOnSeekBarChangeListener(this);
-
-    // create a color template for one dataset with only one color
     ColorTemplate ct = new ColorTemplate();
-    // ct.addColorsForDataSets(new int[] {
-    // R.color.colorful_1
-    // }, this);
     ct.addDataSetColors(new int[] {
-        R.color.colorful_1
+        R.color.neue_line
     }, this);
 
+    final Resources r = getResources();
+
     mChart = (LineChart) findViewById(R.id.chart1);
-    mChart.setOnChartValueSelectedListener(this);
-    mChart.setColorTemplate(ct);
-
-    // if enabled, the chart will always start at zero on the y-axis
+    mChart.setOffsets(0, 0, 0, 0);
     mChart.setStartAtZero(false);
-
-    // disable the drawing of values into the chart
-    mChart.setDrawYValues(false);
-
-    mChart.setLineWidth(1f);
+    mChart.setHighlightEnabled(false);
+    mChart.setHighlightIndicatorEnabled(false);
+    mChart.setOnChartValueSelectedListener(this);
+    mChart.setValuePaintColor(r.getColor(R.color.neue_text));
+    mChart.setValueTypeface(Typeface.DEFAULT_BOLD);
+    mChart.setColorTemplate(ct);
+    mChart.setLineWidth(3f);
     mChart.setCircleSize(4f);
-
-    mChart.setDrawBorder(true);
-    mChart.setBorderStyles(new BorderStyle[] { BorderStyle.BOTTOM });
-
-    // no description text
-    mChart.setDescription("");
-
-    // // enable / disable grid lines
-    // mChart.setDrawVerticalGrid(false);
-    // mChart.setDrawHorizontalGrid(false);
-    //
-    // // enable / disable grid background
-    // mChart.setDrawGridBackground(false);
-    //
-    // mChart.setDrawXLegend(false);
-    // mChart.setDrawYLegend(false);
-
-    // set the number of y-legend entries the chart should have
-    mChart.setYLabelCount(6);
-
-    // enable value highlighting
-    mChart.setHighlightEnabled(true);
-
-    // enable touch gestures
     mChart.setTouchEnabled(true);
-
-    // enable scaling and dragging
     mChart.setDragEnabled(true);
-
-    // if disabled, scaling can be done on x- and y-axis separately
+    mChart.setMaxScaleY(1.0f);
     mChart.setPinchZoom(true);
+    mChart.setDrawFilled(true);
+    mChart.getPaint(Chart.PAINT_FILLED).setShader(new LinearGradient(0, 0, 0, mChart.getMeasuredHeight() / 2, r.getColor(R.color.neue_gradient_start), r.getColor(R.color.neue_gradient_end), TileMode.CLAMP));
+    mChart.setDrawXLabels(false);
+    mChart.setDrawYLabels(true);
+    mChart.setDrawAxisLabelsInChart(true);
+    mChart.setDrawGridBackground(false);
+    mChart.setBackgroundColor(r.getColor(R.color.neue_fill));
+    mChart.setDrawVerticalGrid(false);
+    mChart.setGridColor(r.getColor(R.color.neue_grid));
+    mChart.setDrawBorder(false);
+    mChart.setDrawValueXLabelsInChart(true);
+    mChart.getYLabels().setPosition(YLabelPosition.RIGHT);
+    mChart.getPaint(Chart.PAINT_YLABEL).setColor(r.getColor(R.color.neue_text));
+    mChart.getPaint(Chart.PAINT_CIRCLES_INNER).setColor(r.getColor(R.color.neue_fill));
 
-    // set an alternative background color
-    //        mChart.setBackgroundColor(Color.GRAY);
-
-    // create a custom MarkerView (extend MarkerView) and specify the layout
-    // to use for it
     MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
-
-    // define an offset to change the original position of the marker
-    // (optional)
     mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());
-
-    // set the marker to the chart
     mChart.setMarkerView(mv);
 
-    // enable/disable highlight indicators (the lines that indicate the
-    // highlighted Entry)
     mChart.setHighlightIndicatorEnabled(false);
-
-    // set the line to be drawn like this "- - - - - -"
-    mChart.enableDashedLine(10f, 5f, 0f);
-
-    // add data
-    setData(45, 100);
-
-    //        // restrain the maximum scale-out factor
-    //        mChart.setScaleMinima(3f, 3f);
-    //
-    //        // center the view to a specific position inside the chart
-    //        mChart.centerViewPort(10, 50);
-
-    // get the legend (only possible after setting data)
-    Legend l = mChart.getLegend();
-
-    // modify the legend ...
-    //        l.setPosition(LegendPosition.LEFT_OF_CHART);
-    l.setForm(LegendForm.LINE);
-
-    // dont forget to refresh the drawing
+    setData(30, 10, 30);
+    mChart.setDrawLegend(false);
+    mChart.zoom(mChart.getDataCurrent().getXValCount() / MAX_VALS_PER_PAGE, 1.0f, mChart.getWidth() / 2, mChart.getHeight() / 2);
     mChart.invalidate();
   }
 
@@ -253,18 +196,6 @@ public class LineChartActivity extends DemoBase implements OnSeekBarChangeListen
   }
 
   @Override
-  public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-    tvX.setText("" + (mSeekBarX.getProgress() + 1));
-    tvY.setText("" + (mSeekBarY.getProgress()));
-
-    setData(mSeekBarX.getProgress() + 1, mSeekBarY.getProgress());
-
-    // redraw
-    mChart.invalidate();
-  }
-
-  @Override
   public void onValuesSelected(Entry[] values, Highlight[] highlights) {
     Log.i("VALS SELECTED",
         "Value: " + values[0].getVal() + ", xIndex: " + highlights[0].getXIndex()
@@ -277,32 +208,22 @@ public class LineChartActivity extends DemoBase implements OnSeekBarChangeListen
 
   }
 
-  @Override
-  public void onStartTrackingTouch(SeekBar seekBar) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void onStopTrackingTouch(SeekBar seekBar) {
-    // TODO Auto-generated method stub
-
-  }
-
-  private void setData(int count, float range) {
+  private void setData(int count, float range, float rangeOffset) {
 
     ArrayList<String> xVals = new ArrayList<String>();
+    long ts = System.currentTimeMillis();
+    SimpleDateFormat sdf = new SimpleDateFormat("MMM dd", Locale.US);
+
     for (int i = 0; i < count; i++) {
-      xVals.add((i) + "");
+      xVals.add(sdf.format(new Date(ts)).toUpperCase());
+      ts += TimeUnit.DAYS.toMillis(2);
     }
 
     ArrayList<Entry> yVals = new ArrayList<Entry>();
 
     for (int i = 0; i < count; i++) {
       float mult = (range + 1);
-      float val = (float) (Math.random() * mult) + 3;// + (float)
-      // ((mult *
-      // 0.1) / 10);
+      float val = rangeOffset + (float) (Math.random() * mult);
       yVals.add(new Entry(val, i));
     }
 

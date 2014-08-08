@@ -1,5 +1,13 @@
-
 package com.xxmassdeveloper.mpchartexample;
+
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.ChartData;
+import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.XLabels;
+import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
+import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -11,145 +19,135 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.DataSet;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.XLabels;
-import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
-import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Demonstrates the use of charts inside a ListView. IMPORTANT: provide a
  * specific height attribute for the chart inside your listview-item
- * 
+ *
  * @author Philipp Jahoda
  */
 public class ListViewBarChartActivity extends DemoBase {
 
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    setContentView(R.layout.activity_listview_chart);
+
+    ListView lv = (ListView) findViewById(R.id.listView1);
+
+    ArrayList<ChartData> list = new ArrayList<ChartData>();
+
+    // 20 items
+    for (int i = 0; i < 20; i++) {
+      list.add(generateData(i + 1));
+    }
+
+    ChartDataAdapter cda = new ChartDataAdapter(getApplicationContext(), list);
+    lv.setAdapter(cda);
+  }
+
+  private class ChartDataAdapter extends ArrayAdapter<ChartData> {
+
+    private ColorTemplate mCt;
+    private Typeface mTf;
+
+    public ChartDataAdapter(Context context, List<ChartData> objects) {
+      super(context, 0, objects);
+
+      mCt = new ColorTemplate();
+      mCt.addDataSetColors(ColorTemplate.VORDIPLOM_COLORS, getContext());
+      mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_listview_chart);
-        
-        ListView lv = (ListView) findViewById(R.id.listView1);
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-        ArrayList<ChartData> list = new ArrayList<ChartData>();
+      ChartData c = getItem(position);
 
-        // 20 items
-        for (int i = 0; i < 20; i++) {
-            list.add(generateData(i + 1));
-        }
+      ViewHolder holder = null;
 
-        ChartDataAdapter cda = new ChartDataAdapter(getApplicationContext(), list);
-        lv.setAdapter(cda);
+      if (convertView == null) {
+
+        holder = new ViewHolder();
+
+        convertView = LayoutInflater.from(getContext()).inflate(
+            R.layout.list_item_barchart, null);
+        holder.chart = (BarChart) convertView.findViewById(R.id.chart);
+
+        convertView.setTag(holder);
+      } else {
+        holder = (ViewHolder) convertView.getTag();
+      }
+
+      // apply styling
+      holder.chart.setYLabelCount(5);
+      holder.chart.setColorTemplate(mCt);
+      holder.chart.setBarSpace(20f);
+      holder.chart.setYLabelTypeface(mTf);
+      holder.chart.setXLabelTypeface(mTf);
+      holder.chart.setValueTypeface(mTf);
+      holder.chart.setDescription("");
+      holder.chart.setDrawVerticalGrid(false);
+      holder.chart.setDrawGridBackground(false);
+
+      XLabels xl = holder.chart.getXLabels();
+      xl.setCenterXLabelText(true);
+      xl.setPosition(XLabelPosition.BOTTOM);
+
+      // set data
+      holder.chart.setData(c);
+
+      // do not forget to refresh the chart
+      holder.chart.invalidate();
+
+      return convertView;
     }
 
-    private class ChartDataAdapter extends ArrayAdapter<ChartData> {
+    private class ViewHolder {
 
-        private ColorTemplate mCt;
-        private Typeface mTf;
+      BarChart chart;
+    }
+  }
 
-        public ChartDataAdapter(Context context, List<ChartData> objects) {
-            super(context, 0, objects);
+  /**
+   * generates a random ChartData object with just one DataSet
+   *
+   * @return
+   */
+  private ChartData generateData(int cnt) {
 
-            mCt = new ColorTemplate();
-            mCt.addDataSetColors(ColorTemplate.VORDIPLOM_COLORS, getContext());
-            mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
-        }
+    ArrayList<Entry> entries = new ArrayList<Entry>();
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ChartData c = getItem(position);
-
-            ViewHolder holder = null;
-
-            if (convertView == null) {
-
-                holder = new ViewHolder();
-
-                convertView = LayoutInflater.from(getContext()).inflate(
-                        R.layout.list_item_barchart, null);
-                holder.chart = (BarChart) convertView.findViewById(R.id.chart);
-
-                convertView.setTag(holder);
-
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            // apply styling
-            holder.chart.setYLabelCount(5);
-            holder.chart.setColorTemplate(mCt);
-            holder.chart.setBarSpace(20f);
-            holder.chart.setYLabelTypeface(mTf);
-            holder.chart.setXLabelTypeface(mTf);
-            holder.chart.setValueTypeface(mTf);
-            holder.chart.setDescription("");
-            holder.chart.setDrawVerticalGrid(false);
-            holder.chart.setDrawGridBackground(false);
-
-            XLabels xl = holder.chart.getXLabels();
-            xl.setCenterXLabelText(true);
-            xl.setPosition(XLabelPosition.BOTTOM);
-
-            // set data
-            holder.chart.setData(c);
-            
-            // do not forget to refresh the chart
-            holder.chart.invalidate();
-
-            return convertView;
-        }
-
-        private class ViewHolder {
-
-            BarChart chart;
-        }
+    for (int i = 0; i < 12; i++) {
+      entries.add(new Entry((int) (Math.random() * 70) + 30, i));
     }
 
-    /**
-     * generates a random ChartData object with just one DataSet
-     * 
-     * @return
-     */
-    private ChartData generateData(int cnt) {
+    DataSet d = new DataSet(entries, "New DataSet " + cnt);
 
-        ArrayList<Entry> entries = new ArrayList<Entry>();
+    ChartData cd = new ChartData(getMonths(), d);
+    return cd;
+  }
 
-        for (int i = 0; i < 12; i++) {
-            entries.add(new Entry((int) (Math.random() * 70) + 30, i));
-        }
+  private ArrayList<String> getMonths() {
 
-        DataSet d = new DataSet(entries, "New DataSet " + cnt);
+    ArrayList<String> m = new ArrayList<String>();
+    m.add("Jan");
+    m.add("Feb");
+    m.add("Mar");
+    m.add("Apr");
+    m.add("May");
+    m.add("Jun");
+    m.add("Jul");
+    m.add("Aug");
+    m.add("Sep");
+    m.add("Okt");
+    m.add("Nov");
+    m.add("Dec");
 
-        ChartData cd = new ChartData(getMonths(), d);
-        return cd;
-    }
-
-    private ArrayList<String> getMonths() {
-
-        ArrayList<String> m = new ArrayList<String>();
-        m.add("Jan");
-        m.add("Feb");
-        m.add("Mar");
-        m.add("Apr");
-        m.add("May");
-        m.add("Jun");
-        m.add("Jul");
-        m.add("Aug");
-        m.add("Sep");
-        m.add("Okt");
-        m.add("Nov");
-        m.add("Dec");
-
-        return m;
-    }
+    return m;
+  }
 }
