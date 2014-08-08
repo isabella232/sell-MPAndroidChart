@@ -59,9 +59,10 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setValueTypeface(Typeface.DEFAULT_BOLD);
     mChart.setColorTemplate(ct);
     mChart.setLineWidth(3f);
-    mChart.setCircleSize(5f);
+    mChart.setCircleSize(4f);
     mChart.setTouchEnabled(true);
     mChart.setDragEnabled(true);
+    mChart.setMaxScaleY(1.0f);
     mChart.setPinchZoom(true);
     mChart.setDrawFilled(true);
     mChart.getPaint(Chart.PAINT_FILLED).setShader(new LinearGradient(0, 0, 0, mChart.getMeasuredHeight() / 2, r.getColor(R.color.neue_gradient_start), r.getColor(R.color.neue_gradient_end), TileMode.CLAMP));
@@ -76,6 +77,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setDrawValueXLabelsInChart(true);
     mChart.getYLabels().setPosition(YLabelPosition.RIGHT);
     mChart.getPaint(Chart.PAINT_YLABEL).setColor(r.getColor(R.color.neue_text));
+    mChart.getPaint(Chart.PAINT_CIRCLES_INNER).setColor(r.getColor(R.color.neue_fill));
 
     MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
     mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());
