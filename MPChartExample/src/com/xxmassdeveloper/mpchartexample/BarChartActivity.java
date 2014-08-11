@@ -194,9 +194,9 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
     tvX.setText("" + (mSeekBarX.getProgress() + 1));
     tvY.setText("" + (mSeekBarY.getProgress()));
 
-    ArrayList<String> xVals = new ArrayList<String>();
+    ArrayList<Long> xVals = new ArrayList<Long>();
     for (int i = 0; i < mSeekBarX.getProgress(); i++) {
-      xVals.add((i) + "");
+      xVals.add((long) i);
     }
 
     ArrayList<Entry> yVals1 = new ArrayList<Entry>();

@@ -347,9 +347,10 @@ public abstract class BarLineChartBase extends Chart {
    */
   @Override
   public void prepare() {
-
     if (mDataNotSet)
       return;
+
+    super.prepare();
 
     calcMinMax(mFixedYValues);
 
@@ -585,8 +586,8 @@ public abstract class BarLineChartBase extends Chart {
 
     StringBuffer a = new StringBuffer();
 
-    float length = (int) (((float) (mCurrentData.getXVals().get(0).length() + mCurrentData
-        .getXVals()
+    float length = (int) (((float) (mCurrentData.getXLabels().get(0).length() + mCurrentData
+        .getXLabels()
         .get(mCurrentData.getXValCount() - 1)
         .length())));
 
@@ -716,7 +717,7 @@ public abstract class BarLineChartBase extends Chart {
 
         if (position[0] >= mOffsetLeft && position[0] <= getWidth() - mOffsetRight) {
 
-          mDrawCanvas.drawText(mCurrentData.getXVals().get(i), position[0],
+          mDrawCanvas.drawText(mCurrentData.getXLabels().get(i), position[0],
               yPos,
               mXLabelPaint);
         }
@@ -915,7 +916,7 @@ public abstract class BarLineChartBase extends Chart {
    * returns true if the specified point (x-axis) exceeds the limits of what
    * is visible to the right side
    *
-   * @param v
+   * @param p
    * @return
    */
   protected boolean isOffContentRight(float p) {
@@ -929,7 +930,7 @@ public abstract class BarLineChartBase extends Chart {
    * returns true if the specified point (x-axis) exceeds the limits of what
    * is visible to the left side
    *
-   * @param v
+   * @param p
    * @return
    */
   protected boolean isOffContentLeft(float p) {
@@ -943,7 +944,7 @@ public abstract class BarLineChartBase extends Chart {
    * returns true if the specified point (y-axis) exceeds the limits of what
    * is visible on the top
    *
-   * @param v
+   * @param p
    * @return
    */
   protected boolean isOffContentTop(float p) {
@@ -957,7 +958,7 @@ public abstract class BarLineChartBase extends Chart {
    * returns true if the specified point (y-axis) exceeds the limits of what
    * is visible on the bottom
    *
-   * @param v
+   * @param p
    * @return
    */
   protected boolean isOffContentBottom(float p) {

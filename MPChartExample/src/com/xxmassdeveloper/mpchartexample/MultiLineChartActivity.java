@@ -190,9 +190,9 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
     tvX.setText("" + (mSeekBarX.getProgress() + 1));
     tvY.setText("" + (mSeekBarY.getProgress()));
 
-    ArrayList<String> xVals = new ArrayList<String>();
-    for (int i = 0; i < mSeekBarX.getProgress(); i++) {
-      xVals.add((i) + "");
+    ArrayList<Long> xVals = new ArrayList<Long>();
+    for (long i = 0; i < mSeekBarX.getProgress(); i++) {
+      xVals.add(i);
     }
 
     ArrayList<Double[]> values = new ArrayList<Double[]>();

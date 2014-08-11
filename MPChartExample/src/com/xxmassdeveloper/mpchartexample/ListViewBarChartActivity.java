@@ -8,6 +8,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
+import com.xxmassdeveloper.mpchartexample.utils.ArrayLabelFormatter;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -119,35 +120,19 @@ public class ListViewBarChartActivity extends DemoBase {
    * @return
    */
   private ChartData generateData(int cnt) {
-
     ArrayList<Entry> entries = new ArrayList<Entry>();
 
     for (int i = 0; i < 12; i++) {
       entries.add(new Entry((int) (Math.random() * 70) + 30, i));
     }
 
+    ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec" });
+
     DataSet d = new DataSet(entries, "New DataSet " + cnt);
+    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    dataSets.add(d);
 
-    ChartData cd = new ChartData(getMonths(), d);
+    ChartData cd = new ChartData(formatter.getValues(), dataSets, formatter);
     return cd;
-  }
-
-  private ArrayList<String> getMonths() {
-
-    ArrayList<String> m = new ArrayList<String>();
-    m.add("Jan");
-    m.add("Feb");
-    m.add("Mar");
-    m.add("Apr");
-    m.add("May");
-    m.add("Jun");
-    m.add("Jul");
-    m.add("Aug");
-    m.add("Sep");
-    m.add("Okt");
-    m.add("Nov");
-    m.add("Dec");
-
-    return m;
   }
 }

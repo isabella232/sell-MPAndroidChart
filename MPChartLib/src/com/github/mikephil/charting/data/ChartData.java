@@ -30,12 +30,14 @@ public class ChartData {
   /**
    * holds all x-values the chart represents
    */
-  private ArrayList<String> mXVals;
+  private ArrayList<Long> mXVals;
+  private ArrayList<String> mXLabels;
 
   /**
    * holds all the datasets (e.g. different lines) the chart represents
    */
   private ArrayList<DataSet> mDataSets;
+  private LabelFormatter mLabelFormatter;
 
   /**
    * constructor for chart data
@@ -46,33 +48,21 @@ public class ChartData {
    * @param dataSets all DataSet objects the chart needs to represent
    * @param padding Number of fake entries to add
    */
-  public ChartData(ArrayList<String> xVals, ArrayList<DataSet> dataSets, int padding) {
-    init(xVals, dataSets, padding);
-  }
-  public ChartData(ArrayList<String> xVals, ArrayList<DataSet> dataSets) {
-    this(xVals, dataSets, 0);
+  public ChartData(ArrayList<Long> xVals, ArrayList<DataSet> dataSets, LabelFormatter labelFormatter, int padding) {
+    init(xVals, dataSets, labelFormatter, padding);
   }
 
-
-  /**
-   * constructor that takes string array instead of arraylist string
-   *
-   * @param xVals The values describing the x-axis. Must be at least as long
-   * as the highest xIndex in the Entry objects across all
-   * DataSets.
-   * @param dataSets all DataSet objects the chart needs to represent
-   * @param padding Number of fake entries to add
-   */
-  public ChartData(String[] xVals, ArrayList<DataSet> dataSets, int padding) {
-    ArrayList<String> newXVals = new ArrayList<String>();
-    for (int i = 0; i < xVals.length; i++) {
-      newXVals.add(xVals[i]);
-    }
-    init(newXVals, dataSets, padding);
+  public ChartData(ArrayList<Long> xVals, ArrayList<DataSet> dataSets, LabelFormatter labelFormatter) {
+    this(xVals, dataSets, labelFormatter, 0);
   }
 
-  public ChartData(String[] xVals, ArrayList<DataSet> dataSets) {
-    this(xVals, dataSets, 0);
+  public ChartData(ArrayList<Long> xVals, ArrayList<DataSet> dataSets) {
+    this(xVals, dataSets, new LabelFormatter() {
+      @Override
+      public String formatValue(long value) {
+        return String.valueOf(value);
+      }
+    }, 0);
   }
 
   /**
@@ -80,21 +70,22 @@ public class ChartData {
    *
    * @param xVals
    * @param data
-   * @param padding Number of fake entries to add
    */
-  public ChartData(ArrayList<String> xVals, DataSet data, int padding) {
+  public ChartData(ArrayList<Long> xVals, DataSet data) {
+    this(xVals, data, SIMPLE_LABEL_FORMATTER);
+  }
+
+  public ChartData(ArrayList<Long> xVals, DataSet data, LabelFormatter formatter) {
     ArrayList<DataSet> sets = new ArrayList<DataSet>();
     sets.add(data);
-    init(xVals, sets, padding);
+    init(xVals, sets, formatter, 0);
   }
 
-  public ChartData(ArrayList<String> xVals, DataSet data) {
-    this(xVals, data, 0);
-  }
-
-  private void init(ArrayList<String> xVals, ArrayList<DataSet> dataSets, int padding) {
-    this.mXVals = xVals;
-    this.mDataSets = dataSets;
+  private void init(ArrayList<Long> xVals, ArrayList<DataSet> dataSets, LabelFormatter labelFormatter, int padding) {
+    mLabelFormatter = labelFormatter;
+    mXVals = xVals;
+    mXLabels = new ArrayList<String>();
+    mDataSets = dataSets;
 
     addPadding(padding);
 
@@ -120,8 +111,8 @@ public class ChartData {
       }
 
       while (count-- > 0) {
-        mXVals.add(0, "");
-        mXVals.add("");
+        mXVals.add(0, 0L);
+        mXVals.add(0L);
         for (DataSet set : mDataSets) {
           ArrayList<Entry> yVals = set.getYVals();
           yVals.add(0, new Entry(yVals.get(0).getVal(), count - 1));
@@ -233,8 +224,17 @@ public class ChartData {
    *
    * @return
    */
-  public ArrayList<String> getXVals() {
+  public ArrayList<Long> getXVals() {
     return mXVals;
+  }
+
+  /**
+   * returns the x-value labels the chart represents
+   *
+   * @return
+   */
+  public ArrayList<String> getXLabels() {
+    return mXLabels;
   }
 
   /**
@@ -274,7 +274,7 @@ public class ChartData {
    * be case sensitive or not. IMPORTANT: This method does calculations at
    * runtime, do not over-use in performance critical situations.
    *
-   * @param type
+   * @param label
    * @param ignorecase if true, the search is not case-sensitive
    * @return
    */
@@ -366,14 +366,32 @@ public class ChartData {
    *
    * @return
    */
-  public static ArrayList<String> generateXVals(int from, int to) {
+  public static ArrayList<Long> generateXVals(int from, int to) {
 
-    ArrayList<String> xvals = new ArrayList<String>();
+    ArrayList<Long> xvals = new ArrayList<Long>();
 
     for (int i = from; i < to; i++) {
-      xvals.add("" + i);
+      xvals.add((long) i);
     }
 
     return xvals;
+  }
+
+  private static final LabelFormatter SIMPLE_LABEL_FORMATTER = new LabelFormatter() {
+    @Override
+    public String formatValue(long value) {
+      return String.valueOf(value);
+    }
+  };
+
+  public void populateXLabels() {
+    mXLabels.clear();
+    for (Long val : mXVals) {
+      mXLabels.add(mLabelFormatter.formatValue(val));
+    }
+  }
+
+  public interface LabelFormatter {
+    String formatValue(long value);
   }
 }

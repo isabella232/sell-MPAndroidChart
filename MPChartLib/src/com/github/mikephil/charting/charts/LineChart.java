@@ -275,7 +275,7 @@ public class LineChart extends BarLineChartBase {
 
           String label;
           if (mDrawValueXLabelsInChart) {
-            label = mCurrentData.getXVals().get(j / 2);
+            label = mCurrentData.getXLabels().get(j / 2);
           } else {
             label = mDrawUnitInChart ? mFormatValue.format(val) + mUnit : mFormatValue.format(val);
           }

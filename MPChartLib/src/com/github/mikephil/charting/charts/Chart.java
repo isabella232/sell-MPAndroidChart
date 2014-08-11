@@ -1,6 +1,7 @@
 package com.github.mikephil.charting.charts;
 
 import com.github.mikephil.charting.data.ChartData;
+import com.github.mikephil.charting.data.ChartData.LabelFormatter;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
@@ -318,10 +319,9 @@ public abstract class Chart extends View {
     setColorTemplate(template);
     setDrawYValues(false);
 
-    ArrayList<String> xVals = new ArrayList<String>();
-    Calendar calendar = Calendar.getInstance();
-    for (int i = 0; i < 12; i++) {
-      xVals.add(calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()));
+    ArrayList<Long> xVals = new ArrayList<Long>();
+    for (long i = 0; i < 12; i++) {
+      xVals.add(i);
     }
 
     ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
@@ -338,7 +338,15 @@ public abstract class Chart extends View {
       dataSets.add(set); // add the datasets
     }
     // create a data object with the datasets
-    ChartData data = new ChartData(xVals, dataSets);
+    ChartData data = new ChartData(xVals, dataSets, new LabelFormatter() {
+      private Calendar calendar = Calendar.getInstance();
+
+      @Override
+      public String formatValue(long value) {
+        calendar.set(1999, (int) value, 1);
+        return calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+      }
+    });
     setData(data);
     invalidate();
   }
@@ -379,7 +387,7 @@ public abstract class Chart extends View {
    * @param xVals
    * @param yVals
    */
-  public void setData(ArrayList<String> xVals, ArrayList<Float> yVals) {
+  public void setData(ArrayList<Long> xVals, ArrayList<Float> yVals) {
 
     ArrayList<Entry> series = new ArrayList<Entry>();
 
@@ -399,7 +407,12 @@ public abstract class Chart extends View {
   /**
    * does needed preparations for drawing
    */
-  public abstract void prepare();
+  public void prepare() {
+    if (mDataNotSet)
+      return;
+
+    mCurrentData.populateXLabels();
+  }
 
   /**
    * lets the chart know its unterlying data has changed
@@ -539,7 +552,7 @@ public abstract class Chart extends View {
    * y values transformed with all matrices
    *
    * @param entries
-   * @param xoffset offset the chart values should have on the x-axis (0.5f)
+   * @param xOffset offset the chart values should have on the x-axis (0.5f)
    * to center for barchart
    * @return
    */
@@ -622,7 +635,7 @@ public abstract class Chart extends View {
   /**
    * transforms the given rect objects with the touch matrix only
    *
-   * @param paths
+   * @param rects
    */
   protected void transformRectsTouch(ArrayList<RectF> rects) {
     for (int i = 0; i < rects.size(); i++) {
@@ -1443,7 +1456,7 @@ public abstract class Chart extends View {
    * @param index
    * @return
    */
-  public String getXValue(int index) {
+  public Long getXValue(int index) {
     if (mCurrentData == null || mCurrentData.getXValCount() <= index)
       return null;
     else
@@ -1477,7 +1490,7 @@ public abstract class Chart extends View {
   /**
    * returns the y-value for the given x-index and DataSet index
    *
-   * @param index
+   * @param xIndex
    * @param dataSet
    * @return
    */
@@ -1501,7 +1514,7 @@ public abstract class Chart extends View {
    * returns the DataSet with the given label that is stored in the ChartData
    * object.
    *
-   * @param type
+   * @param dataSetLabel
    * @return
    */
   public DataSet getDataSetByLabel(String dataSetLabel) {

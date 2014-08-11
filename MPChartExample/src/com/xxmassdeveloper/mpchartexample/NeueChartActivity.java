@@ -3,6 +3,7 @@ package com.xxmassdeveloper.mpchartexample;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.ChartData;
+import com.github.mikephil.charting.data.ChartData.LabelFormatter;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
@@ -146,12 +147,11 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
 
   private void setData(int count, float range, float rangeOffset) {
 
-    ArrayList<String> xVals = new ArrayList<String>();
+    ArrayList<Long> xVals = new ArrayList<Long>();
     long ts = System.currentTimeMillis();
-    SimpleDateFormat sdf = new SimpleDateFormat("MMM dd", Locale.US);
 
     for (int i = 0; i < count; i++) {
-      xVals.add(sdf.format(new Date(ts)).toUpperCase());
+      xVals.add(ts);
       ts += TimeUnit.DAYS.toMillis(2);
     }
 
@@ -170,7 +170,14 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     dataSets.add(set1); // add the datasets
 
     // create a data object with the datasets
-    ChartData data = new ChartData(xVals, dataSets, 1);
+    ChartData data = new ChartData(xVals, dataSets, new LabelFormatter() {
+      SimpleDateFormat sdf = new SimpleDateFormat("MMM dd", Locale.US);
+
+      @Override
+      public String formatValue(long value) {
+        return sdf.format(new Date(value)).toUpperCase();
+      }
+    }, 1);
 
     // set data
     mChart.setData(data);

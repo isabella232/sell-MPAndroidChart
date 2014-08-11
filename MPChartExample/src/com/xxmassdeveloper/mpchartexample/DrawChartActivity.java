@@ -3,6 +3,7 @@ package com.xxmassdeveloper.mpchartexample;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.ChartData;
+import com.github.mikephil.charting.data.ChartData.LabelFormatter;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
@@ -76,9 +77,9 @@ public class DrawChartActivity extends DemoBase implements OnChartValueSelectedL
   }
 
   private void initWithDummyData() {
-    ArrayList<String> xVals = new ArrayList<String>();
+    ArrayList<Long> xVals = new ArrayList<Long>();
     for (int i = 0; i < 24; i++) {
-      xVals.add((i) + "h");
+      xVals.add((long) i);
     }
 
     ArrayList<Entry> yVals = new ArrayList<Entry>();
@@ -90,7 +91,12 @@ public class DrawChartActivity extends DemoBase implements OnChartValueSelectedL
     dataSets.add(set1); // add the datasets
 
     // create a data object with the datasets
-    ChartData data = new ChartData(xVals, dataSets);
+    ChartData data = new ChartData(xVals, dataSets, new LabelFormatter() {
+      @Override
+      public String formatValue(long value) {
+        return value + "h";
+      }
+    });
 
     mChart.setData(data);
   }

@@ -187,9 +187,10 @@ public class PieChart extends Chart {
    */
   @Override
   public void prepare() {
-
     if (mDataNotSet)
       return;
+
+    super.prepare();
 
     calcMinMax(false);
 
@@ -575,10 +576,10 @@ public class PieChart extends Chart {
           y -= lineHeight / 2;
 
           mDrawCanvas.drawText(val, x, y, mValuePaint);
-          mDrawCanvas.drawText(mCurrentData.getXVals().get(j), x, y + lineHeight,
+          mDrawCanvas.drawText(mCurrentData.getXLabels().get(j), x, y + lineHeight,
               mValuePaint);
         } else if (mDrawXVals && !mDrawYValues) {
-          mDrawCanvas.drawText(mCurrentData.getXVals().get(j), x, y, mValuePaint);
+          mDrawCanvas.drawText(mCurrentData.getXLabels().get(j), x, y, mValuePaint);
         } else if (!mDrawXVals && mDrawYValues) {
 
           mDrawCanvas.drawText(val, x, y, mValuePaint);
@@ -951,7 +952,7 @@ public class PieChart extends Chart {
    * sets the radius of the hole in the center of the piechart in percent of
    * the maximum radius (max = the radius of the whole chart), default 50%
    *
-   * @param size
+   * @param percent
    */
   public void setHoleRadius(final float percent) {
 

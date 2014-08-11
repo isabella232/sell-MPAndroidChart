@@ -4,6 +4,7 @@ import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.utils.FileUtils;
+import com.xxmassdeveloper.mpchartexample.utils.ArrayLabelFormatter;
 
 import android.support.v4.app.Fragment;
 
@@ -53,6 +54,8 @@ public abstract class SimpleFragment extends Fragment {
     xVals.add("Quarter 3");
     xVals.add("Quarter 4");
 
+    ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] { "Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4" });
+
     for (int i = 0; i < count; i++) {
       xVals.add("entry" + (i + 1));
 
@@ -61,26 +64,16 @@ public abstract class SimpleFragment extends Fragment {
 
     DataSet ds1 = new DataSet(entries1, "Quarterly Revenues 2014");
 
-    ChartData d = new ChartData(xVals, ds1);
+    ChartData d = new ChartData(formatter.getValues(), ds1, formatter);
     return d;
   }
 
   protected ChartData getComplexity() {
-
-    //        DataSet ds1 = new DataSet(n, "O(n)");
-    //        DataSet ds2 = new DataSet(nlogn, "O(nlogn)");
-    //        DataSet ds3 = new DataSet(nsquare, "O(n\u00B2)");
-    //        DataSet ds4 = new DataSet(nthree, "O(n\u00B3)");
-
     ArrayList<DataSet> sets = new ArrayList<DataSet>();
 
     // load DataSets from textfiles in assets folder
     sets.add(FileUtils.dataSetFromAssets(getActivity().getAssets(), "sine.txt"));
     sets.add(FileUtils.dataSetFromAssets(getActivity().getAssets(), "cosine.txt"));
-    //        sets.add(FileUtils.dataSetFromAssets(getActivity().getAssets(), "n.txt"));
-    //        sets.add(FileUtils.dataSetFromAssets(getActivity().getAssets(), "nlogn.txt"));
-    //        sets.add(FileUtils.dataSetFromAssets(getActivity().getAssets(), "square.txt"));
-    //        sets.add(FileUtils.dataSetFromAssets(getActivity().getAssets(), "three.txt"));
 
     int max = Math.max(sets.get(0).getEntryCount(), sets.get(1).getEntryCount());
 
@@ -89,7 +82,6 @@ public abstract class SimpleFragment extends Fragment {
   }
 
   private String[] mLabels = new String[] { "Company A", "Company B", "Company C", "Company D", "Company E", "Company F" };
-  //    private String[] mXVals = new String[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec" };
 
   private String getLabel(int i) {
     return mLabels[i];

@@ -291,18 +291,16 @@ public class LineChartActivity extends DemoBase implements OnSeekBarChangeListen
 
   private void setData(int count, float range) {
 
-    ArrayList<String> xVals = new ArrayList<String>();
+    ArrayList<Long> xVals = new ArrayList<Long>();
     for (int i = 0; i < count; i++) {
-      xVals.add((i) + "");
+      xVals.add((long) i);
     }
 
     ArrayList<Entry> yVals = new ArrayList<Entry>();
 
     for (int i = 0; i < count; i++) {
       float mult = (range + 1);
-      float val = (float) (Math.random() * mult) + 3;// + (float)
-      // ((mult *
-      // 0.1) / 10);
+      float val = (float) (Math.random() * mult) + 3;
       yVals.add(new Entry(val, i));
     }
 

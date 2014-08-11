@@ -2,6 +2,7 @@ package com.xxmassdeveloper.mpchartexample;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.ChartData;
+import com.github.mikephil.charting.data.ChartData.LabelFormatter;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
@@ -159,10 +160,10 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
       yVals1.add(new Entry(val, i));
     }
 
-    ArrayList<String> xVals = new ArrayList<String>();
+    ArrayList<Long> xVals = new ArrayList<Long>();
 
     for (int i = 0; i < mSeekBarX.getProgress(); i++) {
-      xVals.add("Text" + (i + 1));
+      xVals.add((long) (i + 1));
     }
 
     DataSet set1 = new DataSet(yVals1, "Content");
@@ -170,7 +171,12 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
     ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
     dataSets.add(set1);
 
-    ChartData data = new ChartData(xVals, dataSets);
+    ChartData data = new ChartData(xVals, dataSets, new LabelFormatter() {
+      @Override
+      public String formatValue(long value) {
+        return "Text" + value;
+      }
+    });
     mChart.setData(data);
 
     // undo all highlights

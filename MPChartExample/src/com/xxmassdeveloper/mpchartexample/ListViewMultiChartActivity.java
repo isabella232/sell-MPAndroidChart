@@ -8,6 +8,7 @@ import com.xxmassdeveloper.mpchartexample.listviewitems.ChartItem;
 import com.xxmassdeveloper.mpchartexample.listviewitems.LineChartItem;
 import com.xxmassdeveloper.mpchartexample.listviewitems.PieChartItem;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
+import com.xxmassdeveloper.mpchartexample.utils.ArrayLabelFormatter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -94,9 +95,11 @@ public class ListViewMultiChartActivity extends DemoBase {
       entries.add(new Entry((int) (Math.random() * 70) + 30, i));
     }
 
+    ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec" });
+
     DataSet d = new DataSet(entries, "New DataSet " + cnt);
 
-    ChartData cd = new ChartData(getMonths(), d);
+    ChartData cd = new ChartData(formatter.getValues(), d, formatter);
     return cd;
   }
 
@@ -110,37 +113,8 @@ public class ListViewMultiChartActivity extends DemoBase {
 
     DataSet d = new DataSet(entries, "New DataSet " + cnt);
 
-    ChartData cd = new ChartData(getQuarters(), d);
+    ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] { "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter" });
+    ChartData cd = new ChartData(formatter.getValues(), d, formatter);
     return cd;
-  }
-
-  private ArrayList<String> getQuarters() {
-
-    ArrayList<String> q = new ArrayList<String>();
-    q.add("1st Quarter");
-    q.add("2nd Quarter");
-    q.add("3rd Quarter");
-    q.add("4th Quarter");
-
-    return q;
-  }
-
-  private ArrayList<String> getMonths() {
-
-    ArrayList<String> m = new ArrayList<String>();
-    m.add("Jan");
-    m.add("Feb");
-    m.add("Mar");
-    m.add("Apr");
-    m.add("May");
-    m.add("Jun");
-    m.add("Jul");
-    m.add("Aug");
-    m.add("Sep");
-    m.add("Okt");
-    m.add("Nov");
-    m.add("Dec");
-
-    return m;
   }
 }
