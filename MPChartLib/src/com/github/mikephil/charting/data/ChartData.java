@@ -44,10 +44,15 @@ public class ChartData {
    * as the highest xIndex in the Entry objects across all
    * DataSets.
    * @param dataSets all DataSet objects the chart needs to represent
+   * @param padding Number of fake entries to add
    */
-  public ChartData(ArrayList<String> xVals, ArrayList<DataSet> dataSets) {
-    init(xVals, dataSets);
+  public ChartData(ArrayList<String> xVals, ArrayList<DataSet> dataSets, int padding) {
+    init(xVals, dataSets, padding);
   }
+  public ChartData(ArrayList<String> xVals, ArrayList<DataSet> dataSets) {
+    this(xVals, dataSets, 0);
+  }
+
 
   /**
    * constructor that takes string array instead of arraylist string
@@ -56,13 +61,18 @@ public class ChartData {
    * as the highest xIndex in the Entry objects across all
    * DataSets.
    * @param dataSets all DataSet objects the chart needs to represent
+   * @param padding Number of fake entries to add
    */
-  public ChartData(String[] xVals, ArrayList<DataSet> dataSets) {
+  public ChartData(String[] xVals, ArrayList<DataSet> dataSets, int padding) {
     ArrayList<String> newXVals = new ArrayList<String>();
     for (int i = 0; i < xVals.length; i++) {
       newXVals.add(xVals[i]);
     }
-    init(newXVals, dataSets);
+    init(newXVals, dataSets, padding);
+  }
+
+  public ChartData(String[] xVals, ArrayList<DataSet> dataSets) {
+    this(xVals, dataSets, 0);
   }
 
   /**
@@ -70,17 +80,23 @@ public class ChartData {
    *
    * @param xVals
    * @param data
+   * @param padding Number of fake entries to add
    */
-  public ChartData(ArrayList<String> xVals, DataSet data) {
-
+  public ChartData(ArrayList<String> xVals, DataSet data, int padding) {
     ArrayList<DataSet> sets = new ArrayList<DataSet>();
     sets.add(data);
-    init(xVals, sets);
+    init(xVals, sets, padding);
   }
 
-  private void init(ArrayList<String> xVals, ArrayList<DataSet> dataSets) {
+  public ChartData(ArrayList<String> xVals, DataSet data) {
+    this(xVals, data, 0);
+  }
+
+  private void init(ArrayList<String> xVals, ArrayList<DataSet> dataSets, int padding) {
     this.mXVals = xVals;
     this.mDataSets = dataSets;
+
+    addPadding(padding);
 
     calcMinMax();
     calcYValueSum();
@@ -91,6 +107,27 @@ public class ChartData {
           .size() > xVals.size()) {
         throw new IllegalArgumentException(
             "One or more of the DataSet Entry arrays are longer than the x-values array.");
+      }
+    }
+  }
+
+  private void addPadding(int count) {
+    if (count > 0 && mXVals.size() > 0) {
+      for (DataSet set : mDataSets) {
+        for (Entry entry : set.getYVals()) {
+          entry.setXIndex(entry.getXIndex() + count);
+        }
+      }
+
+      while (count-- > 0) {
+        mXVals.add(0, "");
+        mXVals.add("");
+        for (DataSet set : mDataSets) {
+          ArrayList<Entry> yVals = set.getYVals();
+          yVals.add(0, new Entry(yVals.get(0).getVal(), count - 1));
+          Entry lastEntry = yVals.get(yVals.size() - 1);
+          yVals.add(new Entry(lastEntry.getVal(), lastEntry.getXIndex() + 1));
+        }
       }
     }
   }

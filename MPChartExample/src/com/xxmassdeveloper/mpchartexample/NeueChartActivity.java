@@ -51,6 +51,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     final Resources r = getResources();
 
     mChart = (LineChart) findViewById(R.id.chart1);
+    mChart.setValuePadding(1);
     mChart.setUnit("$");
     mChart.setOffsets(0, 0, 0, 0);
     mChart.setStartAtZero(false);
@@ -169,7 +170,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     dataSets.add(set1); // add the datasets
 
     // create a data object with the datasets
-    ChartData data = new ChartData(xVals, dataSets);
+    ChartData data = new ChartData(xVals, dataSets, 1);
 
     // set data
     mChart.setData(data);

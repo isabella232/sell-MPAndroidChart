@@ -61,6 +61,11 @@ public class LineChart extends BarLineChartBase {
    */
   protected boolean mDrawCubic = false;
 
+  /**
+   * Tells how many values should be treated as place holders
+   */
+  protected int mValuePadding = 0;
+
   public LineChart(Context context) {
     super(context);
   }
@@ -249,6 +254,7 @@ public class LineChart extends BarLineChartBase {
 
       ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
 
+      final int padding = mValuePadding * 2;
       for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
 
         DataSet dataSet = dataSets.get(i);
@@ -256,7 +262,7 @@ public class LineChart extends BarLineChartBase {
 
         float[] positions = generateTransformedValues(entries, 0f);
 
-        for (int j = 0; j < positions.length; j += 2) {
+        for (int j = padding; j < positions.length - padding; j += 2) {
 
           if (isOffContentRight(positions[j]))
             break;
@@ -309,7 +315,8 @@ public class LineChart extends BarLineChartBase {
 
         float[] positions = generateTransformedValues(entries, 0f);
 
-        for (int j = 0; j < positions.length; j += 2) {
+        final int padding = mValuePadding * 2;
+        for (int j = padding; j < positions.length - padding; j += 2) {
 
           // Set the color for the currently drawn value. If the index
           // is
@@ -406,6 +413,14 @@ public class LineChart extends BarLineChartBase {
     mLineWidth = width;
 
     mRenderPaint.setStrokeWidth(width);
+  }
+
+  public void setValuePadding(int valuePadding) {
+    mValuePadding = valuePadding;
+  }
+
+  public int getValuePadding() {
+    return mValuePadding;
   }
 
   /**
