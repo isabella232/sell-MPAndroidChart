@@ -153,7 +153,7 @@ public abstract class BarLineChartBase extends Chart {
   /*
    * Offsets for axis descriptions
    */
-  protected float mAxisYLabelWidth, mAxisXLabelHeight;
+  protected float mAxisYLabelWidth, mAxisYLabelHeight, mAxisXLabelHeight;
 
   /**
    * paint used for highlighting values
@@ -399,6 +399,7 @@ public abstract class BarLineChartBase extends Chart {
       mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, (int) (mDeltaY * -1) + mUnit);
     }
 
+    mAxisYLabelHeight = Utils.calcTextHeight(mYLabelPaint, "Q");
     mAxisXLabelHeight = Utils.calcTextHeight(mXLabelPaint, "Q") * 2f;
 
     float yleft = 0f, yright = 0f;
@@ -786,11 +787,10 @@ public abstract class BarLineChartBase extends Chart {
         return;
 
       if (mYLabels.isDrawUnitsInYLabelEnabled()) {
-        mDrawCanvas.drawText(text + mUnit, xPos, positions[i * 2 + 1],
-            mYLabelPaint);
-      } else {
-        mDrawCanvas.drawText(text, xPos, positions[i * 2 + 1], mYLabelPaint);
+        text += mUnit;
       }
+
+      mDrawCanvas.drawText(text, xPos, mAxisYLabelHeight / 2 + positions[i * 2 + 1], mYLabelPaint);
     }
   }
 
