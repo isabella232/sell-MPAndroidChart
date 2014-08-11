@@ -5,12 +5,9 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.filter.Approximator;
-import com.github.mikephil.charting.data.filter.Approximator.ApproximatorType;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
-import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.YLabels.YLabelPosition;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
@@ -23,8 +20,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class NeueChartActivity extends DemoBase implements OnChartValueSelectedListener {
   private static final int MAX_VALS_PER_PAGE = 6;
   private LineChart mChart;
+  private boolean mListVisible = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +96,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.line, menu);
+    getMenuInflater().inflate(R.menu.neue, menu);
     return true;
   }
 
@@ -104,95 +104,26 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
   public boolean onOptionsItemSelected(MenuItem item) {
 
     switch (item.getItemId()) {
-    case R.id.actionToggleValues: {
-      if (mChart.isDrawYValuesEnabled())
-        mChart.setDrawYValues(false);
-      else
-        mChart.setDrawYValues(true);
-      mChart.invalidate();
-      break;
-    }
-    case R.id.actionToggleHighlight: {
-      if (mChart.isHighlightEnabled())
-        mChart.setHighlightEnabled(false);
-      else
-        mChart.setHighlightEnabled(true);
-      mChart.invalidate();
-      break;
-    }
-    case R.id.actionToggleFilled: {
-      if (mChart.isDrawFilledEnabled())
-        mChart.setDrawFilled(false);
-      else
-        mChart.setDrawFilled(true);
-      mChart.invalidate();
-      break;
-    }
-    case R.id.actionToggleCircles: {
-      if (mChart.isDrawCirclesEnabled())
-        mChart.setDrawCircles(false);
-      else
-        mChart.setDrawCircles(true);
-      mChart.invalidate();
-      break;
-    }
-    case R.id.actionToggleStartzero: {
-      if (mChart.isStartAtZeroEnabled())
-        mChart.setStartAtZero(false);
-      else
-        mChart.setStartAtZero(true);
+    case R.id.actionToggleSize: {
+      final int initialHeight = mChart.getMeasuredHeight();
+      final int targetHeight = mListVisible ? ((View) mChart.getParent()).getMeasuredHeight() : mChart.getMeasuredHeight() * 5 / 6;
+      final int delta = initialHeight - targetHeight;
 
-      mChart.invalidate();
-      break;
-    }
-    case R.id.actionTogglePinch: {
-      if (mChart.isPinchZoomEnabled())
-        mChart.setPinchZoom(false);
-      else
-        mChart.setPinchZoom(true);
+      Animation anim = new Animation() {
+        @Override
+        protected void applyTransformation(float interpolatedTime, Transformation t) {
+          mChart.getLayoutParams().height = initialHeight - (int) (interpolatedTime * delta);
+          mChart.requestLayout();
+        }
 
-      mChart.invalidate();
-      break;
-    }
-    case R.id.actionToggleAdjustXLegend: {
-      XLabels xLabels = mChart.getXLabels();
-
-      if (xLabels.isAdjustXLabelsEnabled())
-        xLabels.setAdjustXLabels(false);
-      else
-        xLabels.setAdjustXLabels(true);
-
-      mChart.invalidate();
-      break;
-    }
-    case R.id.actionToggleFilter: {
-
-      // the angle of filtering is 35°
-      Approximator a = new Approximator(ApproximatorType.DOUGLAS_PEUCKER, 35);
-
-      if (!mChart.isFilteringEnabled()) {
-        mChart.enableFiltering(a);
-      } else {
-        mChart.disableFiltering();
-      }
-      mChart.invalidate();
-      break;
-    }
-    case R.id.actionDashedLine: {
-      if (!mChart.isDashedLineEnabled()) {
-        mChart.enableDashedLine(10f, 5f, 0f);
-      } else {
-        mChart.disableDashedLine();
-      }
-      mChart.invalidate();
-      break;
-    }
-    case R.id.actionSave: {
-      if (mChart.saveToPath("title" + System.currentTimeMillis(), "")) {
-        Toast.makeText(getApplicationContext(), "Saving SUCCESSFUL!", Toast.LENGTH_SHORT).show();
-      } else Toast.makeText(getApplicationContext(), "Saving FAILED!", Toast.LENGTH_SHORT).show();
-
-      //                 mChart.saveToGallery("title"+System.currentTimeMillis())
+        @Override
+        public boolean willChangeBounds() {
+          return true;
+        }
+      };
+      anim.setDuration(500);
+      mChart.startAnimation(anim);
+      mListVisible = !mListVisible;
       break;
     }
     }

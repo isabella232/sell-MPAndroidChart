@@ -85,9 +85,6 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
     XLabels xLabels = mChart.getXLabels();
     xLabels.setPosition(XLabelPosition.TOP);
 
-    //        mChart.setDrawXLabels(false);
-    //        mChart.setDrawYLabels(false);
-
     // setting data
     mSeekBarX.setProgress(45);
     mSeekBarY.setProgress(100);
@@ -96,8 +93,6 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
     l.setPosition(LegendPosition.BELOW_CHART_LEFT);
     l.setFormSize(8f);
     l.setEntrySpace(4f);
-
-    //        mChart.setDrawLegend(false);
   }
 
   @Override

@@ -1805,6 +1805,7 @@ public abstract class Chart extends View {
 
   @Override
   protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    forceRedraw();
     super.onSizeChanged(w, h, oldw, oldh);
   }
 
@@ -1814,5 +1815,10 @@ public abstract class Chart extends View {
     if (isInEditMode()) {
       initWithDummyData();
     }
+  }
+
+  public void forceRedraw() {
+    mOffsetsCalculated = false;
+    requestLayout();
   }
 }
