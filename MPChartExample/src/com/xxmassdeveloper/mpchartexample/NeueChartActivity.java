@@ -16,6 +16,7 @@ import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
 import android.content.res.Resources;
 import android.graphics.LinearGradient;
+import android.graphics.Point;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -66,7 +67,9 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setMaxScaleY(1.0f);
     mChart.setPinchZoom(true);
     mChart.setDrawFilled(true);
-    mChart.getPaint(Chart.PAINT_FILLED).setShader(new LinearGradient(0, 0, 0, mChart.getMeasuredHeight() / 2, r.getColor(R.color.neue_gradient_start), r.getColor(R.color.neue_gradient_end), TileMode.CLAMP));
+    Point size = new Point();
+    getWindowManager().getDefaultDisplay().getSize(size);
+    mChart.getPaint(Chart.PAINT_FILLED).setShader(new LinearGradient(0, 0, 0, size.y, r.getColor(R.color.neue_gradient_start), r.getColor(R.color.neue_gradient_end), TileMode.CLAMP));
     mChart.setDrawXLabels(false);
     mChart.setDrawYLabels(true);
     mChart.setDrawAxisLabelsInChart(true);

@@ -54,7 +54,7 @@
     <color name="neue_grid">#33FFFFFF</color>
     <color name="neue_text">#FFFFFFFF</color>
 
-    <color name="neue_gradient_start">#11FFFFFF</color>
+    <color name="neue_gradient_start">#33FFFFFF</color>
     <color name="neue_gradient_end">#00FFFFFF</color>
 
 </resources>
