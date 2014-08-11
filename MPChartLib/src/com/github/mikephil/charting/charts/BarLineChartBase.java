@@ -6,6 +6,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.filter.Approximator;
 import com.github.mikephil.charting.interfaces.OnDrawListener;
 import com.github.mikephil.charting.listener.BarLineChartTouchListener;
+import com.github.mikephil.charting.utils.AbbreviatingNumberFormat;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
 import com.github.mikephil.charting.utils.PointD;
@@ -31,6 +32,7 @@ import android.util.Log;
 import android.view.ViewParent;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 /**
@@ -392,9 +394,9 @@ public abstract class BarLineChartBase extends Chart {
     }
 
     if (mYChartMin >= 0) {
-      mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, (int) mDeltaY + ".00" + mUnit);
+      mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, (int) mDeltaY + mUnit);
     } else {
-      mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, (int) (mDeltaY * -1) + ".00" + mUnit);
+      mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, (int) (mDeltaY * -1) + mUnit);
     }
 
     mAxisXLabelHeight = Utils.calcTextHeight(mXLabelPaint, "Q") * 2f;
@@ -528,7 +530,7 @@ public abstract class BarLineChartBase extends Chart {
   /**
    * the decimalformat responsible for formatting the values in the chart
    */
-  protected DecimalFormat mFormatValue = null;
+  protected NumberFormat mFormatValue = null;
 
   /**
    * the number of digits the y-labels are formatted with
@@ -553,7 +555,7 @@ public abstract class BarLineChartBase extends Chart {
       b.append("0");
     }
 
-    mFormatValue = new DecimalFormat("###,###,###,##0" + b.toString());
+    mFormatValue = new AbbreviatingNumberFormat(new DecimalFormat("###,###,###,##0" + b.toString()), 3, 1);
   }
 
   @Override
@@ -778,8 +780,7 @@ public abstract class BarLineChartBase extends Chart {
     // draw
     for (int i = 0; i < mYLabels.mEntryCount; i++) {
 
-      String text = Utils.formatNumber(mYLabels.mEntries[i], mYLabels.mDecimals,
-          mSeparateTousands);
+      String text = mFormatValue.format(mYLabels.mEntries[i]);
 
       if (!mYLabels.isDrawTopYLabelEntryEnabled() && i >= mYLabels.mEntryCount - 1)
         return;

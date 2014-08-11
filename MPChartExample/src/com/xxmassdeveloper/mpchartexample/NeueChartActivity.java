@@ -50,6 +50,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     final Resources r = getResources();
 
     mChart = (LineChart) findViewById(R.id.chart1);
+    mChart.setUnit("$");
     mChart.setOffsets(0, 0, 0, 0);
     mChart.setStartAtZero(false);
     mChart.setHighlightEnabled(false);
@@ -84,7 +85,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setMarkerView(mv);
 
     mChart.setHighlightIndicatorEnabled(false);
-    setData(30, 10, 30);
+    setData(30, 10000, 100000);
     mChart.setDrawLegend(false);
     mChart.zoom(mChart.getDataCurrent().getXValCount() / MAX_VALS_PER_PAGE, 1.0f, mChart.getWidth() / 2, mChart.getHeight() / 2);
     mChart.invalidate();
