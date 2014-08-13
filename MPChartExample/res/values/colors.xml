@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="neue_line">#FFFFFFFF</color>
+    <color name="neue_fill">#FF00b691</color>
+    <color name="neue_grid">#33FFFFFF</color>
+    <color name="neue_text">#FFFFFFFF</color>
+
+    <color name="neue_gradient_start">#33FFFFFF</color>
+    <color name="neue_gradient_end">#00FFFFFF</color>
+</resources>
