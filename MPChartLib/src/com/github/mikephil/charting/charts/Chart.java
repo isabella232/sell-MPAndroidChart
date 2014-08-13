@@ -819,10 +819,13 @@ public abstract class Chart extends View {
       return false;
 
     // check if touch gestures are enabled
-    if (!mTouchEnabled)
+    if (!mTouchEnabled) {
+      getParent().requestDisallowInterceptTouchEvent(false);
       return false;
-    else
+    } else {
+      getParent().requestDisallowInterceptTouchEvent(true);
       return mListener.onTouch(this, event);
+    }
   }
 
   /**
