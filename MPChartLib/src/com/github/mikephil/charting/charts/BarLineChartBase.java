@@ -228,6 +228,11 @@ public abstract class BarLineChartBase extends Chart {
    */
   private Approximator mApproximator;
 
+  /**
+   * Horizontal label padding.
+   */
+  private int mAxisYLabelPadding = 2;
+
   public BarLineChartBase(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
   }
@@ -394,11 +399,7 @@ public abstract class BarLineChartBase extends Chart {
       }
     }
 
-    if (mYChartMin >= 0) {
-      mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, (int) mDeltaY + mUnit);
-    } else {
-      mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, (int) (mDeltaY * -1) + mUnit);
-    }
+    mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, ((int) (mYChartMin >= 0 ? mDeltaY : -mDeltaY)) + mUnit) + mAxisYLabelPadding;
 
     mAxisYLabelHeight = Utils.calcTextHeight(mYLabelPaint, "Q");
     mAxisXLabelHeight = Utils.calcTextHeight(mXLabelPaint, "Q") * 2f;
@@ -557,7 +558,7 @@ public abstract class BarLineChartBase extends Chart {
       b.append("0");
     }
 
-    mFormatValue = new AbbreviatingNumberFormat(new DecimalFormat("###,###,###,##0" + b.toString()), 3, 1);
+    mFormatValue = new AbbreviatingNumberFormat(new DecimalFormat("###,###,###,##0" + b.toString()), 3, 0);
   }
 
   @Override
@@ -1867,6 +1868,14 @@ public abstract class BarLineChartBase extends Chart {
    */
   public void setPinchZoom(boolean enabled) {
     mPinchZoomEnabled = enabled;
+  }
+
+  public int getAxisYLabelPadding() {
+    return mAxisYLabelPadding;
+  }
+
+  public void setAxisYLabelPadding(int axisYLabelPadding) {
+    mAxisYLabelPadding = axisYLabelPadding;
   }
 
   /**
