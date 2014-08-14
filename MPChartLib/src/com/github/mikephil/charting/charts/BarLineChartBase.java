@@ -315,8 +315,11 @@ public abstract class BarLineChartBase extends Chart {
 
     // make sure the graph values and grid cannot be drawn outside the
     // content-rect
-    int clipRestoreCount = mDrawCanvas.save();
-    mDrawCanvas.clipRect(mContentRect);
+    int clipRestoreCount = 0;
+    if (mClippingEnabled) {
+      clipRestoreCount = mDrawCanvas.save();
+      mDrawCanvas.clipRect(mContentRect);
+    }
 
     drawHorizontalGrid();
     drawVerticalGrid();
@@ -325,7 +328,9 @@ public abstract class BarLineChartBase extends Chart {
     drawHighlights();
 
     // Removes clipping rectangle
-    mDrawCanvas.restoreToCount(clipRestoreCount);
+    if (mClippingEnabled) {
+      mDrawCanvas.restoreToCount(clipRestoreCount);
+    }
 
     drawAdditional();
 
@@ -487,6 +492,8 @@ public abstract class BarLineChartBase extends Chart {
     val.postScale(scaleX, -scaleY);
 
     mMatrixValueToPx.set(val);
+
+    mMatrixValueToPx.invert(mMatrixPxToValue);
 
     Matrix offset = new Matrix();
     offset.postTranslate(mOffsetLeft, getHeight() - mOffsetBottom);

@@ -193,6 +193,10 @@ public abstract class Chart extends View {
    */
   protected Matrix mMatrixValueToPx = new Matrix();
 
+  protected Matrix mMatrixPxToValue = new Matrix();
+
+  protected float[] mHelperVec = new float[2];
+
   /**
    * matrix for handling the different offsets of the chart
    */
@@ -242,6 +246,8 @@ public abstract class Chart extends View {
    * listener that is called when a value on the chart is selected
    */
   protected OnChartValueSelectedListener mSelectionListener;
+
+  protected boolean mClippingEnabled;
 
   /**
    * default constructor for initialization in code
@@ -349,6 +355,20 @@ public abstract class Chart extends View {
     });
     setData(data);
     invalidate();
+  }
+
+  protected float pixelHeightToValue(float height) {
+    mHelperVec[0] = 0;
+    mHelperVec[1] = height;
+    mMatrixPxToValue.mapPoints(mHelperVec);
+    return -mHelperVec[1];
+  }
+
+  protected float pixelWidthToValue(float width) {
+    mHelperVec[0] = width;
+    mHelperVec[1] = 0;
+    mMatrixPxToValue.mapPoints(mHelperVec);
+    return mHelperVec[0];
   }
 
   protected boolean mOffsetsCalculated = false;
@@ -482,6 +502,8 @@ public abstract class Chart extends View {
     mMatrixValueToPx.reset();
     mMatrixValueToPx.postTranslate(0, -mYChartMin);
     mMatrixValueToPx.postScale(scaleX, -scaleY);
+
+    mMatrixValueToPx.invert(mMatrixPxToValue);
 
     mMatrixOffset.reset();
     mMatrixOffset.postTranslate(mOffsetLeft, getHeight() - mOffsetBottom);
@@ -1836,5 +1858,13 @@ public abstract class Chart extends View {
   public void forceRedraw() {
     mOffsetsCalculated = false;
     requestLayout();
+  }
+
+  public void setClippingEnabled(boolean clippingEnabled) {
+    mClippingEnabled = clippingEnabled;
+  }
+
+  public boolean isClippingEnabled() {
+    return mClippingEnabled;
   }
 }
