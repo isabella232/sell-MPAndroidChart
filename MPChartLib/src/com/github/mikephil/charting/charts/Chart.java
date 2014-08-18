@@ -35,6 +35,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,7 +50,7 @@ import java.util.Locale;
  *
  * @author Philipp Jahoda
  */
-public abstract class Chart extends View {
+public abstract class Chart extends FrameLayout {
 
   public static final String LOG_TAG = "MPChart";
 
@@ -277,6 +278,7 @@ public abstract class Chart extends View {
    * initialize all paints and stuff
    */
   protected void init() {
+    setClipChildren(false);
 
     // initialize the utils
     Utils.init(getContext().getResources());
@@ -955,14 +957,15 @@ public abstract class Chart extends View {
   protected void drawMarkers() {
 
     // if there is no marker view or drawing marker is disabled
-    if (mMarkerView == null || !mDrawMarkerViews || !valuesToHighlight())
-      return;
+    if (mMarkerView == null || !mDrawMarkerViews || !valuesToHighlight()) {
+      mMarkerView.setVisibility(View.GONE);
+    } else {
+      for (int i = 0; i < mIndicesToHightlight.length; i++) {
 
-    for (int i = 0; i < mIndicesToHightlight.length; i++) {
+        int xIndex = mIndicesToHightlight[i].getXIndex();
 
-      int xIndex = mIndicesToHightlight[i].getXIndex();
-
-      drawMarkerView(xIndex, mIndicesToHightlight[i].getDataSetIndex());
+        drawMarkerView(xIndex, mIndicesToHightlight[i].getDataSetIndex());
+      }
     }
   }
 
@@ -992,10 +995,10 @@ public abstract class Chart extends View {
 
     // callbacks to update the content
     mMarkerView.refreshContent(xIndex, value, dataSetIndex);
-
-    // call the draw method of the markerview that will translate to the
-    // given position and draw the view
-    mMarkerView.draw(mDrawCanvas, posX, posY);
+    mMarkerView.setPosition(posX, posY);
+    if (mMarkerView.getVisibility() != View.VISIBLE) {
+      mMarkerView.setVisibility(View.VISIBLE);
+    }
   }
 
   /**
@@ -1253,7 +1256,14 @@ public abstract class Chart extends View {
    * @param v
    */
   public void setMarkerView(MarkerView v) {
+    if (mMarkerView != null) {
+      removeView(mMarkerView);
+    }
     mMarkerView = v;
+    if (mMarkerView != null) {
+
+      addView(mMarkerView);
+    }
   }
 
   /**
@@ -1821,8 +1831,6 @@ public abstract class Chart extends View {
 
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-    super.onLayout(changed, left, top, right, bottom);
-
     prepareContentRect();
     Log.i(LOG_TAG,
         "onLayout(), width: " + mContentRect.width() + ", height: " + mContentRect.height());

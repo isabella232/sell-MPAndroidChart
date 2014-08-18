@@ -1,9 +1,10 @@
 package com.github.mikephil.charting.utils;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
 /**
@@ -17,12 +18,10 @@ public abstract class MarkerView extends RelativeLayout {
   /**
    * draw offset on the x-axis
    */
-  private float mXOffset = 0f;
-
-  /**
-   * draw offset on the y-axis
-   */
-  private float mYOffset = 0f;
+  private float mXOffset, mYOffset;
+  private float mXPosition, mYPosition;
+  private Animation mInAnimation;
+  private Animation mOutAnimation;
 
   /**
    * Constructor. Sets up the MarkerView with a custom layout resource.
@@ -33,6 +32,15 @@ public abstract class MarkerView extends RelativeLayout {
   public MarkerView(Context context, int layoutResource) {
     super(context);
     setupLayoutResource(layoutResource);
+    super.setVisibility(View.GONE);
+  }
+
+  public void setInAnimation(Animation inAnimation) {
+    mInAnimation = inAnimation;
+  }
+
+  public void setOutAnimation(Animation outAnimation) {
+    mOutAnimation = outAnimation;
   }
 
   /**
@@ -41,35 +49,26 @@ public abstract class MarkerView extends RelativeLayout {
    * @param layoutResource
    */
   private void setupLayoutResource(int layoutResource) {
-
-    View inflated = LayoutInflater.from(getContext()).inflate(layoutResource, this);
-
-    inflated.setLayoutParams(new LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-    inflated.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-        MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-
-    // measure(getWidth(), getHeight());
+    View inflated = LayoutInflater.from(getContext()).inflate(layoutResource, this, true);
+    inflated.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    inflated.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
     inflated.layout(0, 0, inflated.getMeasuredWidth(), inflated.getMeasuredHeight());
   }
 
-  /**
-   * Draws the MarkerView on the given position on the screen with the given
-   * Canvas object.
-   *
-   * @param canvas
-   * @param posx
-   * @param posy
-   */
-  public void draw(Canvas canvas, float posx, float posy) {
-
-    // take offsets into consideration
-    posx += mXOffset;
-    posy += mYOffset;
-
-    // translate to the correct position and draw
-    canvas.translate(posx, posy);
-    draw(canvas);
-    canvas.translate(-posx, -posy);
+  public void setVisibility(int visibility) {
+    if (getVisibility() != visibility) {
+      super.setVisibility(visibility);
+      View child = getChildAt(0);
+      if (visibility == View.VISIBLE) {
+        if (mInAnimation != null) {
+          child.startAnimation(mInAnimation);
+        }
+      } else if (visibility == View.GONE) {
+        if (mOutAnimation != null) {
+          child.startAnimation(mOutAnimation);
+        }
+      }
+    }
   }
 
   /**
@@ -97,21 +96,12 @@ public abstract class MarkerView extends RelativeLayout {
     this.mYOffset = y;
   }
 
-  /**
-   * returns the x-offset that is set for the MarkerView
-   *
-   * @return
-   */
-  public float getXOffset() {
-    return mXOffset;
-  }
-
-  /**
-   * returns the y-offset that is set for the MarkerView
-   *
-   * @return
-   */
-  public float getYOffset() {
-    return mYOffset;
+  public void setPosition(float x, float y) {
+    mXPosition = x;
+    mYPosition = y;
+    View child = getChildAt(0);
+    int posX = (int) (mXPosition + mXOffset);
+    int posY = (int) (mYPosition + mYOffset);
+    layout(posX, posY, posX + child.getMeasuredWidth(), posY + child.getMeasuredHeight());
   }
 }
