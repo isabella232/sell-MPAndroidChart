@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 
 /**
  * View that can be displayed when selecting values in the chart. Extend this
@@ -15,13 +15,14 @@ import android.widget.RelativeLayout;
  *
  * @author Philipp Jahoda
  */
-public abstract class MarkerView extends RelativeLayout {
+public abstract class MarkerView extends FrameLayout {
 
   /**
    * draw offset on the x-axis
    */
-  private float mXOffset, mYOffset;
-  private float mXPosition, mYPosition;
+  private float mAnchorX, mAnchorY;
+  private float mPositionX, mPositionY;
+  private float mOffsetX, mOffsetY;
   private Animation mInAnimation;
   private Animation mOutAnimation;
 
@@ -51,10 +52,10 @@ public abstract class MarkerView extends RelativeLayout {
    * @param layoutResource
    */
   private void setupLayoutResource(int layoutResource) {
-    View inflated = LayoutInflater.from(getContext()).inflate(layoutResource, this, true);
-    inflated.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-    inflated.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-    inflated.layout(0, 0, inflated.getMeasuredWidth(), inflated.getMeasuredHeight());
+    View child = LayoutInflater.from(getContext()).inflate(layoutResource, this, true);
+    child.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    child.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+    setMeasuredDimension(child.getMeasuredWidth(), child.getMeasuredHeight());
   }
 
   public void setVisibility(int visibility) {
@@ -83,27 +84,23 @@ public abstract class MarkerView extends RelativeLayout {
    */
   public abstract void refreshContent(int xIndex, float value, int dataSetIndex, ChartData data);
 
-  /**
-   * Set the position offset of the MarkerView. By default, the top left edge
-   * of the MarkerView is drawn directly where the selected value is at. In
-   * order to change that, offsets in pixels can be defined. Default offset is
-   * zero (0f) on both axes. For offsets dependent on the MarkerViews width
-   * and height, use getMeasuredWidth() / getMeasuredHeight().
-   *
-   * @param x
-   * @param y
-   */
-  public void setOffsets(float x, float y) {
-    this.mXOffset = x;
-    this.mYOffset = y;
+  public void setAnchor(float anchorX, float anchorY) {
+    mAnchorX = anchorX;
+    mAnchorY = anchorY;
+  }
+
+  public void setOffset(float offsetX, float offsetY) {
+    mOffsetX = offsetX;
+    mOffsetY = offsetY;
   }
 
   public void setPosition(float x, float y) {
-    mXPosition = x;
-    mYPosition = y;
-    View child = getChildAt(0);
-    int posX = (int) (mXPosition + mXOffset);
-    int posY = (int) (mYPosition + mYOffset);
-    layout(posX, posY, posX + child.getMeasuredWidth(), posY + child.getMeasuredHeight());
+    mPositionX = x;
+    mPositionY = y;
+    int l = (int) (mPositionX - mAnchorX * getMeasuredWidth() + mOffsetX);
+    int t = (int) (mPositionY - mAnchorY * getMeasuredHeight() + mOffsetY);
+    int r = l + getMeasuredWidth();
+    int b = t + getMeasuredHeight();
+    layout(l, t, r, b);
   }
 }

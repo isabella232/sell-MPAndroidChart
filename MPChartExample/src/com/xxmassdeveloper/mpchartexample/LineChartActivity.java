@@ -115,7 +115,7 @@ public class LineChartActivity extends DemoBase implements OnSeekBarChangeListen
 
     // define an offset to change the original position of the marker
     // (optional)
-    mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());
+    mv.setAnchor(0.5f, 1.0f);
 
     // set the marker to the chart
     mChart.setMarkerView(mv);

@@ -42,7 +42,7 @@ public class ScatterChartFrag extends SimpleFragment {
     mChart.setYLabelTypeface(tf);
 
     MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.custom_marker_view);
-    mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());
+    mv.setAnchor(0.5f, 1.0f);
 
     mChart.setMarkerView(mv);
 

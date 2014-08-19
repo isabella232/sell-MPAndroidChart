@@ -88,7 +88,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
 
     MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
     mv.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.pop_up));
-    mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());
+    mv.setAnchor(0.5f, 1.0f);
     mChart.setMarkerView(mv);
 
     mChart.setHighlightIndicatorEnabled(false);
