@@ -1,5 +1,7 @@
 package com.github.mikephil.charting.utils;
 
+import com.github.mikephil.charting.data.ChartData;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,7 +81,7 @@ public abstract class MarkerView extends RelativeLayout {
    * @param value the actual selected value
    * @param dataSetIndex the index of the DataSet the selected value is in
    */
-  public abstract void refreshContent(int xIndex, float value, int dataSetIndex);
+  public abstract void refreshContent(int xIndex, float value, int dataSetIndex, ChartData data);
 
   /**
    * Set the position offset of the MarkerView. By default, the top left edge

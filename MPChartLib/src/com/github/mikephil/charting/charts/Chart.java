@@ -1014,8 +1014,8 @@ public abstract class Chart extends FrameLayout {
     float posY = pts[1];
 
     // callbacks to update the content
-    mMarkerView.refreshContent(xIndex, value, dataSetIndex);
     mMarkerView.setPosition(posX, posY);
+    mMarkerView.refreshContent(xIndex, value, dataSetIndex, mCurrentData);
     if (mMarkerView.getVisibility() != View.VISIBLE) {
       mMarkerView.setVisibility(View.VISIBLE);
     }

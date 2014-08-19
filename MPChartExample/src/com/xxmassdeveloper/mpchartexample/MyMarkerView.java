@@ -1,5 +1,6 @@
 package com.xxmassdeveloper.mpchartexample;
 
+import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.utils.MarkerView;
 import com.github.mikephil.charting.utils.Utils;
 
@@ -16,10 +17,8 @@ public class MyMarkerView extends MarkerView {
     tvContent = (TextView) findViewById(R.id.tvContent);
   }
 
-  // callbacks everytime the MarkerView is redrawn, can be used to update the
-  // content
   @Override
-  public void refreshContent(int xIndex, float value, int dataSetIndex) {
+  public void refreshContent(int xIndex, float value, int dataSetIndex, ChartData data) {
     tvContent.setText(" " + Utils.formatNumber(value, 0, true));
   }
 }
