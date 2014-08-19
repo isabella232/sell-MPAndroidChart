@@ -574,18 +574,10 @@ public abstract class BarLineChartBase extends Chart {
   protected void calcMinMax(boolean fixedValues) {
     super.calcMinMax(fixedValues); // calc min and max in the super class
 
-    // additional handling for space (default 10% space), spacing only
-    // applies with non-rounded y-label
-    float space = mDeltaY / 100f * 15f;
-
     if (mStartAtZero) {
       mYChartMin = 0;
-    } else {
-      mYChartMin = mYChartMin - space;
     }
 
-    // calc delta
-    mYChartMax = mYChartMax + space;
     mDeltaY = Math.abs(mYChartMax - mYChartMin);
   }
 
