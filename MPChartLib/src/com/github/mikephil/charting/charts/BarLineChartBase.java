@@ -749,28 +749,48 @@ public abstract class BarLineChartBase extends Chart {
     float xoffset = Utils.convertDpToPixel(5f);
 
     if (mDrawAxisLabelsInChart) {
-      xoffset -= mAxisYLabelWidth;
+      // determine position and draw adequately
+      if (mYLabels.getPosition() == YLabelPosition.LEFT) {
+
+        mYLabelPaint.setTextAlign(Align.LEFT);
+        drawYLabels(mOffsetLeft + xoffset, positions);
+      } else if (mYLabels.getPosition() == YLabelPosition.RIGHT) {
+
+        mYLabelPaint.setTextAlign(Align.RIGHT);
+        drawYLabels(getWidth() - mOffsetRight - xoffset, positions);
+      } else { // BOTH SIDED Y-AXIS LABELS
+
+        // draw left legend
+        mYLabelPaint.setTextAlign(Align.LEFT);
+        drawYLabels(mOffsetLeft + xoffset, positions);
+
+        // draw right legend
+        mYLabelPaint.setTextAlign(Align.RIGHT);
+        drawYLabels(getWidth() - mOffsetRight - xoffset, positions);
+      }
+    } else {
+      // determine position and draw adequately
+      if (mYLabels.getPosition() == YLabelPosition.LEFT) {
+
+        mYLabelPaint.setTextAlign(Align.RIGHT);
+        drawYLabels(mOffsetLeft - xoffset, positions);
+      } else if (mYLabels.getPosition() == YLabelPosition.RIGHT) {
+
+        mYLabelPaint.setTextAlign(Align.LEFT);
+        drawYLabels(getWidth() - mOffsetRight + xoffset, positions);
+      } else { // BOTH SIDED Y-AXIS LABELS
+
+        // draw left legend
+        mYLabelPaint.setTextAlign(Align.RIGHT);
+        drawYLabels(mOffsetLeft - xoffset, positions);
+
+        // draw right legend
+        mYLabelPaint.setTextAlign(Align.LEFT);
+        drawYLabels(getWidth() - mOffsetRight + xoffset, positions);
+      }
     }
 
-    // determine position and draw adequately
-    if (mYLabels.getPosition() == YLabelPosition.LEFT) {
 
-      mYLabelPaint.setTextAlign(Align.RIGHT);
-      drawYLabels(mOffsetLeft - xoffset, positions);
-    } else if (mYLabels.getPosition() == YLabelPosition.RIGHT) {
-
-      mYLabelPaint.setTextAlign(Align.LEFT);
-      drawYLabels(getWidth() - mOffsetRight + xoffset, positions);
-    } else { // BOTH SIDED Y-AXIS LABELS
-
-      // draw left legend
-      mYLabelPaint.setTextAlign(Align.RIGHT);
-      drawYLabels(mOffsetLeft - xoffset, positions);
-
-      // draw right legend
-      mYLabelPaint.setTextAlign(Align.LEFT);
-      drawYLabels(getWidth() - mOffsetRight + xoffset, positions);
-    }
   }
 
   /**
