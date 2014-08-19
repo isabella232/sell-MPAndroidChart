@@ -228,6 +228,8 @@ public abstract class BarLineChartBase extends Chart {
    */
   private Approximator mApproximator;
 
+  private float mHighlightFocusDelta;
+
   /**
    * Horizontal label padding.
    */
@@ -248,6 +250,8 @@ public abstract class BarLineChartBase extends Chart {
   @Override
   protected void init() {
     super.init();
+
+    mHighlightFocusDelta = Utils.convertDpToPixel(15);
 
     mListener = new BarLineChartTouchListener(this, mMatrixTouch);
 
@@ -492,8 +496,6 @@ public abstract class BarLineChartBase extends Chart {
     val.postScale(scaleX, -scaleY);
 
     mMatrixValueToPx.set(val);
-
-    mMatrixValueToPx.invert(mMatrixPxToValue);
 
     Matrix offset = new Matrix();
     offset.postTranslate(mOffsetLeft, getHeight() - mOffsetBottom);
@@ -1609,6 +1611,11 @@ public abstract class BarLineChartBase extends Chart {
       if (xTouchVal - base > 0.5) {
         xIndex = (int) base + 1;
       }
+
+      float deltaInValue = pixelWidthToValue(mHighlightFocusDelta);
+      if (Math.abs(xTouchVal - xIndex) > deltaInValue) {
+        return null;
+      }
     }
 
     ArrayList<SelInfo> valsAtIndex = getYValsAtIndex(xIndex);
@@ -1639,6 +1646,10 @@ public abstract class BarLineChartBase extends Chart {
         index = valsAtIndex.get(i).dataSetIndex;
         distance = cdistance;
       }
+    }
+
+    if (this instanceof LineChart && distance >= pixelHeightToValue(mHighlightFocusDelta)) {
+      return -1;
     }
 
     Log.i(LOG_TAG, "Closest DataSet index: " + index);

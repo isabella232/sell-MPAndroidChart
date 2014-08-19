@@ -194,9 +194,8 @@ public abstract class Chart extends FrameLayout {
    */
   protected Matrix mMatrixValueToPx = new Matrix();
 
-  protected Matrix mMatrixPxToValue = new Matrix();
-
   protected float[] mHelperVec = new float[2];
+  protected Matrix mHelperMatrix = new Matrix();
 
   /**
    * matrix for handling the different offsets of the chart
@@ -359,18 +358,44 @@ public abstract class Chart extends FrameLayout {
     invalidate();
   }
 
-  protected float pixelHeightToValue(float height) {
+  protected float pixelYToValue(float y) {
     mHelperVec[0] = 0;
-    mHelperVec[1] = height;
-    mMatrixPxToValue.mapPoints(mHelperVec);
-    return -mHelperVec[1];
+    mHelperVec[1] = y;
+
+    mMatrixOffset.invert(mHelperMatrix);
+    mHelperMatrix.mapPoints(mHelperVec);
+
+    mMatrixTouch.invert(mHelperMatrix);
+    mHelperMatrix.mapPoints(mHelperVec);
+
+    mMatrixValueToPx.invert(mHelperMatrix);
+    mHelperMatrix.mapPoints(mHelperVec);
+
+    return mHelperVec[1];
+  }
+
+  protected float pixelXToValue(float x) {
+    mHelperVec[0] = x;
+    mHelperVec[1] = 0;
+
+    mMatrixOffset.invert(mHelperMatrix);
+    mHelperMatrix.mapPoints(mHelperVec);
+
+    mMatrixTouch.invert(mHelperMatrix);
+    mHelperMatrix.mapPoints(mHelperVec);
+
+    mMatrixValueToPx.invert(mHelperMatrix);
+    mHelperMatrix.mapPoints(mHelperVec);
+
+    return mHelperVec[0];
+  }
+
+  protected float pixelHeightToValue(float height) {
+    return Math.abs(pixelYToValue(height) - pixelYToValue(0));
   }
 
   protected float pixelWidthToValue(float width) {
-    mHelperVec[0] = width;
-    mHelperVec[1] = 0;
-    mMatrixPxToValue.mapPoints(mHelperVec);
-    return mHelperVec[0];
+    return Math.abs(pixelXToValue(width) - pixelXToValue(0));
   }
 
   protected boolean mOffsetsCalculated = false;
@@ -504,8 +529,6 @@ public abstract class Chart extends FrameLayout {
     mMatrixValueToPx.reset();
     mMatrixValueToPx.postTranslate(0, -mYChartMin);
     mMatrixValueToPx.postScale(scaleX, -scaleY);
-
-    mMatrixValueToPx.invert(mMatrixPxToValue);
 
     mMatrixOffset.reset();
     mMatrixOffset.postTranslate(mOffsetLeft, getHeight() - mOffsetBottom);
@@ -952,7 +975,7 @@ public abstract class Chart extends FrameLayout {
   protected MarkerView mMarkerView;
 
   /**
-   * draws all MarkerViews on the highlighted positions
+   * draws MarkerView on the first highlighted position
    */
   protected void drawMarkers() {
 
@@ -960,12 +983,9 @@ public abstract class Chart extends FrameLayout {
     if (mMarkerView == null || !mDrawMarkerViews || !valuesToHighlight()) {
       mMarkerView.setVisibility(View.GONE);
     } else {
-      for (int i = 0; i < mIndicesToHightlight.length; i++) {
+      int xIndex = mIndicesToHightlight[0].getXIndex();
 
-        int xIndex = mIndicesToHightlight[i].getXIndex();
-
-        drawMarkerView(xIndex, mIndicesToHightlight[i].getDataSetIndex());
-      }
+      drawMarkerView(xIndex, mIndicesToHightlight[0].getDataSetIndex());
     }
   }
 

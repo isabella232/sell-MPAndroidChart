@@ -7,7 +7,6 @@ import com.github.mikephil.charting.utils.Utils;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -134,7 +133,7 @@ public class LineChart extends BarLineChartBase {
     dataSets = mCurrentData.getDataSets();
 
     if (mDrawFilled) {
-      float heightOffset = pixelHeightToValue(mOffsetBottom + mOffsetTop);
+      float heightOffset = pixelYToValue(mOffsetBottom + mOffsetTop);
       for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
 
         DataSet dataSet = dataSets.get(i);
