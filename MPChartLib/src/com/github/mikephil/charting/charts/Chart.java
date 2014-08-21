@@ -35,7 +35,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,7 +50,7 @@ import java.util.Locale;
  *
  * @author Philipp Jahoda
  */
-public abstract class Chart extends FrameLayout {
+public abstract class Chart extends ViewGroup {
 
   public static final String LOG_TAG = "MPChart";
 
