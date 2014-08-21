@@ -277,6 +277,7 @@ public abstract class Chart extends FrameLayout {
    * initialize all paints and stuff
    */
   protected void init() {
+    setWillNotDraw(false);
     setClipChildren(false);
 
     // initialize the utils
@@ -981,7 +982,9 @@ public abstract class Chart extends FrameLayout {
 
     // if there is no marker view or drawing marker is disabled
     if (mMarkerView == null || !mDrawMarkerViews || !valuesToHighlight()) {
-      mMarkerView.setVisibility(View.GONE);
+      if (mMarkerView != null) {
+        mMarkerView.setVisibility(View.GONE);
+      }
     } else {
       int xIndex = mIndicesToHightlight[0].getXIndex();
 
