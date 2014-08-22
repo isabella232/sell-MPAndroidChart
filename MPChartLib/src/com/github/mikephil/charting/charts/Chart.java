@@ -1018,7 +1018,7 @@ public abstract class Chart extends ViewGroup {
 
     // callbacks to update the content
     mMarkerView.setPosition(posX, posY);
-    mMarkerView.refreshContent(xIndex, value, dataSetIndex, mCurrentData);
+    mMarkerView.onContentUpdate(xIndex, value, dataSetIndex, mCurrentData);
     if (mMarkerView.getVisibility() != View.VISIBLE) {
       mMarkerView.setVisibility(View.VISIBLE);
     }

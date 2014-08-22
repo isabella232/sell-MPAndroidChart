@@ -75,14 +75,13 @@ public abstract class MarkerView extends FrameLayout {
   }
 
   /**
-   * this method enables a specified custom MarkerView to update it's content
-   * everytime the MarkerView is redrawn
-   *
-   * @param xIndex the index on the x-axis
-   * @param value the actual selected value
-   * @param dataSetIndex the index of the DataSet the selected value is in
+   * Method called every time when data point gets selected.
+   * @param xIndex
+   * @param value
+   * @param dataSetIndex
+   * @param data
    */
-  public abstract void refreshContent(int xIndex, float value, int dataSetIndex, ChartData data);
+  public abstract void onContentUpdate(int xIndex, float value, int dataSetIndex, ChartData data);
 
   public void setAnchor(float anchorX, float anchorY) {
     mAnchorX = anchorX;

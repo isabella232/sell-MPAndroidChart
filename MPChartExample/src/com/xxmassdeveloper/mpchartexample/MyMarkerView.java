@@ -18,7 +18,7 @@ public class MyMarkerView extends MarkerView {
   }
 
   @Override
-  public void refreshContent(int xIndex, float value, int dataSetIndex, ChartData data) {
+  public void onContentUpdate(int xIndex, float value, int dataSetIndex, ChartData data) {
     tvContent.setText(" " + Utils.formatNumber(value, 0, true));
   }
 }
