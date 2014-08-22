@@ -613,7 +613,7 @@ public abstract class Chart extends ViewGroup {
       valuePoints[j + 1] = entries.get(j / 2).getVal();
     }
 
-    transformPointArray(valuePoints);
+    transformValueToPixel(valuePoints);
 
     return valuePoints;
   }
@@ -649,11 +649,20 @@ public abstract class Chart extends ViewGroup {
    *
    * @param pts
    */
-  protected void transformPointArray(float[] pts) {
+  protected void transformValueToPixel(float[] pts) {
 
     mMatrixValueToPx.mapPoints(pts);
     mMatrixTouch.mapPoints(pts);
     mMatrixOffset.mapPoints(pts);
+  }
+
+  protected void transformPixelToValue(float[] pts) {
+    mMatrixOffset.invert(mHelperMatrix);
+    mHelperMatrix.mapPoints(pts);
+    mMatrixTouch.invert(mHelperMatrix);
+    mHelperMatrix.mapPoints(pts);
+    mMatrixValueToPx.invert(mHelperMatrix);
+    mHelperMatrix.mapPoints(pts);
   }
 
   /**
@@ -1011,16 +1020,25 @@ public abstract class Chart extends ViewGroup {
     float[] pts = new float[] {
         xPos, value
     };
-    transformPointArray(pts);
+    transformValueToPixel(pts);
 
     float posX = pts[0];
     float posY = pts[1];
 
     // callbacks to update the content
     mMarkerView.setPosition(posX, posY);
-    mMarkerView.onContentUpdate(xIndex, value, dataSetIndex, mCurrentData);
     if (mMarkerView.getVisibility() != View.VISIBLE) {
+      float[] min = new float[] { 0, mYChartMin };
+      float[] max = new float[] { mDeltaX, mYChartMax };
+      transformValueToPixel(min);
+      transformValueToPixel(max);
+
+      mMarkerView.onFreeSpaceChanged((int) (posX - min[0]), (int) (posY - max[1]), (int) (max[0] - posX), (int) (min[1] - posY));
+      mMarkerView.onContentUpdate(xIndex, value, dataSetIndex, mCurrentData);
+      mMarkerView.updatePosition();
       mMarkerView.setVisibility(View.VISIBLE);
+    } else {
+      mMarkerView.updatePosition();
     }
   }
 

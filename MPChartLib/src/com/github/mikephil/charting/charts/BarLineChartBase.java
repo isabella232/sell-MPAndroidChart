@@ -715,7 +715,7 @@ public abstract class BarLineChartBase extends Chart {
         if (mXLabels.isCenterXLabelsEnabled())
           position[0] += 0.5f;
 
-        transformPointArray(position);
+        transformValueToPixel(position);
 
         if (position[0] >= mOffsetLeft && position[0] <= getWidth() - mOffsetRight) {
 
@@ -744,7 +744,7 @@ public abstract class BarLineChartBase extends Chart {
       positions[i + 1] = mYLabels.mEntries[i / 2];
     }
 
-    transformPointArray(positions);
+    transformValueToPixel(positions);
 
     float xoffset = Utils.convertDpToPixel(5f);
 
@@ -923,7 +923,7 @@ public abstract class BarLineChartBase extends Chart {
 
         position[0] = i;
 
-        transformPointArray(position);
+        transformValueToPixel(position);
 
         if (position[0] >= mOffsetLeft && position[0] <= getWidth()) {
 
@@ -1095,7 +1095,7 @@ public abstract class BarLineChartBase extends Chart {
         Matrix save = new Matrix();
         save.set(mMatrixTouch);
 
-        transformPointArray(pts);
+        transformValueToPixel(pts);
 
         final float x = -pts[0] + getOffsetLeft();
         final float y = -pts[1] - getOffsetTop();
@@ -1718,7 +1718,7 @@ public abstract class BarLineChartBase extends Chart {
         x, y
     };
 
-    transformPointArray(pts);
+    transformValueToPixel(pts);
 
     return new PointD(pts[0], pts[1]);
   }

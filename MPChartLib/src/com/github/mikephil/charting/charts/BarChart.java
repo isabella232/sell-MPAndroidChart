@@ -229,7 +229,7 @@ public class BarChart extends BarLineChartBase {
 
       // calculate the depth depending on scale
 
-      transformPointArray(pts);
+      transformValueToPixel(pts);
 
       pts[3] = pts[2] - pts[0];
       pts[2] = 0f;

@@ -115,7 +115,7 @@ public class LineChart extends BarLineChartBase {
             xIndex, mYChartMax, xIndex, mYChartMin, 0, y, mDeltaX, y
         };
 
-        transformPointArray(pts);
+        transformValueToPixel(pts);
         // draw the highlight lines
         mDrawCanvas.drawLines(pts, mHighlightPaint);
       }

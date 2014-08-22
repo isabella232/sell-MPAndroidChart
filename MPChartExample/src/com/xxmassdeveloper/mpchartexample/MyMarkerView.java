@@ -21,4 +21,8 @@ public class MyMarkerView extends MarkerView {
   public void onContentUpdate(int xIndex, float value, int dataSetIndex, ChartData data) {
     tvContent.setText(" " + Utils.formatNumber(value, 0, true));
   }
+
+  @Override
+  public void onFreeSpaceChanged(int left, int top, int right, int bottom) {
+  }
 }

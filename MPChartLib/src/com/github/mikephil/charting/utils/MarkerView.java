@@ -83,6 +83,8 @@ public abstract class MarkerView extends FrameLayout {
    */
   public abstract void onContentUpdate(int xIndex, float value, int dataSetIndex, ChartData data);
 
+  public abstract void onFreeSpaceChanged(int left, int top, int right, int bottom);
+
   public void setAnchor(float anchorX, float anchorY) {
     mAnchorX = anchorX;
     mAnchorY = anchorY;
@@ -96,6 +98,9 @@ public abstract class MarkerView extends FrameLayout {
   public void setPosition(float x, float y) {
     mPositionX = x;
     mPositionY = y;
+  }
+
+  public void updatePosition() {
     int l = (int) (mPositionX - mAnchorX * getMeasuredWidth() + mOffsetX);
     int t = (int) (mPositionY - mAnchorY * getMeasuredHeight() + mOffsetY);
     int r = l + getMeasuredWidth();
