@@ -30,8 +30,7 @@ public class BarChartFrag extends SimpleFragment {
     mChart.setYLabelCount(6);
     mChart.setDescription("");
 
-    MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.custom_marker_view);
-    mv.setAnchor(0.5f, 1.0f);
+    MyMarkerView mv = new MyMarkerView(getActivity());
 
     mChart.setMarkerView(mv);
 

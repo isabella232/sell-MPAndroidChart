@@ -42,8 +42,16 @@ public abstract class MarkerView extends FrameLayout {
     mInAnimation = inAnimation;
   }
 
+  public Animation getInAnimation() {
+    return mInAnimation;
+  }
+
   public void setOutAnimation(Animation outAnimation) {
     mOutAnimation = outAnimation;
+  }
+
+  public Animation getOutAnimation() {
+    return mOutAnimation;
   }
 
   /**

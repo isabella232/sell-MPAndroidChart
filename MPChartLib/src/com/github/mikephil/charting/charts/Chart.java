@@ -947,6 +947,10 @@ public abstract class Chart extends ViewGroup {
     // set the indices to highlight
     mIndicesToHightlight = highs;
 
+    if (mMarkerView != null) {
+      mMarkerView.setVisibility(View.GONE);
+    }
+
     // redraw the chart
     invalidate();
 

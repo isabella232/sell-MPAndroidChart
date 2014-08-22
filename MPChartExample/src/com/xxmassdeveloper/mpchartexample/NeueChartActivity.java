@@ -24,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 
 import java.text.SimpleDateFormat;
@@ -86,9 +85,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.getPaint(Chart.PAINT_YLABEL).setColor(r.getColor(R.color.neue_text));
     mChart.getPaint(Chart.PAINT_CIRCLES_INNER).setColor(r.getColor(R.color.neue_fill));
 
-    MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
-    mv.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.pop_up));
-    mv.setAnchor(0.5f, 1.0f);
+    MyMarkerView mv = new MyMarkerView(this);
     mChart.setMarkerView(mv);
 
     mChart.setHighlightIndicatorEnabled(false);

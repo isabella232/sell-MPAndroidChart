@@ -111,11 +111,7 @@ public class LineChartActivity extends DemoBase implements OnSeekBarChangeListen
 
     // create a custom MarkerView (extend MarkerView) and specify the layout
     // to use for it
-    MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
-
-    // define an offset to change the original position of the marker
-    // (optional)
-    mv.setAnchor(0.5f, 1.0f);
+    MyMarkerView mv = new MyMarkerView(this);
 
     // set the marker to the chart
     mChart.setMarkerView(mv);
