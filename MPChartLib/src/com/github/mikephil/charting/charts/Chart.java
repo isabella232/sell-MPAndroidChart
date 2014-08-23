@@ -423,6 +423,10 @@ public abstract class Chart extends ViewGroup {
 
     prepare();
 
+    if (mMarkerView != null) {
+      mMarkerView.setVisibility(View.GONE);
+    }
+
     Log.i(LOG_TAG, "Data is set.");
   }
 
