@@ -617,10 +617,6 @@ public abstract class BarLineChartBase extends Chart {
     PointD p1 = getValuesByTouchPoint(mContentRect.left, mContentRect.top);
     PointD p2 = getValuesByTouchPoint(mContentRect.left, mContentRect.bottom);
 
-    // update the current chart dimensions on the y-axis
-    mYChartMin = (float) p2.y;
-    mYChartMax = (float) p1.y;
-
     float yMin = mYChartMin;
     float yMax = mYChartMax;
 
@@ -1692,22 +1688,9 @@ public abstract class BarLineChartBase extends Chart {
     pts[0] = x;
     pts[1] = y;
 
-    Matrix tmp = new Matrix();
+    transformPixelToValue(pts);
 
-    // invert all matrixes to convert back to the original value
-    mMatrixOffset.invert(tmp);
-    tmp.mapPoints(pts);
-
-    mMatrixTouch.invert(tmp);
-    tmp.mapPoints(pts);
-
-    mMatrixValueToPx.invert(tmp);
-    tmp.mapPoints(pts);
-
-    double xTouchVal = pts[0];
-    double yTouchVal = pts[1];
-
-    return new PointD(xTouchVal, yTouchVal);
+    return new PointD(pts[0], pts[1]);
   }
 
   /**
