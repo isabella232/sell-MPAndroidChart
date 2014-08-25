@@ -535,6 +535,13 @@ public abstract class Chart extends ViewGroup {
     mMatrixValueToPx.postTranslate(0, -mYChartMin);
     mMatrixValueToPx.postScale(scaleX, -scaleY);
 
+    mMatrixTouch.reset();
+    if (mResetScaleX != null && mResetScaleY != null) {
+      mMatrixTouch.postScale(mResetScaleX, mResetScaleY);
+      mResetScaleX = null;
+      mResetScaleY = null;
+    }
+
     mMatrixOffset.reset();
     mMatrixOffset.postTranslate(mOffsetLeft, getHeight() - mOffsetBottom);
 
@@ -1866,6 +1873,20 @@ public abstract class Chart extends ViewGroup {
 
     return getContext().getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values) == null
         ? false : true;
+  }
+
+  public void reset() {
+    reset(1, 1);
+  }
+
+  // Used for setting zoom after reset
+  private Float mResetScaleX, mResetScaleY;
+
+  public void reset(float scaleX, float scaleY) {
+    mMatrixOnLayoutPrepared = false;
+    mResetScaleX = scaleX;
+    mResetScaleY = scaleY;
+    requestLayout();
   }
 
   @Override
