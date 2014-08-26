@@ -401,7 +401,7 @@ public class PieChart extends Chart {
         // redefine the rect that contains the arc so that the
         // highlighted pie is not cut off
         mDrawCanvas.drawArc(highlighted, angle + mSliceSpace / 2f, sliceDegrees
-            - mSliceSpace / 2f, true, mCurrentData.getDataSetByIndex(i).getDataSetPaint());
+            - mSliceSpace / 2f, true, mCurrentData.getDataSetByIndex(i).getDrawingSpec().getBasicPaint());
       }
     }
   }
@@ -427,7 +427,7 @@ public class PieChart extends Chart {
         if (!needsHighlight(entries.get(j).getXIndex(), i)) {
 
           mDrawCanvas.drawArc(mCircleBox, angle + mSliceSpace / 2f, newangle
-              - mSliceSpace / 2f, true, mCurrentData.getDataSetByIndex(i).getDataSetPaint());
+              - mSliceSpace / 2f, true, mCurrentData.getDataSetByIndex(i).getDrawingSpec().getBasicPaint());
         }
 
         angle += newangle;

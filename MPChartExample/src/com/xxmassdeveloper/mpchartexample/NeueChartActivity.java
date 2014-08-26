@@ -147,7 +147,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
 
     // create a dataset and give it a type
     DataSet set = new DataSet(yVals, name);
-    set.getDataSetPaint().setColor(getResources().getColor(R.color.neue_line));
+    set.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(R.color.neue_line));
     return set;
   }
 

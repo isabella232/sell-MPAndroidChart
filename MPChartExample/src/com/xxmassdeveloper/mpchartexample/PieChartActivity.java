@@ -161,7 +161,7 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
     }
 
     DataSet set1 = new DataSet(yVals1, "Content");
-    set1.getDataSetPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[0]));
+    set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[0]));
 
     ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
     dataSets.add(set1);

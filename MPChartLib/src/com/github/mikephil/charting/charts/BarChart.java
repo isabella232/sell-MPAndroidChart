@@ -97,7 +97,7 @@ public class BarChart extends BarLineChartBase {
 
     for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
       DataSet set = mCurrentData.getDataSetByIndex(i);
-      int color = set.getDataSetPaint().getColor();
+      int color = set.getDrawingSpec().getBasicPaint().getColor();
 
       // extract the color
       Color.colorToHSV(color, hsv); // convert to hsv
@@ -113,7 +113,7 @@ public class BarChart extends BarLineChartBase {
       mTopColors.add(color);
 
       // get color again
-      color = set.getDataSetPaint().getColor();
+      color = set.getDrawingSpec().getBasicPaint().getColor();
 
       // convert
       Color.colorToHSV(color, hsv);
@@ -275,7 +275,7 @@ public class BarChart extends BarLineChartBase {
     // 2D drawing
     for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
       DataSet dataSet = dataSets.get(i);
-      Paint paint = dataSet.getDataSetPaint();
+      Paint paint = dataSet.getDrawingSpec().getBasicPaint();
       ArrayList<Entry> series = dataSet.getYVals();
 
       // do the drawing

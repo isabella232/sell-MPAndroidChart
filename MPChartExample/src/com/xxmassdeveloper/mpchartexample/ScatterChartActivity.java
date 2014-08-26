@@ -186,7 +186,7 @@ public class ScatterChartActivity extends DemoBase implements OnSeekBarChangeLis
 
     int i = 0;
     for (DataSet set : dataSets) {
-      set.getDataSetPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[i % Colors.VORDIPLOM_COLORS.length]));
+      set.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[i % Colors.VORDIPLOM_COLORS.length]));
       i++;
     }
 

@@ -99,7 +99,7 @@ public class ListViewMultiChartActivity extends DemoBase {
     ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec" });
 
     DataSet d = new DataSet(entries, "New DataSet " + cnt);
-    d.getDataSetPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[idx % Colors.FRESH_COLORS.length]));
+    d.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[idx % Colors.FRESH_COLORS.length]));
 
     ChartData cd = new ChartData(formatter.getValues(), d, formatter);
     return cd;
@@ -114,7 +114,7 @@ public class ListViewMultiChartActivity extends DemoBase {
     }
 
     DataSet d = new DataSet(entries, "New DataSet " + cnt);
-    d.getDataSetPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[idx % Colors.FRESH_COLORS.length]));
+    d.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[idx % Colors.FRESH_COLORS.length]));
 
     ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] { "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter" });
     ChartData cd = new ChartData(formatter.getValues(), d, formatter);

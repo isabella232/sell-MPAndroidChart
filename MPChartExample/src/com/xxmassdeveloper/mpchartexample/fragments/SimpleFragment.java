@@ -31,7 +31,7 @@ public abstract class SimpleFragment extends Fragment {
       }
 
       DataSet ds = new DataSet(entries, getLabel(i));
-      ds.getDataSetPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[i % Colors.VORDIPLOM_COLORS.length]));
+      ds.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[i % Colors.VORDIPLOM_COLORS.length]));
       sets.add(ds);
     }
 
@@ -79,7 +79,7 @@ public abstract class SimpleFragment extends Fragment {
 
     int i = 0;
     for (DataSet set : sets) {
-      set.getDataSetPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[i % Colors.VORDIPLOM_COLORS.length]));
+      set.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[i % Colors.VORDIPLOM_COLORS.length]));
       i++;
     }
 

@@ -1,6 +1,6 @@
 package com.github.mikephil.charting.data;
 
-import android.graphics.Paint;
+import com.github.mikephil.charting.utils.DrawingSpec;
 
 import java.util.ArrayList;
 
@@ -39,10 +39,7 @@ public class DataSet {
    */
   private String mLabel = "DataSet";
 
-  protected Paint mDataSetPaint = new Paint();
-  {
-    mDataSetPaint.setAntiAlias(true);
-  }
+  protected DrawingSpec mDrawingSpec;
 
   /**
    * Creates a new DataSet object with the given values it represents. Also, a
@@ -63,6 +60,11 @@ public class DataSet {
 
     calcMinMax();
     calcYValueSum();
+    initDrawingSpec();
+  }
+
+  protected void initDrawingSpec() {
+    mDrawingSpec = new DrawingSpec();
   }
 
   /**
@@ -292,11 +294,7 @@ public class DataSet {
     return mLabel;
   }
 
-  public Paint getDataSetPaint() {
-    return mDataSetPaint;
-  }
-
-  public void setDataSetPaint(Paint dataSetPaint) {
-    mDataSetPaint = dataSetPaint;
+  public DrawingSpec getDrawingSpec() {
+    return mDrawingSpec;
   }
 }

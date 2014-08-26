@@ -163,7 +163,7 @@ public class LineChart extends BarLineChartBase {
 
       float[] valuePoints = generateTransformedValues(entries, 0f);
 
-      Paint paint = mCurrentData.getDataSetByIndex(i).getDataSetPaint();
+      Paint paint = mCurrentData.getDataSetByIndex(i).getDrawingSpec().getBasicPaint();
 
       if (mDrawCubic) {
         Path spline = new Path();
@@ -305,7 +305,7 @@ public class LineChart extends BarLineChartBase {
             continue;
 
           mDrawCanvas.drawCircle(positions[j], positions[j + 1], mCircleSize,
-              dataSet.getDataSetPaint());
+              dataSet.getDrawingSpec().getBasicPaint());
           mDrawCanvas.drawCircle(positions[j], positions[j + 1], mCircleSize / 2,
               mCirclePaintInner);
         }

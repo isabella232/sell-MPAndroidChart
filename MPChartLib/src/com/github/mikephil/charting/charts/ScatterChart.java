@@ -76,7 +76,7 @@ public class ScatterChart extends BarLineChartBase {
 
         // Set the color for the currently drawn value. If the index is
         // out of bounds, reuse colors.
-        Paint renderPaint = mCurrentData.getDataSetByIndex(i).getDataSetPaint();
+        Paint renderPaint = mCurrentData.getDataSetByIndex(i).getDrawingSpec().getBasicPaint();
 
         if (isOffContentRight(pos[j]))
           break;

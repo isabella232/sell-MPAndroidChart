@@ -124,7 +124,7 @@ public class ListViewBarChartActivity extends DemoBase {
     ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec" });
 
     DataSet d = new DataSet(entries, "New DataSet " + cnt);
-    d.getDataSetPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[0]));
+    d.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[0]));
     ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
     dataSets.add(d);
 

@@ -553,7 +553,7 @@ public abstract class Chart extends ViewGroup {
     for (int i = 0; i < mOriginalData.getDataSetCount(); i++) {
       DataSet ds = mOriginalData.getDataSetByIndex(i);
       labels.add(ds.getLabel());
-      colors.add(ds.getDataSetPaint().getColor());
+      colors.add(ds.getDrawingSpec().getBasicPaint().getColor());
     }
 
     // Log.i(LOG_TAG, "Preparing legend, colors size: " + colors.size() +

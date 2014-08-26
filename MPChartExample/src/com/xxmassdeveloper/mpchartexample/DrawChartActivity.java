@@ -80,7 +80,7 @@ public class DrawChartActivity extends DemoBase implements OnChartValueSelectedL
 
     // create a dataset and give it a type (0)
     DataSet set1 = new DataSet(yVals, "DataSet");
-    set1.getDataSetPaint().setColor(getResources().getColor(Colors.COLORFUL_COLORS[0]));
+    set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.COLORFUL_COLORS[0]));
 
     ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
     dataSets.add(set1); // add the datasets
