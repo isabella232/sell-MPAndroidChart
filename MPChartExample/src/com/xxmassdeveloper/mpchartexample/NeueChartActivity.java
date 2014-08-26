@@ -12,7 +12,9 @@ import com.github.mikephil.charting.utils.YLabels.YLabelPosition;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
 import android.content.res.Resources;
+import android.graphics.DashPathEffect;
 import android.graphics.LinearGradient;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
@@ -136,7 +138,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
 
   }
 
-  private LineDataSet createSet(String name, int count, float range, float rangeOffset) {
+  private LineDataSet createSet(String name, int count, float range, float rangeOffset, boolean dashed) {
     ArrayList<Entry> yVals = new ArrayList<Entry>();
 
     for (int i = 0; i < count; i++) {
@@ -147,7 +149,11 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
 
     // create a dataset and give it a type
     LineDataSet set = new LineDataSet(yVals, name);
-    set.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(R.color.neue_line));
+    Paint paint = set.getDrawingSpec().getBasicPaint();
+    paint.setColor(getResources().getColor(R.color.neue_line));
+    if (dashed) {
+      paint.setPathEffect(new DashPathEffect(new float[] { 3, 3 }, 0));
+    }
     return set;
   }
 
@@ -161,8 +167,8 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     }
 
     ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-    dataSets.add(createSet("Data 1", count, range, rangeOffset)); // add the datasets
-    dataSets.add(createSet("Data 2", count, range, rangeOffset)); // add the datasets
+    dataSets.add(createSet("Data 1", count, range, rangeOffset, true));
+    dataSets.add(createSet("Data 2", count, range, rangeOffset, false));
 
     // create a data object with the datasets
     ChartData<LineDataSet> data = new ChartData<LineDataSet>(xVals, dataSets, new LabelFormatter() {
