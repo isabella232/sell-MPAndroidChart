@@ -8,10 +8,10 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.filter.Approximator;
 import com.github.mikephil.charting.data.filter.Approximator.ApproximatorType;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.XLabels;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
+import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -47,14 +47,7 @@ public class ScatterChartActivity extends DemoBase implements OnSeekBarChangeLis
     mSeekBarY = (SeekBar) findViewById(R.id.seekBar2);
     mSeekBarY.setOnSeekBarChangeListener(this);
 
-    // create a color template for one dataset with only one color
-    ColorTemplate ct = new ColorTemplate();
-    ct.addColorsForDataSets(new int[] {
-        R.color.colorful_1, R.color.colorful_2, R.color.colorful_3
-    }, this);
-
     mChart = (ScatterChart) findViewById(R.id.chart1);
-    mChart.setColorTemplate(ct);
 
     // specify the shapes for the datasets, one shape per dataset
     mChart.setScatterShapes(new ScatterShape[] { ScatterShape.SQUARE, ScatterShape.TRIANGLE, ScatterShape.CIRCLE });
@@ -190,6 +183,12 @@ public class ScatterChartActivity extends DemoBase implements OnSeekBarChangeLis
     dataSets.add(set1); // add the datasets
     dataSets.add(set2);
     dataSets.add(set3);
+
+    int i = 0;
+    for (DataSet set : dataSets) {
+      set.getDataSetPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[i % Colors.VORDIPLOM_COLORS.length]));
+      i++;
+    }
 
     // create a data object with the datasets
     ChartData data = new ChartData(xVals, dataSets);

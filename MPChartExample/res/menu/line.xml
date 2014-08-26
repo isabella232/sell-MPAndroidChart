@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/actionToggleValues"
@@ -29,15 +29,11 @@
         android:id="@+id/actionToggleFilter"
         android:title="Toggle filter">
     </item>
-        <item
-        android:id="@+id/actionDashedLine"
-        android:title="Toggle dashed Line">
-    </item>
     <item
         android:id="@+id/actionSave"
         android:title="Save to SD-Card">
     </item>
-<item
+    <item
         android:id="@+id/actionTogglePinch"
         android:title="Toggle PinchZoom">
     </item>

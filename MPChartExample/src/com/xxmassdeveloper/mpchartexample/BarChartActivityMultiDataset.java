@@ -4,11 +4,11 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
 import com.github.mikephil.charting.utils.XLabels;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
+import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -44,21 +44,6 @@ public class BarChartActivityMultiDataset extends DemoBase implements OnSeekBarC
 
     mChart = (BarChart) findViewById(R.id.chart1);
     mChart.setDescription("");
-
-    ColorTemplate ct = new ColorTemplate();
-
-    // add colors for the first dataset
-    ct.addDataSetColors(ColorTemplate.FRESH_COLORS, this);
-
-    // the second dataset only has one color
-    ct.addDataSetColors(new int[] {
-        R.color.liberty_2
-    }, this);
-
-    // add colors for the third dataset
-    ct.addDataSetColors(ColorTemplate.COLORFUL_COLORS, this);
-
-    mChart.setColorTemplate(ct);
 
     // disable the drawing of values
     mChart.setDrawYValues(false);
@@ -197,8 +182,11 @@ public class BarChartActivityMultiDataset extends DemoBase implements OnSeekBarC
 
     // create 3 datasets with different types
     DataSet set1 = new DataSet(yVals1, "Company A");
+    set1.getDataSetPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[0]));
     DataSet set2 = new DataSet(yVals2, "Company B");
+    set1.getDataSetPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[1]));
     DataSet set3 = new DataSet(yVals3, "Company C");
+    set1.getDataSetPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[2]));
 
     ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
     dataSets.add(set1);

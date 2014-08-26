@@ -5,7 +5,6 @@ import com.github.mikephil.charting.data.ChartData.LabelFormatter;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.MarkerView;
@@ -22,7 +21,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
@@ -150,11 +148,6 @@ public abstract class Chart extends ViewGroup {
   protected Paint mValuePaint;
 
   /**
-   * this is the paint object used for drawing the data onto the chart
-   */
-  protected Paint mRenderPaint;
-
-  /**
    * paint for the legend labels
    */
   protected Paint mLegendLabelPaint;
@@ -163,11 +156,6 @@ public abstract class Chart extends ViewGroup {
    * paint used for the legend forms
    */
   protected Paint mLegendFormPaint;
-
-  /**
-   * the colortemplate the chart uses
-   */
-  protected ColorTemplate mCt;
 
   /**
    * description text that appears in the bottom right corner of the chart
@@ -289,9 +277,6 @@ public abstract class Chart extends ViewGroup {
     mOffsetRight = (int) Utils.convertDpToPixel(mOffsetRight);
     mOffsetTop = (int) Utils.convertDpToPixel(mOffsetTop);
 
-    mRenderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    mRenderPaint.setStyle(Style.FILL);
-
     mDrawPaint = new Paint();
 
     mDescPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -315,16 +300,9 @@ public abstract class Chart extends ViewGroup {
 
     mLegendLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     mLegendLabelPaint.setTextSize(Utils.convertDpToPixel(9f));
-
-    mCt = new ColorTemplate();
-    mCt.addDataSetColors(ColorTemplate.VORDIPLOM_COLORS, getContext());
   }
 
   public void initWithDummyData() {
-    ColorTemplate template = new ColorTemplate();
-    template.addColorsForDataSets(ColorTemplate.COLORFUL_COLORS, getContext());
-
-    setColorTemplate(template);
     setDrawYValues(false);
 
     ArrayList<Long> xVals = new ArrayList<Long>();
@@ -573,24 +551,9 @@ public abstract class Chart extends ViewGroup {
     ArrayList<Integer> colors = new ArrayList<Integer>();
 
     for (int i = 0; i < mOriginalData.getDataSetCount(); i++) {
-
-      ArrayList<Integer> clrs = mCt.getDataSetColors(i % mCt.getColors().size());
-      int dataSetCount = mOriginalData.getDataSetByIndex(i).getEntryCount();
-
-      for (int j = 0; j < clrs.size() && j < dataSetCount; j++) {
-
-        // if multiple colors are set for a DataSet, group them
-        if (j < clrs.size() - 1 && j < dataSetCount - 1) {
-
-          labels.add(null);
-        } else { // add label to the last entry
-
-          String label = mOriginalData.getDataSetByIndex(i).getLabel();
-          labels.add(label);
-        }
-
-        colors.add(clrs.get(j));
-      }
+      DataSet ds = mOriginalData.getDataSetByIndex(i);
+      labels.add(ds.getLabel());
+      colors.add(ds.getDataSetPaint().getColor());
     }
 
     // Log.i(LOG_TAG, "Preparing legend, colors size: " + colors.size() +
@@ -1285,28 +1248,6 @@ public abstract class Chart extends ViewGroup {
   }
 
   /**
-   * Sets a colortemplate for the chart that defindes the colors used for
-   * drawing. If more values need to be drawn than provided colors available
-   * in the colortemplate, colors are repeated.
-   *
-   * @param ct
-   */
-  public void setColorTemplate(ColorTemplate ct) {
-    this.mCt = ct;
-
-    Log.i(LOG_TAG, "ColorTemplate set.");
-  }
-
-  /**
-   * returns the colortemplate used by the chart
-   *
-   * @return
-   */
-  public ColorTemplate getColorTemplate() {
-    return mCt;
-  }
-
-  /**
    * sets the view that is displayed when a value is clicked on the chart
    *
    * @param v
@@ -1461,9 +1402,6 @@ public abstract class Chart extends ViewGroup {
     case PAINT_VALUES:
       mValuePaint = p;
       break;
-    case PAINT_RENDER:
-      mRenderPaint = p;
-      break;
     case PAINT_LEGEND_LABEL:
       mLegendLabelPaint = p;
       break;
@@ -1484,8 +1422,6 @@ public abstract class Chart extends ViewGroup {
       return mDescPaint;
     case PAINT_VALUES:
       return mValuePaint;
-    case PAINT_RENDER:
-      return mRenderPaint;
     case PAINT_LEGEND_LABEL:
       return mLegendLabelPaint;
     }

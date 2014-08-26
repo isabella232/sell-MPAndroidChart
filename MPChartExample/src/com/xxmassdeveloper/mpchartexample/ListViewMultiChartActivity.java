@@ -9,6 +9,7 @@ import com.xxmassdeveloper.mpchartexample.listviewitems.LineChartItem;
 import com.xxmassdeveloper.mpchartexample.listviewitems.PieChartItem;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 import com.xxmassdeveloper.mpchartexample.utils.ArrayLabelFormatter;
+import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -44,11 +45,11 @@ public class ListViewMultiChartActivity extends DemoBase {
     for (int i = 0; i < 30; i++) {
 
       if (i % 3 == 0) {
-        list.add(new LineChartItem(generateData(i + 1), getApplicationContext()));
+        list.add(new LineChartItem(generateData(i, i + 1), getApplicationContext()));
       } else if (i % 3 == 1) {
-        list.add(new BarChartItem(generateData(i + 1), getApplicationContext()));
+        list.add(new BarChartItem(generateData(i, i + 1), getApplicationContext()));
       } else if (i % 3 == 2) {
-        list.add(new PieChartItem(generatePieChartData(i + 1), getApplicationContext()));
+        list.add(new PieChartItem(generatePieChartData(i, i + 1), getApplicationContext()));
       }
     }
 
@@ -87,7 +88,7 @@ public class ListViewMultiChartActivity extends DemoBase {
    *
    * @return
    */
-  private ChartData generateData(int cnt) {
+  private ChartData generateData(int idx, int cnt) {
 
     ArrayList<Entry> entries = new ArrayList<Entry>();
 
@@ -98,12 +99,13 @@ public class ListViewMultiChartActivity extends DemoBase {
     ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec" });
 
     DataSet d = new DataSet(entries, "New DataSet " + cnt);
+    d.getDataSetPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[idx % Colors.FRESH_COLORS.length]));
 
     ChartData cd = new ChartData(formatter.getValues(), d, formatter);
     return cd;
   }
 
-  private ChartData generatePieChartData(int cnt) {
+  private ChartData generatePieChartData(int idx, int cnt) {
 
     ArrayList<Entry> entries = new ArrayList<Entry>();
 
@@ -112,6 +114,7 @@ public class ListViewMultiChartActivity extends DemoBase {
     }
 
     DataSet d = new DataSet(entries, "New DataSet " + cnt);
+    d.getDataSetPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[idx % Colors.FRESH_COLORS.length]));
 
     ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] { "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter" });
     ChartData cd = new ChartData(formatter.getValues(), d, formatter);

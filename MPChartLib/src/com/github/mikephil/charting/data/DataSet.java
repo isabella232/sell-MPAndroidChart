@@ -1,5 +1,7 @@
 package com.github.mikephil.charting.data;
 
+import android.graphics.Paint;
+
 import java.util.ArrayList;
 
 /**
@@ -36,6 +38,11 @@ public class DataSet {
    * label that describes the DataSet or the data the DataSet represents
    */
   private String mLabel = "DataSet";
+
+  protected Paint mDataSetPaint = new Paint();
+  {
+    mDataSetPaint.setAntiAlias(true);
+  }
 
   /**
    * Creates a new DataSet object with the given values it represents. Also, a
@@ -238,35 +245,6 @@ public class DataSet {
   }
 
   /**
-   * Convenience method to create multiple DataSets of different types with
-   * various double value arrays. Each double array represents the data of one
-   * DataSet with a type created by this method, starting at 0 (and
-   * incremented).
-   *
-   * @param yValues
-   * @return
-   */
-  public static ArrayList<DataSet> makeDataSets(ArrayList<Double[]> yValues) {
-
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
-
-    for (int i = 0; i < yValues.size(); i++) {
-
-      Double[] curValues = yValues.get(i);
-
-      ArrayList<Entry> entries = new ArrayList<Entry>();
-
-      for (int j = 0; j < curValues.length; j++) {
-        entries.add(new Entry(curValues[j].floatValue(), j));
-      }
-
-      dataSets.add(new DataSet(entries, "DS " + i));
-    }
-
-    return dataSets;
-  }
-
-  /**
    * provides an exact copy of the DataSet this method is used on
    *
    * @return
@@ -312,5 +290,13 @@ public class DataSet {
    */
   public String getLabel() {
     return mLabel;
+  }
+
+  public Paint getDataSetPaint() {
+    return mDataSetPaint;
+  }
+
+  public void setDataSetPaint(Paint dataSetPaint) {
+    mDataSetPaint = dataSetPaint;
   }
 }

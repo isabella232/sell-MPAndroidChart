@@ -7,7 +7,6 @@ import com.github.mikephil.charting.data.ChartData.LabelFormatter;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.YLabels.YLabelPosition;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
@@ -44,11 +43,6 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
     setContentView(R.layout.activity_neuechart);
 
-    ColorTemplate ct = new ColorTemplate();
-    ct.addDataSetColors(new int[] {
-        R.color.neue_line
-    }, this);
-
     final Resources r = getResources();
 
     mChart = (LineChart) findViewById(R.id.chart1);
@@ -61,8 +55,6 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setOnChartValueSelectedListener(this);
     mChart.setValuePaintColor(r.getColor(R.color.neue_text));
     mChart.setValueTypeface(Typeface.DEFAULT_BOLD);
-    mChart.setColorTemplate(ct);
-    mChart.setLineWidth(3f);
     mChart.setCircleSize(4f);
     mChart.setTouchEnabled(true);
     mChart.setDragEnabled(true);
@@ -144,16 +136,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
 
   }
 
-  private void setData(int count, float range, float rangeOffset) {
-
-    ArrayList<Long> xVals = new ArrayList<Long>();
-    long ts = System.currentTimeMillis();
-
-    for (int i = 0; i < count; i++) {
-      xVals.add(ts);
-      ts += TimeUnit.DAYS.toMillis(2);
-    }
-
+  private DataSet createSet(String name, int count, float range, float rangeOffset) {
     ArrayList<Entry> yVals = new ArrayList<Entry>();
 
     for (int i = 0; i < count; i++) {
@@ -163,10 +146,23 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     }
 
     // create a dataset and give it a type
-    DataSet set1 = new DataSet(yVals, "DataSet 1");
+    DataSet set = new DataSet(yVals, name);
+    set.getDataSetPaint().setColor(getResources().getColor(R.color.neue_line));
+    return set;
+  }
+
+  private void setData(int count, float range, float rangeOffset) {
+    ArrayList<Long> xVals = new ArrayList<Long>();
+    long ts = System.currentTimeMillis();
+
+    for (int i = 0; i < count; i++) {
+      xVals.add(ts);
+      ts += TimeUnit.DAYS.toMillis(2);
+    }
 
     ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
-    dataSets.add(set1); // add the datasets
+    dataSets.add(createSet("Data 1", count, range, rangeOffset)); // add the datasets
+    dataSets.add(createSet("Data 2", count, range, rangeOffset)); // add the datasets
 
     // create a data object with the datasets
     ChartData data = new ChartData(xVals, dataSets, new LabelFormatter() {

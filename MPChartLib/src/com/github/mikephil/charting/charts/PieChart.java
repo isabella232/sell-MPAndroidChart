@@ -398,18 +398,10 @@ public class PieChart extends Chart {
             mCircleBox.right
                 + xShift, mCircleBox.bottom + yShift);
 
-        DataSet set = mCurrentData.getDataSetByIndex(mIndicesToHightlight[i]
-            .getDataSetIndex());
-
-        int color = mCt.getDataSetColor(mIndicesToHightlight[i].getDataSetIndex(),
-            set.getIndexInEntries(xIndex));
-
-        mRenderPaint.setColor(color);
-
         // redefine the rect that contains the arc so that the
         // highlighted pie is not cut off
         mDrawCanvas.drawArc(highlighted, angle + mSliceSpace / 2f, sliceDegrees
-            - mSliceSpace / 2f, true, mRenderPaint);
+            - mSliceSpace / 2f, true, mCurrentData.getDataSetByIndex(i).getDataSetPaint());
       }
     }
   }
@@ -428,19 +420,14 @@ public class PieChart extends Chart {
       DataSet dataSet = dataSets.get(i);
       ArrayList<Entry> entries = dataSet.getYVals();
 
-      // Get the colors for the DataSet at the current index. If the index
-      // is out of bounds, reuse DataSet colors.
-      ArrayList<Integer> colors = mCt.getDataSetColors(i % mCt.getColors().size());
-
       for (int j = 0; j < entries.size(); j++) {
 
         float newangle = mDrawAngles[cnt];
 
         if (!needsHighlight(entries.get(j).getXIndex(), i)) {
 
-          mRenderPaint.setColor(colors.get(j % colors.size()));
           mDrawCanvas.drawArc(mCircleBox, angle + mSliceSpace / 2f, newangle
-              - mSliceSpace / 2f, true, mRenderPaint);
+              - mSliceSpace / 2f, true, mCurrentData.getDataSetByIndex(i).getDataSetPaint());
         }
 
         angle += newangle;

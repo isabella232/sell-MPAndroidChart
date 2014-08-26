@@ -4,6 +4,7 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 
@@ -69,17 +70,13 @@ public class ScatterChart extends BarLineChartBase {
 
       float[] pos = generateTransformedValues(entries, 0f);
 
-      // Get the colors for the DataSet at the current index. If the index
-      // is out of bounds, reuse DataSet colors.
-      ArrayList<Integer> colors = mCt.getDataSetColors(i % mCt.getColors().size());
-
       ScatterShape shape = mScatterShapes[i % mScatterShapes.length];
 
       for (int j = 0; j < pos.length; j += 2) {
 
         // Set the color for the currently drawn value. If the index is
         // out of bounds, reuse colors.
-        mRenderPaint.setColor(colors.get(j % colors.size()));
+        Paint renderPaint = mCurrentData.getDataSetByIndex(i).getDataSetPaint();
 
         if (isOffContentRight(pos[j]))
           break;
@@ -94,16 +91,16 @@ public class ScatterChart extends BarLineChartBase {
 
           mDrawCanvas.drawRect(pos[j] - shapeHalf, pos[j + 1] - shapeHalf, pos[j]
               + shapeHalf, pos[j + 1]
-              + shapeHalf, mRenderPaint);
+              + shapeHalf, renderPaint);
         } else if (shape == ScatterShape.CIRCLE) {
 
-          mDrawCanvas.drawCircle(pos[j], pos[j + 1], mShapeSize / 2f, mRenderPaint);
+          mDrawCanvas.drawCircle(pos[j], pos[j + 1], mShapeSize / 2f, renderPaint);
         } else if (shape == ScatterShape.CROSS) {
 
           mDrawCanvas.drawLine(pos[j] - shapeHalf, pos[j + 1], pos[j] + shapeHalf,
-              pos[j + 1], mRenderPaint);
+              pos[j + 1], renderPaint);
           mDrawCanvas.drawLine(pos[j], pos[j + 1] - shapeHalf, pos[j], pos[j + 1]
-              + shapeHalf, mRenderPaint);
+              + shapeHalf, renderPaint);
         } else if (shape == ScatterShape.TRIANGLE) {
 
           // create a triangle path
@@ -113,7 +110,7 @@ public class ScatterChart extends BarLineChartBase {
           tri.lineTo(pos[j] - shapeHalf, pos[j + 1] + shapeHalf);
           tri.close();
 
-          mDrawCanvas.drawPath(tri, mRenderPaint);
+          mDrawCanvas.drawPath(tri, renderPaint);
         } else if (shape == ScatterShape.CUSTOM) {
 
           if (mCustomScatterPath == null)
@@ -121,7 +118,7 @@ public class ScatterChart extends BarLineChartBase {
 
           // transform the provided custom path
           transformPath(mCustomScatterPath);
-          mDrawCanvas.drawPath(mCustomScatterPath, mRenderPaint);
+          mDrawCanvas.drawPath(mCustomScatterPath, renderPaint);
         }
       }
     }

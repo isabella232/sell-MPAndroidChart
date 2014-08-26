@@ -8,12 +8,12 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.filter.Approximator;
 import com.github.mikephil.charting.data.filter.Approximator.ApproximatorType;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendForm;
 import com.github.mikephil.charting.utils.XLabels;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
+import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -53,18 +53,8 @@ public class LineChartActivity extends DemoBase implements OnSeekBarChangeListen
     mSeekBarY.setOnSeekBarChangeListener(this);
     mSeekBarX.setOnSeekBarChangeListener(this);
 
-    // create a color template for one dataset with only one color
-    ColorTemplate ct = new ColorTemplate();
-    // ct.addColorsForDataSets(new int[] {
-    // R.color.colorful_1
-    // }, this);
-    ct.addDataSetColors(new int[] {
-        R.color.colorful_1
-    }, this);
-
     mChart = (LineChart) findViewById(R.id.chart1);
     mChart.setOnChartValueSelectedListener(this);
-    mChart.setColorTemplate(ct);
 
     // if enabled, the chart will always start at zero on the y-axis
     mChart.setStartAtZero(false);
@@ -72,7 +62,6 @@ public class LineChartActivity extends DemoBase implements OnSeekBarChangeListen
     // disable the drawing of values into the chart
     mChart.setDrawYValues(false);
 
-    mChart.setLineWidth(1f);
     mChart.setCircleSize(4f);
 
     mChart.setDrawBorder(true);
@@ -119,9 +108,6 @@ public class LineChartActivity extends DemoBase implements OnSeekBarChangeListen
     // enable/disable highlight indicators (the lines that indicate the
     // highlighted Entry)
     mChart.setHighlightIndicatorEnabled(false);
-
-    // set the line to be drawn like this "- - - - - -"
-    mChart.enableDashedLine(10f, 5f, 0f);
 
     // add data
     setData(45, 100);
@@ -227,15 +213,6 @@ public class LineChartActivity extends DemoBase implements OnSeekBarChangeListen
       mChart.invalidate();
       break;
     }
-    case R.id.actionDashedLine: {
-      if (!mChart.isDashedLineEnabled()) {
-        mChart.enableDashedLine(10f, 5f, 0f);
-      } else {
-        mChart.disableDashedLine();
-      }
-      mChart.invalidate();
-      break;
-    }
     case R.id.actionSave: {
       if (mChart.saveToPath("title" + System.currentTimeMillis(), "")) {
         Toast.makeText(getApplicationContext(), "Saving SUCCESSFUL!", Toast.LENGTH_SHORT).show();
@@ -302,7 +279,7 @@ public class LineChartActivity extends DemoBase implements OnSeekBarChangeListen
 
     // create a dataset and give it a type
     DataSet set1 = new DataSet(yVals, "DataSet 1");
-
+    set1.getDataSetPaint().setColor(getResources().getColor(Colors.COLORFUL_COLORS[0]));
     ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
     dataSets.add(set1); // add the datasets
 

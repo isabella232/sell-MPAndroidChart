@@ -5,6 +5,7 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.utils.FileUtils;
 import com.xxmassdeveloper.mpchartexample.utils.ArrayLabelFormatter;
+import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
 import android.support.v4.app.Fragment;
 
@@ -30,6 +31,7 @@ public abstract class SimpleFragment extends Fragment {
       }
 
       DataSet ds = new DataSet(entries, getLabel(i));
+      ds.getDataSetPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[i % Colors.VORDIPLOM_COLORS.length]));
       sets.add(ds);
     }
 
@@ -74,6 +76,12 @@ public abstract class SimpleFragment extends Fragment {
     // load DataSets from textfiles in assets folder
     sets.add(FileUtils.dataSetFromAssets(getActivity().getAssets(), "sine.txt"));
     sets.add(FileUtils.dataSetFromAssets(getActivity().getAssets(), "cosine.txt"));
+
+    int i = 0;
+    for (DataSet set : sets) {
+      set.getDataSetPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[i % Colors.VORDIPLOM_COLORS.length]));
+      i++;
+    }
 
     int max = Math.max(sets.get(0).getEntryCount(), sets.get(1).getEntryCount());
 

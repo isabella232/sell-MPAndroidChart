@@ -6,7 +6,6 @@ import com.github.mikephil.charting.utils.Utils;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -25,11 +24,6 @@ public class LineChart extends BarLineChartBase {
    * the radius of the circle-shaped value indicators
    */
   protected float mCircleSize = 4f;
-
-  /**
-   * the width of the drawn data lines
-   */
-  protected float mLineWidth = 1f;
 
   /**
    * the width of the highlighning line
@@ -169,16 +163,9 @@ public class LineChart extends BarLineChartBase {
 
       float[] valuePoints = generateTransformedValues(entries, 0f);
 
-      // Get the colors for the DataSet at the current index. If the index
-      // is out of bounds, reuse DataSet colors.
-      ArrayList<Integer> colors = mCt.getDataSetColors(i % mCt.getColors().size());
-
-      Paint paint = mRenderPaint;
+      Paint paint = mCurrentData.getDataSetByIndex(i).getDataSetPaint();
 
       if (mDrawCubic) {
-
-        paint.setColor(colors.get(i % colors.size()));
-
         Path spline = new Path();
 
         spline.moveTo(entries.get(0).getXIndex(), entries.get(0).getVal());
@@ -201,13 +188,7 @@ public class LineChart extends BarLineChartBase {
 
         mDrawCanvas.drawPath(spline, paint);
       } else {
-
         for (int j = 0; j < valuePoints.length - 2; j += 2) {
-
-          // Set the color for the currently drawn value. If the index
-          // is
-          // out of bounds, reuse colors.
-          paint.setColor(colors.get(j % colors.size()));
 
           if (isOffContentRight(valuePoints[j]))
             break;
@@ -309,20 +290,10 @@ public class LineChart extends BarLineChartBase {
         DataSet dataSet = dataSets.get(i);
         ArrayList<Entry> entries = dataSet.getYVals();
 
-        // Get the colors for the DataSet at the current index. If the
-        // index
-        // is out of bounds, reuse DataSet colors.
-        ArrayList<Integer> colors = mCt.getDataSetColors(i % mCt.getColors().size());
-
         float[] positions = generateTransformedValues(entries, 0f);
 
         final int padding = mValuePadding * 2;
         for (int j = padding; j < positions.length - padding; j += 2) {
-
-          // Set the color for the currently drawn value. If the index
-          // is
-          // out of bounds, reuse colors.
-          mRenderPaint.setColor(colors.get(j % colors.size()));
 
           if (isOffContentRight(positions[j]))
             break;
@@ -334,7 +305,7 @@ public class LineChart extends BarLineChartBase {
             continue;
 
           mDrawCanvas.drawCircle(positions[j], positions[j + 1], mCircleSize,
-              mRenderPaint);
+              dataSet.getDataSetPaint());
           mDrawCanvas.drawCircle(positions[j], positions[j + 1], mCircleSize / 2,
               mCirclePaintInner);
         }
@@ -399,38 +370,12 @@ public class LineChart extends BarLineChartBase {
     return mDrawFilled;
   }
 
-  /**
-   * set the line width of the chart (min = 0.5f, max = 10f); default 1f NOTE:
-   * thinner line == better performance, thicker line == worse performance
-   *
-   * @param width
-   */
-  public void setLineWidth(float width) {
-
-    if (width < 0.5f)
-      width = 0.5f;
-    if (width > 10.0f)
-      width = 10.0f;
-    mLineWidth = width;
-
-    mRenderPaint.setStrokeWidth(width);
-  }
-
   public void setValuePadding(int valuePadding) {
     mValuePadding = valuePadding;
   }
 
   public int getValuePadding() {
     return mValuePadding;
-  }
-
-  /**
-   * returns the width of the drawn chart line
-   *
-   * @return
-   */
-  public float getLineWidth() {
-    return mLineWidth;
   }
 
   /**
@@ -458,35 +403,6 @@ public class LineChart extends BarLineChartBase {
    */
   public float getHighlightLineWidth() {
     return mHighlightWidth;
-  }
-
-  /**
-   * Enables the line to be drawn in dashed mode, e.g. like this "- - - - - -"
-   *
-   * @param lineLength the length of the line pieces
-   * @param spaceLength the length of space inbetween the pieces
-   * @param phase offset, in degrees (normally, use 0)
-   */
-  public void enableDashedLine(float lineLength, float spaceLength, float phase) {
-    mRenderPaint.setPathEffect(new DashPathEffect(new float[] {
-        lineLength, spaceLength
-    }, phase));
-  }
-
-  /**
-   * Disables the line to be drawn in dashed mode.
-   */
-  public void disableDashedLine() {
-    mRenderPaint.setPathEffect(null);
-  }
-
-  /**
-   * Returns true if the dashed-line effect is enabled, false if not.
-   *
-   * @return
-   */
-  public boolean isDashedLineEnabled() {
-    return mRenderPaint.getPathEffect() == null ? false : true;
   }
 
   @Override

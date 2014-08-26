@@ -6,11 +6,11 @@ import com.github.mikephil.charting.data.ChartData.LabelFormatter;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
+import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -51,12 +51,6 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
 
     mChart.setValueTypeface(tf);
     mChart.setCenterTextTypeface(Typeface.createFromAsset(getAssets(), "OpenSans-Light.ttf"));
-
-    ColorTemplate ct = new ColorTemplate();
-
-    ct.addDataSetColors(ColorTemplate.VORDIPLOM_COLORS, this);
-
-    mChart.setColorTemplate(ct);
 
     // set a space between the slices
     mChart.setSliceSpace(3f);
@@ -167,6 +161,7 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
     }
 
     DataSet set1 = new DataSet(yVals1, "Content");
+    set1.getDataSetPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[0]));
 
     ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
     dataSets.add(set1);

@@ -4,11 +4,11 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 import com.xxmassdeveloper.mpchartexample.utils.ArrayLabelFormatter;
+import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -53,14 +53,10 @@ public class ListViewBarChartActivity extends DemoBase {
 
   private class ChartDataAdapter extends ArrayAdapter<ChartData> {
 
-    private ColorTemplate mCt;
     private Typeface mTf;
 
     public ChartDataAdapter(Context context, List<ChartData> objects) {
       super(context, 0, objects);
-
-      mCt = new ColorTemplate();
-      mCt.addDataSetColors(ColorTemplate.VORDIPLOM_COLORS, getContext());
       mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
     }
 
@@ -86,7 +82,6 @@ public class ListViewBarChartActivity extends DemoBase {
 
       // apply styling
       holder.chart.setYLabelCount(5);
-      holder.chart.setColorTemplate(mCt);
       holder.chart.setBarSpace(20f);
       holder.chart.setYLabelTypeface(mTf);
       holder.chart.setXLabelTypeface(mTf);
@@ -129,6 +124,7 @@ public class ListViewBarChartActivity extends DemoBase {
     ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec" });
 
     DataSet d = new DataSet(entries, "New DataSet " + cnt);
+    d.getDataSetPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[0]));
     ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
     dataSets.add(d);
 
