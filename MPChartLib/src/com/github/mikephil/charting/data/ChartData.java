@@ -265,7 +265,7 @@ public class ChartData<T extends DataSet> {
    * @param index
    * @return
    */
-  public DataSet getDataSetByIndex(int index) {
+  public T getDataSetByIndex(int index) {
     return mDataSets.get(index);
   }
 
@@ -278,7 +278,7 @@ public class ChartData<T extends DataSet> {
    * @param ignorecase if true, the search is not case-sensitive
    * @return
    */
-  public DataSet getDataSetByLabel(String label, boolean ignorecase) {
+  public T getDataSetByLabel(String label, boolean ignorecase) {
     // check which dataset to use
     ArrayList<T> dataSets = mDataSets;
 

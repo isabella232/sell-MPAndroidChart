@@ -9,6 +9,7 @@ import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
+import com.github.mikephil.charting.utils.MulticolorDrawingSpec;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
@@ -161,7 +162,7 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
     }
 
     PieDataSet set1 = new PieDataSet(yVals1, "Content");
-    set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[0]));
+    set1.getDrawingSpec().setColors(MulticolorDrawingSpec.fromResources(this, Colors.FRESH_COLORS));
 
     ArrayList<PieDataSet> dataSets = new ArrayList<PieDataSet>();
     dataSets.add(set1);

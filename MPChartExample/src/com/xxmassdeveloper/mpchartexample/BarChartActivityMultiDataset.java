@@ -6,6 +6,7 @@ import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
+import com.github.mikephil.charting.utils.MulticolorDrawingSpec;
 import com.github.mikephil.charting.utils.XLabels;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 import com.xxmassdeveloper.mpchartexample.utils.Colors;
@@ -182,11 +183,11 @@ public class BarChartActivityMultiDataset extends DemoBase implements OnSeekBarC
 
     // create 3 datasets with different types
     BarDataSet set1 = new BarDataSet(yVals1, "Company A");
-    set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[0]));
+    set1.getDrawingSpec().setColors(MulticolorDrawingSpec.fromResources(this, Colors.FRESH_COLORS));
     BarDataSet set2 = new BarDataSet(yVals2, "Company B");
-    set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[1]));
+    set2.getDrawingSpec().setColors(MulticolorDrawingSpec.fromResources(this, Colors.COLORFUL_COLORS));
     BarDataSet set3 = new BarDataSet(yVals3, "Company C");
-    set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[2]));
+    set3.getDrawingSpec().setColors(MulticolorDrawingSpec.fromResources(this, Colors.JOYFUL_COLORS));
 
     ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
     dataSets.add(set1);

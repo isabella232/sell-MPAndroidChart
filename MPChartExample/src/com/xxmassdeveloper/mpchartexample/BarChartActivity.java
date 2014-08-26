@@ -8,6 +8,7 @@ import com.github.mikephil.charting.data.filter.Approximator;
 import com.github.mikephil.charting.data.filter.Approximator.ApproximatorType;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
+import com.github.mikephil.charting.utils.MulticolorDrawingSpec;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.github.mikephil.charting.utils.YLabels;
@@ -201,7 +202,8 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
     }
 
     BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
-    set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[0]));
+    set1.getDrawingSpec().setColors(MulticolorDrawingSpec.fromResources(this, Colors.FRESH_COLORS));
+
     ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
     dataSets.add(set1);
 

@@ -1,9 +1,11 @@
 package com.xxmassdeveloper.mpchartexample;
 
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.utils.MulticolorDrawingSpec;
 import com.xxmassdeveloper.mpchartexample.listviewitems.BarChartItem;
 import com.xxmassdeveloper.mpchartexample.listviewitems.ChartItem;
 import com.xxmassdeveloper.mpchartexample.listviewitems.LineChartItem;
@@ -46,9 +48,9 @@ public class ListViewMultiChartActivity extends DemoBase {
     for (int i = 0; i < 30; i++) {
 
       if (i % 3 == 0) {
-        list.add(new LineChartItem(generateData(i, i + 1), getApplicationContext()));
+        list.add(new LineChartItem(generateLineChartData(i, i + 1), getApplicationContext()));
       } else if (i % 3 == 1) {
-        list.add(new BarChartItem(generateData(i, i + 1), getApplicationContext()));
+        list.add(new BarChartItem(generateBarChartData(i, i + 1), getApplicationContext()));
       } else if (i % 3 == 2) {
         list.add(new PieChartItem(generatePieChartData(i, i + 1), getApplicationContext()));
       }
@@ -84,12 +86,7 @@ public class ListViewMultiChartActivity extends DemoBase {
     }
   }
 
-  /**
-   * generates a random ChartData object with just one DataSet
-   *
-   * @return
-   */
-  private ChartData<LineDataSet> generateData(int idx, int cnt) {
+  private ChartData<LineDataSet> generateLineChartData(int idx, int cnt) {
 
     ArrayList<Entry> entries = new ArrayList<Entry>();
 
@@ -106,6 +103,23 @@ public class ListViewMultiChartActivity extends DemoBase {
     return cd;
   }
 
+  private ChartData<BarDataSet> generateBarChartData(int idx, int cnt) {
+
+    ArrayList<Entry> entries = new ArrayList<Entry>();
+
+    for (int i = 0; i < 12; i++) {
+      entries.add(new Entry((int) (Math.random() * 70) + 30, i));
+    }
+
+    ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec" });
+
+    BarDataSet d = new BarDataSet(entries, "New DataSet " + cnt);
+    d.getDrawingSpec().setColors(MulticolorDrawingSpec.fromResources(this, Colors.FRESH_COLORS));
+
+    ChartData<BarDataSet> cd = new ChartData<BarDataSet>(formatter.getValues(), d, formatter);
+    return cd;
+  }
+
   private ChartData<PieDataSet> generatePieChartData(int idx, int cnt) {
 
     ArrayList<Entry> entries = new ArrayList<Entry>();
@@ -115,7 +129,7 @@ public class ListViewMultiChartActivity extends DemoBase {
     }
 
     PieDataSet d = new PieDataSet(entries, "New DataSet " + cnt);
-    d.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[idx % Colors.FRESH_COLORS.length]));
+    d.getDrawingSpec().setColors(MulticolorDrawingSpec.fromResources(this, Colors.FRESH_COLORS));
 
     ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] { "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter" });
     ChartData<PieDataSet> cd = new ChartData<PieDataSet>(formatter.getValues(), d, formatter);

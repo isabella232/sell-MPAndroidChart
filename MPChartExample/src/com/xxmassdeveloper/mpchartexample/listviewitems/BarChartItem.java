@@ -1,6 +1,7 @@
 package com.xxmassdeveloper.mpchartexample.listviewitems;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
@@ -11,7 +12,7 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 
-public class BarChartItem extends ChartItem {
+public class BarChartItem extends ChartItem<BarDataSet> {
   private Typeface mTf;
 
   public BarChartItem(ChartData cd, Context c) {

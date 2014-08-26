@@ -1,9 +1,10 @@
 package com.github.mikephil.charting.charts;
 
 import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.utils.Legend;
+import com.github.mikephil.charting.utils.MulticolorDrawingSpec;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -47,12 +48,6 @@ public class BarChart extends BarLineChartBase<BarDataSet> {
    */
   private boolean mDrawHighlightArrow = false;
 
-  //    /**
-  //     * if true, bars representing values of different DataSets on the same
-  //     * x-index are stacked (instead of being aligned behind each other)
-  //     */
-  //    private boolean mStackEnabled = false;
-
   public BarChart(Context context) {
     super(context);
   }
@@ -74,66 +69,6 @@ public class BarChart extends BarLineChartBase<BarDataSet> {
     mHighlightPaint.setColor(Color.rgb(0, 0, 0));
     // set alpha after color
     mHighlightPaint.setAlpha(120);
-  }
-
-  /**
-   * array that holds all the colors for the top 3D effect
-   */
-  private ArrayList<Integer> mTopColors;
-
-  /**
-   * array that holds all the colors for the side 3D effect
-   */
-  private ArrayList<Integer> mSideColors;
-
-  /**
-   * calculates the 3D color arrays
-   */
-  protected void calculate3DColors() {
-    // generate the colors for the 3D effect
-    mTopColors = new ArrayList<Integer>();
-    mSideColors = new ArrayList<Integer>();
-
-    float[] hsv = new float[3];
-
-    for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
-      DataSet set = mCurrentData.getDataSetByIndex(i);
-      int color = set.getDrawingSpec().getBasicPaint().getColor();
-
-      // extract the color
-      Color.colorToHSV(color, hsv); // convert to hsv
-
-      // make brighter
-      hsv[1] = hsv[1] - 0.1f; // less saturation
-      hsv[2] = hsv[2] + 0.1f; // more brightness
-
-      // convert back
-      color = Color.HSVToColor(hsv);
-
-      // assign
-      mTopColors.add(color);
-
-      // get color again
-      color = set.getDrawingSpec().getBasicPaint().getColor();
-
-      // convert
-      Color.colorToHSV(color, hsv);
-
-      // make darker
-      hsv[1] = hsv[1] + 0.1f; // more saturation
-      hsv[2] = hsv[2] - 0.1f; // less brightness
-
-      // reassing
-      color = Color.HSVToColor(hsv);
-
-      mSideColors.add(color);
-    }
-  }
-
-  @Override
-  public void setData(ChartData data) {
-    super.setData(data);
-    calculate3DColors();
   }
 
   @Override
@@ -275,7 +210,7 @@ public class BarChart extends BarLineChartBase<BarDataSet> {
 
     // 2D drawing
     for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
-      DataSet dataSet = dataSets.get(i);
+      BarDataSet dataSet = dataSets.get(i);
       Paint paint = dataSet.getDrawingSpec().getBasicPaint();
       ArrayList<Entry> series = dataSet.getYVals();
 
@@ -302,22 +237,24 @@ public class BarChart extends BarLineChartBase<BarDataSet> {
           continue;
         }
 
+        int originalColor = paint.getColor();
 
+        if (dataSet.getDrawingSpec().hasMultipleColors()) {
+          paint.setColor(dataSet.getDrawingSpec().getColor(j));
+        }
 
         mDrawCanvas.drawRect(mBarRect, paint);
 
         // 3D drawing
-        if (m3DEnabled) {
-          int originalColor = paint.getColor();
-
-          paint.setColor(mTopColors.get(i));
+        if (m3DEnabled && dataSet.getDrawingSpec().hasMultipleColors()) {
+          paint.setColor(dataSet.getDrawingSpec().getTopColor(j));
           mDrawCanvas.drawPath(topPaths.get(cnt), paint);
 
-          paint.setColor(mSideColors.get(i));
+          paint.setColor(dataSet.getDrawingSpec().getSideColor(j));
           mDrawCanvas.drawPath(sidePaths.get(cnt), paint);
-
-          paint.setColor(originalColor);
         }
+
+        paint.setColor(originalColor);
 
         cnt++;
       }
@@ -458,17 +395,6 @@ public class BarChart extends BarLineChartBase<BarDataSet> {
     return mDrawHighlightArrow;
   }
 
-  //    /**
-  //     * If true, bars representing values of different DataSets on the same
-  //     * x-index are stacked (instead of being aligned behind each other). This
-  //     * only makes sense when multiple DataSets are used.
-  //     *
-  //     * @param enabled
-  //     */
-  //    public void setStackEnabled(boolean enabled) {
-  //        mStackEnabled = true;
-  //    }
-
   @Override
   public void setPaint(Paint p, int which) {
     super.setPaint(p, which);
@@ -499,5 +425,42 @@ public class BarChart extends BarLineChartBase<BarDataSet> {
 
   @Override
   protected void drawAdditional() {
+  }
+
+  public void prepareLegend() {
+    ArrayList<String> labels = new ArrayList<String>();
+    ArrayList<Integer> colors = new ArrayList<Integer>();
+
+    for (int i = 0; i < mOriginalData.getDataSetCount(); i++) {
+      BarDataSet dataSet = mOriginalData.getDataSetByIndex(i);
+      MulticolorDrawingSpec spec = dataSet.getDrawingSpec();
+      if (spec.hasMultipleColors()) {
+        int entriesCount = mOriginalData.getDataSetByIndex(i).getEntryCount();
+
+        for (int j = 0; j < spec.getColorsCount() && j < entriesCount; j++) {
+          if (j < spec.getColorsCount() - 1 && j < entriesCount - 1) {
+            // if multiple colors are set for a DataSet, group them
+            labels.add(null);
+          } else {
+            // add label to the last entry
+            String label = mOriginalData.getDataSetByIndex(i).getLabel();
+            labels.add(label);
+          }
+
+          colors.add(spec.getColor(j));
+        }
+      } else {
+        labels.add(dataSet.getLabel());
+        colors.add(spec.getBasicPaint().getColor());
+      }
+    }
+
+    Legend l = new Legend(colors, labels);
+
+    if (mLegend != null) {
+      l.apply(mLegend);
+    }
+
+    mLegend = l;
   }
 }

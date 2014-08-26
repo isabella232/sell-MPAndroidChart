@@ -2,6 +2,7 @@ package com.xxmassdeveloper.mpchartexample.listviewitems;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.ChartData;
+import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
 import com.xxmassdeveloper.mpchartexample.R;
@@ -11,7 +12,7 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 
-public class PieChartItem extends ChartItem {
+public class PieChartItem extends ChartItem<PieDataSet> {
   private Typeface mTf;
 
   public PieChartItem(ChartData cd, Context c) {
