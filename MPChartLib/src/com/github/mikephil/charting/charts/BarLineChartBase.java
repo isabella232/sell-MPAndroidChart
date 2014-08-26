@@ -579,6 +579,9 @@ public abstract class BarLineChartBase extends Chart {
     }
 
     mDeltaY = Math.abs(mYChartMax - mYChartMin);
+    if (mDeltaY == 0) {
+      mDeltaY = 1000;
+    }
   }
 
   /**
@@ -1293,6 +1296,9 @@ public abstract class BarLineChartBase extends Chart {
       mStartAtZero = false;
     }
     mDeltaY = mYChartMax - mYChartMin;
+    if (mDeltaY == 0) {
+      mDeltaY = 1000;
+    }
 
     calcFormats();
     prepareMatrix();

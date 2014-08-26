@@ -115,7 +115,7 @@ public class ChartData {
         mXVals.add(0L);
         for (DataSet set : mDataSets) {
           ArrayList<Entry> yVals = set.getYVals();
-          yVals.add(0, new Entry(yVals.get(0).getVal(), count - 1));
+          yVals.add(0, new Entry(yVals.get(0).getVal(), count));
           Entry lastEntry = yVals.get(yVals.size() - 1);
           yVals.add(new Entry(lastEntry.getVal(), lastEntry.getXIndex() + 1));
         }
