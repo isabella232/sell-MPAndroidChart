@@ -1,14 +1,15 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
+import com.github.mikephil.charting.utils.MulticolorDrawingSpec;
 import com.github.mikephil.charting.utils.XLabels;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
+import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -44,21 +45,6 @@ public class BarChartActivityMultiDataset extends DemoBase implements OnSeekBarC
 
     mChart = (BarChart) findViewById(R.id.chart1);
     mChart.setDescription("");
-
-    ColorTemplate ct = new ColorTemplate();
-
-    // add colors for the first dataset
-    ct.addDataSetColors(ColorTemplate.FRESH_COLORS, this);
-
-    // the second dataset only has one color
-    ct.addDataSetColors(new int[] {
-        R.color.liberty_2
-    }, this);
-
-    // add colors for the third dataset
-    ct.addDataSetColors(ColorTemplate.COLORFUL_COLORS, this);
-
-    mChart.setColorTemplate(ct);
 
     // disable the drawing of values
     mChart.setDrawYValues(false);
@@ -196,16 +182,19 @@ public class BarChartActivityMultiDataset extends DemoBase implements OnSeekBarC
     }
 
     // create 3 datasets with different types
-    DataSet set1 = new DataSet(yVals1, "Company A");
-    DataSet set2 = new DataSet(yVals2, "Company B");
-    DataSet set3 = new DataSet(yVals3, "Company C");
+    BarDataSet set1 = new BarDataSet(yVals1, "Company A");
+    set1.getDrawingSpec().setColors(MulticolorDrawingSpec.fromResources(this, Colors.FRESH_COLORS));
+    BarDataSet set2 = new BarDataSet(yVals2, "Company B");
+    set2.getDrawingSpec().setColors(MulticolorDrawingSpec.fromResources(this, Colors.COLORFUL_COLORS));
+    BarDataSet set3 = new BarDataSet(yVals3, "Company C");
+    set3.getDrawingSpec().setColors(MulticolorDrawingSpec.fromResources(this, Colors.JOYFUL_COLORS));
 
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
     dataSets.add(set1);
     dataSets.add(set2);
     dataSets.add(set3);
 
-    ChartData data = new ChartData(xVals, dataSets);
+    ChartData<BarDataSet> data = new ChartData<BarDataSet>(xVals, dataSets);
 
     mChart.setData(data);
     mChart.invalidate();

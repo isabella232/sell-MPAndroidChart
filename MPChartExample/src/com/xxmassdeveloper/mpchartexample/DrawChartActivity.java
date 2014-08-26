@@ -6,12 +6,13 @@ import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.ChartData.LabelFormatter;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.interfaces.OnDrawListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.XLabels;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
+import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -41,11 +42,6 @@ public class DrawChartActivity extends DemoBase implements OnChartValueSelectedL
 
     mChart = (LineChart) findViewById(R.id.chart1);
 
-    // create a color template, one color per dataset
-    ColorTemplate ct = new ColorTemplate();
-    ct.addColorsForDataSets(ColorTemplate.COLORFUL_COLORS, this);
-    mChart.setColorTemplate(ct);
-
     // listener for selecting and drawing
     mChart.setOnChartValueSelectedListener(this);
     mChart.setOnDrawListener(this);
@@ -57,7 +53,6 @@ public class DrawChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setDragEnabled(true);
 
     mChart.setDrawYValues(false);
-    mChart.setLineWidth(5f);
     mChart.setCircleSize(5f);
     mChart.setYLabelCount(6);
     mChart.setHighlightEnabled(true);
@@ -85,13 +80,14 @@ public class DrawChartActivity extends DemoBase implements OnChartValueSelectedL
     ArrayList<Entry> yVals = new ArrayList<Entry>();
 
     // create a dataset and give it a type (0)
-    DataSet set1 = new DataSet(yVals, "DataSet");
+    LineDataSet set1 = new LineDataSet(yVals, "DataSet");
+    set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.COLORFUL_COLORS[0]));
 
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
     dataSets.add(set1); // add the datasets
 
     // create a data object with the datasets
-    ChartData data = new ChartData(xVals, dataSets, new LabelFormatter() {
+    ChartData<LineDataSet> data = new ChartData<LineDataSet>(xVals, dataSets, new LabelFormatter() {
       @Override
       public String formatValue(long value) {
         return value + "h";

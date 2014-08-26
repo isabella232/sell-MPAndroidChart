@@ -2,8 +2,11 @@ package com.github.mikephil.charting.charts;
 
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.listener.PieChartTouchListener;
+import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
+import com.github.mikephil.charting.utils.MulticolorDrawingSpec;
 import com.github.mikephil.charting.utils.Utils;
 
 import android.content.Context;
@@ -28,7 +31,7 @@ import java.util.ArrayList;
  *
  * @author Philipp Jahoda
  */
-public class PieChart extends Chart {
+public class PieChart extends Chart<PieDataSet> {
 
   /**
    * rect object that represents the bounds of the piechart, needed for
@@ -343,7 +346,7 @@ public class PieChart extends Chart {
     mDrawAngles = new float[mCurrentData.getYValCount()];
     mAbsoluteAngles = new float[mCurrentData.getYValCount()];
 
-    ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+    ArrayList<PieDataSet> dataSets = mCurrentData.getDataSets();
 
     int cnt = 0;
 
@@ -398,18 +401,10 @@ public class PieChart extends Chart {
             mCircleBox.right
                 + xShift, mCircleBox.bottom + yShift);
 
-        DataSet set = mCurrentData.getDataSetByIndex(mIndicesToHightlight[i]
-            .getDataSetIndex());
-
-        int color = mCt.getDataSetColor(mIndicesToHightlight[i].getDataSetIndex(),
-            set.getIndexInEntries(xIndex));
-
-        mRenderPaint.setColor(color);
-
         // redefine the rect that contains the arc so that the
         // highlighted pie is not cut off
         mDrawCanvas.drawArc(highlighted, angle + mSliceSpace / 2f, sliceDegrees
-            - mSliceSpace / 2f, true, mRenderPaint);
+            - mSliceSpace / 2f, true, mCurrentData.getDataSetByIndex(i).getDrawingSpec().getBasicPaint());
       }
     }
   }
@@ -419,31 +414,35 @@ public class PieChart extends Chart {
 
     float angle = mChartAngle;
 
-    ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+    ArrayList<PieDataSet> dataSets = mCurrentData.getDataSets();
 
     int cnt = 0;
 
     for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
-
-      DataSet dataSet = dataSets.get(i);
+      PieDataSet dataSet = dataSets.get(i);
+      MulticolorDrawingSpec spec = dataSet.getDrawingSpec();
       ArrayList<Entry> entries = dataSet.getYVals();
 
-      // Get the colors for the DataSet at the current index. If the index
-      // is out of bounds, reuse DataSet colors.
-      ArrayList<Integer> colors = mCt.getDataSetColors(i % mCt.getColors().size());
+      Paint paint = spec.getBasicPaint();
 
       for (int j = 0; j < entries.size(); j++) {
 
-        float newangle = mDrawAngles[cnt];
+        float newAngle = mDrawAngles[cnt];
 
-        if (!needsHighlight(entries.get(j).getXIndex(), i)) {
+        int originalColor = paint.getColor();
 
-          mRenderPaint.setColor(colors.get(j % colors.size()));
-          mDrawCanvas.drawArc(mCircleBox, angle + mSliceSpace / 2f, newangle
-              - mSliceSpace / 2f, true, mRenderPaint);
+        if (spec.hasMultipleColors()) {
+          paint.setColor(spec.getColor(j));
         }
 
-        angle += newangle;
+        if (!needsHighlight(entries.get(j).getXIndex(), i)) {
+          mDrawCanvas.drawArc(mCircleBox, angle + mSliceSpace / 2f, newAngle
+              - mSliceSpace / 2f, true, paint);
+        }
+
+        paint.setColor(originalColor);
+
+        angle += newAngle;
         cnt++;
       }
     }
@@ -533,7 +532,7 @@ public class PieChart extends Chart {
 
     r -= off; // offset to keep things inside the chart
 
-    ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+    ArrayList<PieDataSet> dataSets = mCurrentData.getDataSets();
 
     int cnt = 0;
 
@@ -548,23 +547,17 @@ public class PieChart extends Chart {
         float offset = mDrawAngles[cnt] / 2;
 
         // calculate the text position
-        float x = (float) (r
-            * Math.cos(Math.toRadians(mChartAngle + mAbsoluteAngles[cnt] - offset)) + center.x);
-        float y = (float) (r
-            * Math.sin(Math.toRadians(mChartAngle + mAbsoluteAngles[cnt] - offset)) + center.y);
-
-        // if (y > center.y) {
-        // y += 10;
-        // x += 3;
-        // }
+        float x = (float) (r * Math.cos(Math.toRadians(mChartAngle + mAbsoluteAngles[cnt] - offset)) + center.x);
+        float y = (float) (r * Math.sin(Math.toRadians(mChartAngle + mAbsoluteAngles[cnt] - offset)) + center.y);
 
         String val = "";
         float value = entries.get(j).getVal();
 
-        if (mUsePercentValues)
+        if (mUsePercentValues) {
           val = mFormatValue.format(getPercentOfTotal(value)) + " %";
-        else
+        } else {
           val = mFormatValue.format(value);
+        }
 
         // draw everything, depending on settings
         if (mDrawXVals && mDrawYValues) {
@@ -632,7 +625,7 @@ public class PieChart extends Chart {
    */
   public int getDataSetIndexForIndex(int xIndex) {
 
-    ArrayList<DataSet> sets = mCurrentData.getDataSets();
+    ArrayList<PieDataSet> sets = mCurrentData.getDataSets();
 
     for (int i = 0; i < sets.size(); i++) {
       if (sets.get(i).getEntryForXIndex(xIndex) != null)
@@ -1011,5 +1004,47 @@ public class PieChart extends Chart {
     }
 
     return null;
+  }
+
+  @Override
+  protected PieDataSet createDataSet(ArrayList<Entry> approximated, String label) {
+    return new PieDataSet(approximated, label);
+  }
+
+  public void prepareLegend() {
+    ArrayList<String> labels = new ArrayList<String>();
+    ArrayList<Integer> colors = new ArrayList<Integer>();
+
+    for (int i = 0; i < mOriginalData.getDataSetCount(); i++) {
+      PieDataSet dataSet = mOriginalData.getDataSetByIndex(i);
+      MulticolorDrawingSpec spec = dataSet.getDrawingSpec();
+      if (spec.hasMultipleColors()) {
+        int entriesCount = mOriginalData.getDataSetByIndex(i).getEntryCount();
+
+        for (int j = 0; j < spec.getColorsCount() && j < entriesCount; j++) {
+          if (j < spec.getColorsCount() - 1 && j < entriesCount - 1) {
+            // if multiple colors are set for a DataSet, group them
+            labels.add(null);
+          } else {
+            // add label to the last entry
+            String label = mOriginalData.getDataSetByIndex(i).getLabel();
+            labels.add(label);
+          }
+
+          colors.add(spec.getColor(j));
+        }
+      } else {
+        labels.add(dataSet.getLabel());
+        colors.add(spec.getBasicPaint().getColor());
+      }
+    }
+
+    Legend l = new Legend(colors, labels);
+
+    if (mLegend != null) {
+      l.apply(mLegend);
+    }
+
+    mLegend = l;
   }
 }

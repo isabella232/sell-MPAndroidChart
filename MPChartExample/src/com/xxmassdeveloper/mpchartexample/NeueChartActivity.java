@@ -4,16 +4,17 @@ import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.ChartData.LabelFormatter;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.YLabels.YLabelPosition;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
 import android.content.res.Resources;
+import android.graphics.DashPathEffect;
 import android.graphics.LinearGradient;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
@@ -44,11 +45,6 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
     setContentView(R.layout.activity_neuechart);
 
-    ColorTemplate ct = new ColorTemplate();
-    ct.addDataSetColors(new int[] {
-        R.color.neue_line
-    }, this);
-
     final Resources r = getResources();
 
     mChart = (LineChart) findViewById(R.id.chart1);
@@ -61,17 +57,12 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setOnChartValueSelectedListener(this);
     mChart.setValuePaintColor(r.getColor(R.color.neue_text));
     mChart.setValueTypeface(Typeface.DEFAULT_BOLD);
-    mChart.setColorTemplate(ct);
-    mChart.setLineWidth(3f);
     mChart.setCircleSize(4f);
     mChart.setTouchEnabled(true);
     mChart.setDragEnabled(true);
     mChart.setMaxScaleY(1.0f);
     mChart.setPinchZoom(true);
     mChart.setDrawFilled(true);
-    Point size = new Point();
-    getWindowManager().getDefaultDisplay().getSize(size);
-    mChart.getPaint(Chart.PAINT_FILLED).setShader(new LinearGradient(0, 0, 0, size.y, r.getColor(R.color.neue_gradient_start), r.getColor(R.color.neue_gradient_end), TileMode.CLAMP));
     mChart.setDrawXLabels(false);
     mChart.setDrawYLabels(true);
     mChart.setDrawAxisLabelsInChart(true);
@@ -83,7 +74,6 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setDrawValueXLabelsInChart(true);
     mChart.getYLabels().setPosition(YLabelPosition.RIGHT);
     mChart.getPaint(Chart.PAINT_YLABEL).setColor(r.getColor(R.color.neue_text));
-    mChart.getPaint(Chart.PAINT_CIRCLES_INNER).setColor(r.getColor(R.color.neue_fill));
 
     MyMarkerView mv = new MyMarkerView(this);
     mChart.setMarkerView(mv);
@@ -144,16 +134,8 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
 
   }
 
-  private void setData(int count, float range, float rangeOffset) {
-
-    ArrayList<Long> xVals = new ArrayList<Long>();
-    long ts = System.currentTimeMillis();
-
-    for (int i = 0; i < count; i++) {
-      xVals.add(ts);
-      ts += TimeUnit.DAYS.toMillis(2);
-    }
-
+  private LineDataSet createSet(String name, int count, float range, float rangeOffset, boolean dashed) {
+    Resources r = getResources();
     ArrayList<Entry> yVals = new ArrayList<Entry>();
 
     for (int i = 0; i < count; i++) {
@@ -163,13 +145,34 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     }
 
     // create a dataset and give it a type
-    DataSet set1 = new DataSet(yVals, "DataSet 1");
+    LineDataSet set = new LineDataSet(yVals, name);
+    Paint paint = set.getDrawingSpec().getBasicPaint();
+    paint.setColor(getResources().getColor(R.color.neue_line));
+    if (dashed) {
+      paint.setPathEffect(new DashPathEffect(new float[] { 3, 3 }, 0));
+    }
+    Point size = new Point();
+    getWindowManager().getDefaultDisplay().getSize(size);
+    set.getDrawingSpec().getFillPaint().setShader(new LinearGradient(0, 0, 0, size.y, r.getColor(R.color.neue_gradient_start), r.getColor(R.color.neue_gradient_end), TileMode.CLAMP));
+    set.getDrawingSpec().getDataPointInnerCirclePaint().setColor(r.getColor(R.color.neue_fill));
+    return set;
+  }
 
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
-    dataSets.add(set1); // add the datasets
+  private void setData(int count, float range, float rangeOffset) {
+    ArrayList<Long> xVals = new ArrayList<Long>();
+    long ts = System.currentTimeMillis();
+
+    for (int i = 0; i < count; i++) {
+      xVals.add(ts);
+      ts += TimeUnit.DAYS.toMillis(2);
+    }
+
+    ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+    dataSets.add(createSet("Data 1", count, range, rangeOffset, true));
+    dataSets.add(createSet("Data 2", count, range, rangeOffset, false));
 
     // create a data object with the datasets
-    ChartData data = new ChartData(xVals, dataSets, new LabelFormatter() {
+    ChartData<LineDataSet> data = new ChartData<LineDataSet>(xVals, dataSets, new LabelFormatter() {
       SimpleDateFormat sdf = new SimpleDateFormat("MMM dd", Locale.US);
 
       @Override

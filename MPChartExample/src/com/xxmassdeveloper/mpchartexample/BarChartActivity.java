@@ -1,19 +1,20 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.filter.Approximator;
 import com.github.mikephil.charting.data.filter.Approximator.ApproximatorType;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
+import com.github.mikephil.charting.utils.MulticolorDrawingSpec;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.github.mikephil.charting.utils.YLabels;
 import com.github.mikephil.charting.utils.YLabels.YLabelPosition;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
+import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -49,13 +50,6 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
     mSeekBarY.setOnSeekBarChangeListener(this);
 
     mChart = (BarChart) findViewById(R.id.chart1);
-
-    ColorTemplate ct = new ColorTemplate();
-
-    // add colors for one dataset
-    ct.addDataSetColors(ColorTemplate.FRESH_COLORS, this);
-
-    mChart.setColorTemplate(ct);
 
     // enable the drawing of values
     mChart.setDrawYValues(true);
@@ -207,11 +201,13 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
       yVals1.add(new Entry(val, i));
     }
 
-    DataSet set1 = new DataSet(yVals1, "DataSet");
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
+    set1.getDrawingSpec().setColors(MulticolorDrawingSpec.fromResources(this, Colors.FRESH_COLORS));
+
+    ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
     dataSets.add(set1);
 
-    ChartData data = new ChartData(xVals, dataSets);
+    ChartData<BarDataSet> data = new ChartData<BarDataSet>(xVals, dataSets);
 
     mChart.setData(data);
     mChart.invalidate();

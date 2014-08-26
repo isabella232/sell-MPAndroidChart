@@ -1,11 +1,9 @@
 package com.github.mikephil.charting.charts;
 
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.ChartData.LabelFormatter;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.MarkerView;
@@ -22,7 +20,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
@@ -42,15 +39,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 /**
  * Baseclass of all Chart-Views.
  *
  * @author Philipp Jahoda
  */
-public abstract class Chart extends ViewGroup {
+public abstract class Chart<T extends DataSet> extends ViewGroup {
 
   public static final String LOG_TAG = "MPChart";
 
@@ -98,13 +93,13 @@ public abstract class Chart extends ViewGroup {
    * object that holds all data relevant for the chart (x-vals, y-vals, ...)
    * that are currently displayed
    */
-  protected ChartData mCurrentData = null;
+  protected ChartData<T> mCurrentData = null;
 
   /**
    * object that holds all data that was originally set for the chart, before
    * it was modified or any filtering algorithms had been applied
    */
-  protected ChartData mOriginalData = null;
+  protected ChartData<T> mOriginalData = null;
 
   /**
    * final bitmap that contains all information and is drawn to the screen
@@ -150,11 +145,6 @@ public abstract class Chart extends ViewGroup {
   protected Paint mValuePaint;
 
   /**
-   * this is the paint object used for drawing the data onto the chart
-   */
-  protected Paint mRenderPaint;
-
-  /**
    * paint for the legend labels
    */
   protected Paint mLegendLabelPaint;
@@ -163,11 +153,6 @@ public abstract class Chart extends ViewGroup {
    * paint used for the legend forms
    */
   protected Paint mLegendFormPaint;
-
-  /**
-   * the colortemplate the chart uses
-   */
-  protected ColorTemplate mCt;
 
   /**
    * description text that appears in the bottom right corner of the chart
@@ -289,9 +274,6 @@ public abstract class Chart extends ViewGroup {
     mOffsetRight = (int) Utils.convertDpToPixel(mOffsetRight);
     mOffsetTop = (int) Utils.convertDpToPixel(mOffsetTop);
 
-    mRenderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    mRenderPaint.setStyle(Style.FILL);
-
     mDrawPaint = new Paint();
 
     mDescPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -315,48 +297,6 @@ public abstract class Chart extends ViewGroup {
 
     mLegendLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     mLegendLabelPaint.setTextSize(Utils.convertDpToPixel(9f));
-
-    mCt = new ColorTemplate();
-    mCt.addDataSetColors(ColorTemplate.VORDIPLOM_COLORS, getContext());
-  }
-
-  public void initWithDummyData() {
-    ColorTemplate template = new ColorTemplate();
-    template.addColorsForDataSets(ColorTemplate.COLORFUL_COLORS, getContext());
-
-    setColorTemplate(template);
-    setDrawYValues(false);
-
-    ArrayList<Long> xVals = new ArrayList<Long>();
-    for (long i = 0; i < 12; i++) {
-      xVals.add(i);
-    }
-
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
-    for (int i = 0; i < 3; i++) {
-
-      ArrayList<Entry> yVals = new ArrayList<Entry>();
-
-      for (int j = 0; j < 12; j++) {
-        float val = (float) (Math.random() * 100);
-        yVals.add(new Entry(val, j));
-      }
-
-      DataSet set = new DataSet(yVals, "DataSet " + i);
-      dataSets.add(set); // add the datasets
-    }
-    // create a data object with the datasets
-    ChartData data = new ChartData(xVals, dataSets, new LabelFormatter() {
-      private Calendar calendar = Calendar.getInstance();
-
-      @Override
-      public String formatValue(long value) {
-        calendar.set(1999, (int) value, 1);
-        return calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
-      }
-    });
-    setData(data);
-    invalidate();
   }
 
   protected float pixelYToValue(float y) {
@@ -428,32 +368,6 @@ public abstract class Chart extends ViewGroup {
     }
 
     Log.i(LOG_TAG, "Data is set.");
-  }
-
-  /**
-   * Sets primitive data for the chart. Internally, this is converted into a
-   * ChartData object with one DataSet (type 0). If you have more specific
-   * requirements for your data, use the setData(ChartData data) method and
-   * create your own ChartData object with as many DataSets as you like.
-   *
-   * @param xVals
-   * @param yVals
-   */
-  public void setData(ArrayList<Long> xVals, ArrayList<Float> yVals) {
-
-    ArrayList<Entry> series = new ArrayList<Entry>();
-
-    for (int i = 0; i < yVals.size(); i++) {
-      series.add(new Entry(yVals.get(i), i));
-    }
-
-    DataSet set = new DataSet(series, "DataSet");
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
-    dataSets.add(set);
-
-    ChartData data = new ChartData(xVals, dataSets);
-
-    setData(data);
   }
 
   /**
@@ -573,24 +487,9 @@ public abstract class Chart extends ViewGroup {
     ArrayList<Integer> colors = new ArrayList<Integer>();
 
     for (int i = 0; i < mOriginalData.getDataSetCount(); i++) {
-
-      ArrayList<Integer> clrs = mCt.getDataSetColors(i % mCt.getColors().size());
-      int dataSetCount = mOriginalData.getDataSetByIndex(i).getEntryCount();
-
-      for (int j = 0; j < clrs.size() && j < dataSetCount; j++) {
-
-        // if multiple colors are set for a DataSet, group them
-        if (j < clrs.size() - 1 && j < dataSetCount - 1) {
-
-          labels.add(null);
-        } else { // add label to the last entry
-
-          String label = mOriginalData.getDataSetByIndex(i).getLabel();
-          labels.add(label);
-        }
-
-        colors.add(clrs.get(j));
-      }
+      DataSet ds = mOriginalData.getDataSetByIndex(i);
+      labels.add(ds.getLabel());
+      colors.add(ds.getDrawingSpec().getBasicPaint().getColor());
     }
 
     // Log.i(LOG_TAG, "Preparing legend, colors size: " + colors.size() +
@@ -1285,28 +1184,6 @@ public abstract class Chart extends ViewGroup {
   }
 
   /**
-   * Sets a colortemplate for the chart that defindes the colors used for
-   * drawing. If more values need to be drawn than provided colors available
-   * in the colortemplate, colors are repeated.
-   *
-   * @param ct
-   */
-  public void setColorTemplate(ColorTemplate ct) {
-    this.mCt = ct;
-
-    Log.i(LOG_TAG, "ColorTemplate set.");
-  }
-
-  /**
-   * returns the colortemplate used by the chart
-   *
-   * @return
-   */
-  public ColorTemplate getColorTemplate() {
-    return mCt;
-  }
-
-  /**
    * sets the view that is displayed when a value is clicked on the chart
    *
    * @param v
@@ -1392,11 +1269,6 @@ public abstract class Chart extends ViewGroup {
   public static final int PAINT_VALUES = 8;
 
   /**
-   * paint for the inner circle (linechart)
-   */
-  public static final int PAINT_CIRCLES_INNER = 10;
-
-  /**
    * paint for the description text in the bottom right corner
    */
   public static final int PAINT_DESCRIPTION = 11;
@@ -1427,19 +1299,9 @@ public abstract class Chart extends ViewGroup {
   public static final int PAINT_HIGHLIGHT_BAR = 16;
 
   /**
-   * paint used for all rendering processes
-   */
-  public static final int PAINT_RENDER = 17;
-
-  /**
    * paint used for the legend
    */
   public static final int PAINT_LEGEND_LABEL = 18;
-
-  /*
-   * paint used for filling graph
-   */
-  public static final int PAINT_FILLED = 19;
 
   /**
    * set a new paint object for the specified parameter in the chart e.g.
@@ -1461,9 +1323,6 @@ public abstract class Chart extends ViewGroup {
     case PAINT_VALUES:
       mValuePaint = p;
       break;
-    case PAINT_RENDER:
-      mRenderPaint = p;
-      break;
     case PAINT_LEGEND_LABEL:
       mLegendLabelPaint = p;
       break;
@@ -1484,8 +1343,6 @@ public abstract class Chart extends ViewGroup {
       return mDescPaint;
     case PAINT_VALUES:
       return mValuePaint;
-    case PAINT_RENDER:
-      return mRenderPaint;
     case PAINT_LEGEND_LABEL:
       return mLegendLabelPaint;
     }
@@ -1925,14 +1782,6 @@ public abstract class Chart extends ViewGroup {
     super.onSizeChanged(w, h, oldw, oldh);
   }
 
-  @Override
-  protected void onAttachedToWindow() {
-    super.onAttachedToWindow();
-    if (isInEditMode()) {
-      initWithDummyData();
-    }
-  }
-
   public void forceRedraw() {
     mOffsetsCalculated = false;
     requestLayout();
@@ -1945,4 +1794,6 @@ public abstract class Chart extends ViewGroup {
   public boolean isClippingEnabled() {
     return mClippingEnabled;
   }
+
+  protected abstract T createDataSet(ArrayList<Entry> approximated, String label);
 }

@@ -2,7 +2,7 @@ package com.xxmassdeveloper.mpchartexample.listviewitems;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
 import com.xxmassdeveloper.mpchartexample.R;
@@ -12,16 +12,12 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 
-public class PieChartItem extends ChartItem {
-
-  private ColorTemplate mCt;
+public class PieChartItem extends ChartItem<PieDataSet> {
   private Typeface mTf;
 
   public PieChartItem(ChartData cd, Context c) {
     super(cd);
 
-    mCt = new ColorTemplate();
-    mCt.addDataSetColors(ColorTemplate.VORDIPLOM_COLORS, c);
     mTf = Typeface.createFromAsset(c.getAssets(), "OpenSans-Regular.ttf");
   }
 
@@ -49,7 +45,6 @@ public class PieChartItem extends ChartItem {
     }
 
     // apply styling
-    holder.chart.setColorTemplate(mCt);
     holder.chart.setValueTypeface(mTf);
     holder.chart.setDescription("");
     holder.chart.setHoleRadius(60f);

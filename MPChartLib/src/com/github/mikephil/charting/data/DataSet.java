@@ -1,5 +1,7 @@
 package com.github.mikephil.charting.data;
 
+import com.github.mikephil.charting.utils.DrawingSpec;
+
 import java.util.ArrayList;
 
 /**
@@ -10,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author Philipp Jahoda
  */
-public class DataSet {
+public abstract class DataSet {
 
   /**
    * the entries that this dataset represents / holds together
@@ -37,6 +39,8 @@ public class DataSet {
    */
   private String mLabel = "DataSet";
 
+  protected DrawingSpec mDrawingSpec;
+
   /**
    * Creates a new DataSet object with the given values it represents. Also, a
    * label that describes the DataSet can be specified. The label can also be
@@ -56,6 +60,11 @@ public class DataSet {
 
     calcMinMax();
     calcYValueSum();
+    initDrawingSpec();
+  }
+
+  protected void initDrawingSpec() {
+    mDrawingSpec = new DrawingSpec();
   }
 
   /**
@@ -64,16 +73,6 @@ public class DataSet {
   public void notifyDataSetChanged() {
     calcMinMax();
     calcYValueSum();
-  }
-
-  public DataSet cloneDataSet() {
-    ArrayList<Entry> duplicatedEntries = new ArrayList<Entry>();
-    for (int i = 0; i < mYVals.size(); i++) {
-      Entry entry = mYVals.get(i).copy();
-      duplicatedEntries.add(entry);
-    }
-    DataSet dataSet = new DataSet(duplicatedEntries, mLabel);
-    return dataSet;
   }
 
   /**
@@ -237,52 +236,6 @@ public class DataSet {
     return -1;
   }
 
-  /**
-   * Convenience method to create multiple DataSets of different types with
-   * various double value arrays. Each double array represents the data of one
-   * DataSet with a type created by this method, starting at 0 (and
-   * incremented).
-   *
-   * @param yValues
-   * @return
-   */
-  public static ArrayList<DataSet> makeDataSets(ArrayList<Double[]> yValues) {
-
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
-
-    for (int i = 0; i < yValues.size(); i++) {
-
-      Double[] curValues = yValues.get(i);
-
-      ArrayList<Entry> entries = new ArrayList<Entry>();
-
-      for (int j = 0; j < curValues.length; j++) {
-        entries.add(new Entry(curValues[j].floatValue(), j));
-      }
-
-      dataSets.add(new DataSet(entries, "DS " + i));
-    }
-
-    return dataSets;
-  }
-
-  /**
-   * provides an exact copy of the DataSet this method is used on
-   *
-   * @return
-   */
-  public DataSet copy() {
-
-    ArrayList<Entry> yVals = new ArrayList<Entry>();
-
-    for (int i = 0; i < mYVals.size(); i++) {
-      yVals.add(mYVals.get(i).copy());
-    }
-
-    DataSet copied = new DataSet(yVals, mLabel);
-    return copied;
-  }
-
   @Override
   public String toString() {
     StringBuffer buffer = new StringBuffer();
@@ -312,5 +265,9 @@ public class DataSet {
    */
   public String getLabel() {
     return mLabel;
+  }
+
+  public DrawingSpec getDrawingSpec() {
+    return mDrawingSpec;
   }
 }

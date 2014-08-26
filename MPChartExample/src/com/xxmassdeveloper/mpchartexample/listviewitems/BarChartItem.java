@@ -1,8 +1,8 @@
 package com.xxmassdeveloper.mpchartexample.listviewitems;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.xxmassdeveloper.mpchartexample.R;
@@ -12,16 +12,12 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 
-public class BarChartItem extends ChartItem {
-
-  private ColorTemplate mCt;
+public class BarChartItem extends ChartItem<BarDataSet> {
   private Typeface mTf;
 
   public BarChartItem(ChartData cd, Context c) {
     super(cd);
 
-    mCt = new ColorTemplate();
-    mCt.addDataSetColors(ColorTemplate.VORDIPLOM_COLORS, c);
     mTf = Typeface.createFromAsset(c.getAssets(), "OpenSans-Regular.ttf");
   }
 
@@ -50,7 +46,6 @@ public class BarChartItem extends ChartItem {
 
     // apply styling
     holder.chart.setYLabelCount(5);
-    holder.chart.setColorTemplate(mCt);
     holder.chart.setBarSpace(20f);
     holder.chart.setYLabelTypeface(mTf);
     holder.chart.setXLabelTypeface(mTf);

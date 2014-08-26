@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author Philipp Jahoda
  */
-public class ChartData {
+public class ChartData<T extends DataSet> {
 
   /**
    * maximum y-value in the y-value array
@@ -36,7 +36,7 @@ public class ChartData {
   /**
    * holds all the datasets (e.g. different lines) the chart represents
    */
-  private ArrayList<DataSet> mDataSets;
+  private ArrayList<T> mDataSets;
   private LabelFormatter mLabelFormatter;
 
   /**
@@ -48,15 +48,15 @@ public class ChartData {
    * @param dataSets all DataSet objects the chart needs to represent
    * @param padding Number of fake entries to add
    */
-  public ChartData(ArrayList<Long> xVals, ArrayList<DataSet> dataSets, LabelFormatter labelFormatter, int padding) {
+  public ChartData(ArrayList<Long> xVals, ArrayList<T> dataSets, LabelFormatter labelFormatter, int padding) {
     init(xVals, dataSets, labelFormatter, padding);
   }
 
-  public ChartData(ArrayList<Long> xVals, ArrayList<DataSet> dataSets, LabelFormatter labelFormatter) {
+  public ChartData(ArrayList<Long> xVals, ArrayList<T> dataSets, LabelFormatter labelFormatter) {
     this(xVals, dataSets, labelFormatter, 0);
   }
 
-  public ChartData(ArrayList<Long> xVals, ArrayList<DataSet> dataSets) {
+  public ChartData(ArrayList<Long> xVals, ArrayList<T> dataSets) {
     this(xVals, dataSets, new LabelFormatter() {
       @Override
       public String formatValue(long value) {
@@ -71,17 +71,17 @@ public class ChartData {
    * @param xVals
    * @param data
    */
-  public ChartData(ArrayList<Long> xVals, DataSet data) {
+  public ChartData(ArrayList<Long> xVals, T data) {
     this(xVals, data, SIMPLE_LABEL_FORMATTER);
   }
 
-  public ChartData(ArrayList<Long> xVals, DataSet data, LabelFormatter formatter) {
-    ArrayList<DataSet> sets = new ArrayList<DataSet>();
+  public ChartData(ArrayList<Long> xVals, T data, LabelFormatter formatter) {
+    ArrayList<T> sets = new ArrayList<T>();
     sets.add(data);
     init(xVals, sets, formatter, 0);
   }
 
-  private void init(ArrayList<Long> xVals, ArrayList<DataSet> dataSets, LabelFormatter labelFormatter, int padding) {
+  private void init(ArrayList<Long> xVals, ArrayList<T> dataSets, LabelFormatter labelFormatter, int padding) {
     mLabelFormatter = labelFormatter;
     mXVals = xVals;
     mXLabels = new ArrayList<String>();
@@ -144,7 +144,7 @@ public class ChartData {
    */
   private void calcMinMax() {
     // check which dataset to use
-    ArrayList<DataSet> dataSets = mDataSets;
+    ArrayList<T> dataSets = mDataSets;
 
     mYMin = dataSets.get(0).getYMin();
     mYMax = dataSets.get(0).getYMax();
@@ -166,7 +166,7 @@ public class ChartData {
     mYValueSum = 0;
 
     // check which dataset to use
-    ArrayList<DataSet> dataSets = mDataSets;
+    ArrayList<T> dataSets = mDataSets;
     for (int i = 0; i < dataSets.size(); i++) {
       mYValueSum += Math.abs(dataSets.get(i).getYValueSum());
     }
@@ -265,7 +265,7 @@ public class ChartData {
    * @param index
    * @return
    */
-  public DataSet getDataSetByIndex(int index) {
+  public T getDataSetByIndex(int index) {
     return mDataSets.get(index);
   }
 
@@ -278,9 +278,9 @@ public class ChartData {
    * @param ignorecase if true, the search is not case-sensitive
    * @return
    */
-  public DataSet getDataSetByLabel(String label, boolean ignorecase) {
+  public T getDataSetByLabel(String label, boolean ignorecase) {
     // check which dataset to use
-    ArrayList<DataSet> dataSets = mDataSets;
+    ArrayList<T> dataSets = mDataSets;
 
     if (ignorecase) {
       for (int i = 0; i < dataSets.size(); i++) {
@@ -303,7 +303,7 @@ public class ChartData {
    *
    * @return
    */
-  public ArrayList<DataSet> getDataSets() {
+  public ArrayList<T> getDataSets() {
     return mDataSets;
   }
 
@@ -312,7 +312,7 @@ public class ChartData {
    *
    * @return
    */
-  public ArrayList<DataSet> getOriginalDataSets() {
+  public ArrayList<T> getOriginalDataSets() {
     return mDataSets;
   }
 
@@ -335,7 +335,7 @@ public class ChartData {
   public int getYValCount() {
     int count = 0;
     // check which dataset to use
-    ArrayList<DataSet> dataSets = mDataSets;
+    ArrayList<T> dataSets = mDataSets;
 
     for (int i = 0; i < dataSets.size(); i++) {
       count += dataSets.get(i).getEntryCount();

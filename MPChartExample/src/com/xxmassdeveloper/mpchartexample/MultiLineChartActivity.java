@@ -4,13 +4,14 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.filter.Approximator;
 import com.github.mikephil.charting.data.filter.Approximator.ApproximatorType;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.XLabels;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
+import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -46,20 +47,14 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
     mSeekBarY = (SeekBar) findViewById(R.id.seekBar2);
     mSeekBarY.setOnSeekBarChangeListener(this);
 
-    // create a color template for one dataset with only one color
-    ColorTemplate ct = new ColorTemplate();
-    ct.addColorsForDataSets(ColorTemplate.VORDIPLOM_COLORS, this);
-
     mChart = (LineChart) findViewById(R.id.chart1);
     mChart.setOnChartValueSelectedListener(this);
-    mChart.setColorTemplate(ct);
 
     // mChart.setStartAtZero(true);
 
     // disable the drawing of values into the chart
     mChart.setDrawYValues(false);
 
-    mChart.setLineWidth(5f);
     mChart.setCircleSize(5f);
     mChart.setYLabelCount(6);
 
@@ -106,15 +101,6 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
       else
         mChart.setPinchZoom(true);
 
-      mChart.invalidate();
-      break;
-    }
-    case R.id.actionDashedLine: {
-      if (!mChart.isDashedLineEnabled()) {
-        mChart.enableDashedLine(10f, 5f, 0f);
-      } else {
-        mChart.disableDashedLine();
-      }
       mChart.invalidate();
       break;
     }
@@ -209,14 +195,14 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
       values.add(vals);
     }
 
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    ArrayList<LineDataSet> dataSets = makeDataSets(values);
+    int i = 0;
+    for (DataSet set : dataSets) {
+      set.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[i % Colors.VORDIPLOM_COLORS.length]));
+      i++;
+    }
 
-    // create DataSets from values
-    // NOTE: DataSet.makeDataSets(...) is just a convenience method. Of
-    // course, three different DataSets could be created separately as well.
-    dataSets.addAll(DataSet.makeDataSets(values));
-
-    ChartData data = new ChartData(xVals, dataSets);
+    ChartData<LineDataSet> data = new ChartData<LineDataSet>(xVals, dataSets);
     mChart.setData(data);
     mChart.invalidate();
   }
@@ -241,4 +227,35 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
   @Override
   public void onStopTrackingTouch(SeekBar seekBar) {
   }
+
+
+  /**
+   * Convenience method to create multiple DataSets of different types with
+   * various double value arrays. Each double array represents the data of one
+   * DataSet with a type created by this method, starting at 0 (and
+   * incremented).
+   *
+   * @param yValues
+   * @return
+   */
+  public static ArrayList<LineDataSet> makeDataSets(ArrayList<Double[]> yValues) {
+
+    ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+
+    for (int i = 0; i < yValues.size(); i++) {
+
+      Double[] curValues = yValues.get(i);
+
+      ArrayList<Entry> entries = new ArrayList<Entry>();
+
+      for (int j = 0; j < curValues.length; j++) {
+        entries.add(new Entry(curValues[j].floatValue(), j));
+      }
+
+      dataSets.add(new LineDataSet(entries, "DS " + i));
+    }
+
+    return dataSets;
+  }
+
 }

@@ -2,7 +2,7 @@ package com.xxmassdeveloper.mpchartexample.listviewitems;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
 import com.xxmassdeveloper.mpchartexample.R;
@@ -12,16 +12,13 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 
-public class LineChartItem extends ChartItem {
+public class LineChartItem extends ChartItem<LineDataSet> {
 
-  private ColorTemplate mCt;
   private Typeface mTf;
 
   public LineChartItem(ChartData cd, Context c) {
     super(cd);
 
-    mCt = new ColorTemplate();
-    mCt.addDataSetColor(R.color.vordiplom_4, c);
     mTf = Typeface.createFromAsset(c.getAssets(), "OpenSans-Regular.ttf");
   }
 
@@ -50,8 +47,6 @@ public class LineChartItem extends ChartItem {
 
     // apply styling
     holder.chart.setYLabelCount(5);
-    holder.chart.setColorTemplate(mCt);
-    holder.chart.setLineWidth(3f);
     holder.chart.setCircleSize(5f);
     holder.chart.setYLabelTypeface(mTf);
     holder.chart.setXLabelTypeface(mTf);

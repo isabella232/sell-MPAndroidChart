@@ -3,14 +3,15 @@ package com.xxmassdeveloper.mpchartexample;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.ChartData.LabelFormatter;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
+import com.github.mikephil.charting.utils.MulticolorDrawingSpec;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
+import com.xxmassdeveloper.mpchartexample.utils.Colors;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -51,12 +52,6 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
 
     mChart.setValueTypeface(tf);
     mChart.setCenterTextTypeface(Typeface.createFromAsset(getAssets(), "OpenSans-Light.ttf"));
-
-    ColorTemplate ct = new ColorTemplate();
-
-    ct.addDataSetColors(ColorTemplate.VORDIPLOM_COLORS, this);
-
-    mChart.setColorTemplate(ct);
 
     // set a space between the slices
     mChart.setSliceSpace(3f);
@@ -166,12 +161,13 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
       xVals.add((long) (i + 1));
     }
 
-    DataSet set1 = new DataSet(yVals1, "Content");
+    PieDataSet set1 = new PieDataSet(yVals1, "Content");
+    set1.getDrawingSpec().setColors(MulticolorDrawingSpec.fromResources(this, Colors.FRESH_COLORS));
 
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    ArrayList<PieDataSet> dataSets = new ArrayList<PieDataSet>();
     dataSets.add(set1);
 
-    ChartData data = new ChartData(xVals, dataSets, new LabelFormatter() {
+    ChartData<PieDataSet> data = new ChartData<PieDataSet>(xVals, dataSets, new LabelFormatter() {
       @Override
       public String formatValue(long value) {
         return "Text" + value;

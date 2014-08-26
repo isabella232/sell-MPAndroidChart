@@ -11,7 +11,6 @@ import com.xxmassdeveloper.mpchartexample.NeueChartActivity;
 import com.xxmassdeveloper.mpchartexample.PieChartActivity;
 import com.xxmassdeveloper.mpchartexample.R;
 import com.xxmassdeveloper.mpchartexample.ScatterChartActivity;
-import com.xxmassdeveloper.mpchartexample.fragments.SimpleChartDemo;
 
 import android.app.Activity;
 import android.content.Context;
@@ -54,9 +53,6 @@ public class MainActivity extends Activity implements OnItemClickListener {
         "A bar chart with multiple DataSet objects. One multiple colors per DataSet."));
     objects.add(new ContentItem("Draw Chart",
         "Demonstration of drawing values into the chart per touch-gesture. With callbacks."));
-    objects.add(new ContentItem(
-        "Charts in Fragments, awesome design.",
-        "Demonstration of charts inside Fragments. In this example the focus was on the design and look and feel of the chart."));
     objects.add(new ContentItem(
         "BarChart inside ListView",
         "Demonstrates the usage of a BarChart inside a ListView item."));
@@ -112,14 +108,10 @@ public class MainActivity extends Activity implements OnItemClickListener {
       startActivity(i);
       break;
     case 8:
-      i = new Intent(this, SimpleChartDemo.class);
-      startActivity(i);
-      break;
-    case 9:
       i = new Intent(this, ListViewBarChartActivity.class);
       startActivity(i);
       break;
-    case 10:
+    case 9:
       i = new Intent(this, ListViewMultiChartActivity.class);
       startActivity(i);
       break;

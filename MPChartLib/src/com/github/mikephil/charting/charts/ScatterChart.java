@@ -2,8 +2,10 @@ package com.github.mikephil.charting.charts;
 
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.ScatterDataSet;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 
@@ -15,7 +17,7 @@ import java.util.ArrayList;
  *
  * @author Philipp Jahoda
  */
-public class ScatterChart extends BarLineChartBase {
+public class ScatterChart extends BarLineChartBase<ScatterDataSet> {
 
   /**
    * enum that defines the shape that is drawn where the values are
@@ -58,7 +60,7 @@ public class ScatterChart extends BarLineChartBase {
   @Override
   protected void drawData() {
 
-    ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+    ArrayList<ScatterDataSet> dataSets = mCurrentData.getDataSets();
 
     float shapeHalf = mShapeSize / 2f;
 
@@ -69,17 +71,13 @@ public class ScatterChart extends BarLineChartBase {
 
       float[] pos = generateTransformedValues(entries, 0f);
 
-      // Get the colors for the DataSet at the current index. If the index
-      // is out of bounds, reuse DataSet colors.
-      ArrayList<Integer> colors = mCt.getDataSetColors(i % mCt.getColors().size());
-
       ScatterShape shape = mScatterShapes[i % mScatterShapes.length];
 
       for (int j = 0; j < pos.length; j += 2) {
 
         // Set the color for the currently drawn value. If the index is
         // out of bounds, reuse colors.
-        mRenderPaint.setColor(colors.get(j % colors.size()));
+        Paint renderPaint = mCurrentData.getDataSetByIndex(i).getDrawingSpec().getBasicPaint();
 
         if (isOffContentRight(pos[j]))
           break;
@@ -94,16 +92,16 @@ public class ScatterChart extends BarLineChartBase {
 
           mDrawCanvas.drawRect(pos[j] - shapeHalf, pos[j + 1] - shapeHalf, pos[j]
               + shapeHalf, pos[j + 1]
-              + shapeHalf, mRenderPaint);
+              + shapeHalf, renderPaint);
         } else if (shape == ScatterShape.CIRCLE) {
 
-          mDrawCanvas.drawCircle(pos[j], pos[j + 1], mShapeSize / 2f, mRenderPaint);
+          mDrawCanvas.drawCircle(pos[j], pos[j + 1], mShapeSize / 2f, renderPaint);
         } else if (shape == ScatterShape.CROSS) {
 
           mDrawCanvas.drawLine(pos[j] - shapeHalf, pos[j + 1], pos[j] + shapeHalf,
-              pos[j + 1], mRenderPaint);
+              pos[j + 1], renderPaint);
           mDrawCanvas.drawLine(pos[j], pos[j + 1] - shapeHalf, pos[j], pos[j + 1]
-              + shapeHalf, mRenderPaint);
+              + shapeHalf, renderPaint);
         } else if (shape == ScatterShape.TRIANGLE) {
 
           // create a triangle path
@@ -113,7 +111,7 @@ public class ScatterChart extends BarLineChartBase {
           tri.lineTo(pos[j] - shapeHalf, pos[j + 1] + shapeHalf);
           tri.close();
 
-          mDrawCanvas.drawPath(tri, mRenderPaint);
+          mDrawCanvas.drawPath(tri, renderPaint);
         } else if (shape == ScatterShape.CUSTOM) {
 
           if (mCustomScatterPath == null)
@@ -121,7 +119,7 @@ public class ScatterChart extends BarLineChartBase {
 
           // transform the provided custom path
           transformPath(mCustomScatterPath);
-          mDrawCanvas.drawPath(mCustomScatterPath, mRenderPaint);
+          mDrawCanvas.drawPath(mCustomScatterPath, renderPaint);
         }
       }
     }
@@ -132,7 +130,7 @@ public class ScatterChart extends BarLineChartBase {
     // if values are drawn
     if (mDrawYValues && mCurrentData.getYValCount() < mMaxVisibleCount * mScaleX) {
 
-      ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+      ArrayList<ScatterDataSet> dataSets = mCurrentData.getDataSets();
 
       for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
 
@@ -190,6 +188,11 @@ public class ScatterChart extends BarLineChartBase {
         mDrawCanvas.drawLines(pts, mHighlightPaint);
       }
     }
+  }
+
+  @Override
+  protected ScatterDataSet createDataSet(ArrayList<Entry> approximated, String label) {
+    return new ScatterDataSet(approximated, label);
   }
 
   @Override
