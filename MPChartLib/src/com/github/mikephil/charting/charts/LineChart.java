@@ -2,6 +2,7 @@ package com.github.mikephil.charting.charts;
 
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 
 import android.content.Context;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  *
  * @author Philipp Jahoda
  */
-public class LineChart extends BarLineChartBase {
+public class LineChart extends BarLineChartBase<LineDataSet> {
 
   /**
    * the radius of the circle-shaped value indicators
@@ -122,9 +123,7 @@ public class LineChart extends BarLineChartBase {
   @Override
   protected void drawData() {
 
-    ArrayList<DataSet> dataSets;
-
-    dataSets = mCurrentData.getDataSets();
+    ArrayList<LineDataSet> dataSets = mCurrentData.getDataSets();
 
     if (mDrawFilled) {
       float heightOffset = pixelYToValue(mOffsetBottom + mOffsetTop);
@@ -234,7 +233,7 @@ public class LineChart extends BarLineChartBase {
       if (!mDrawCircles)
         valOffset = valOffset / 2;
 
-      ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+      ArrayList<LineDataSet> dataSets = mCurrentData.getDataSets();
 
       final int padding = mValuePadding * 2;
       for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
@@ -283,7 +282,7 @@ public class LineChart extends BarLineChartBase {
     // if drawing circles is enabled
     if (mDrawCircles) {
 
-      ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+      ArrayList<LineDataSet> dataSets = mCurrentData.getDataSets();
 
       for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
 
@@ -435,5 +434,10 @@ public class LineChart extends BarLineChartBase {
     default:
       return super.getPaint(which);
     }
+  }
+
+  @Override
+  protected LineDataSet createDataSet(ArrayList<Entry> approximated, String label) {
+    return new LineDataSet(approximated, label);
   }
 }

@@ -1,8 +1,8 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.XLabels.XLabelPosition;
@@ -40,7 +40,7 @@ public class ListViewBarChartActivity extends DemoBase {
 
     ListView lv = (ListView) findViewById(R.id.listView1);
 
-    ArrayList<ChartData> list = new ArrayList<ChartData>();
+    ArrayList<ChartData<BarDataSet>> list = new ArrayList<ChartData<BarDataSet>>();
 
     // 20 items
     for (int i = 0; i < 20; i++) {
@@ -51,11 +51,11 @@ public class ListViewBarChartActivity extends DemoBase {
     lv.setAdapter(cda);
   }
 
-  private class ChartDataAdapter extends ArrayAdapter<ChartData> {
+  private class ChartDataAdapter extends ArrayAdapter<ChartData<BarDataSet>> {
 
     private Typeface mTf;
 
-    public ChartDataAdapter(Context context, List<ChartData> objects) {
+    public ChartDataAdapter(Context context, List<ChartData<BarDataSet>> objects) {
       super(context, 0, objects);
       mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
     }
@@ -63,7 +63,7 @@ public class ListViewBarChartActivity extends DemoBase {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-      ChartData c = getItem(position);
+      ChartData<BarDataSet> c = getItem(position);
 
       ViewHolder holder = null;
 
@@ -123,12 +123,12 @@ public class ListViewBarChartActivity extends DemoBase {
 
     ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec" });
 
-    DataSet d = new DataSet(entries, "New DataSet " + cnt);
+    BarDataSet d = new BarDataSet(entries, "New DataSet " + cnt);
     d.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[0]));
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
     dataSets.add(d);
 
-    ChartData cd = new ChartData(formatter.getValues(), dataSets, formatter);
+    ChartData<BarDataSet> cd = new ChartData<BarDataSet>(formatter.getValues(), dataSets, formatter);
     return cd;
   }
 }

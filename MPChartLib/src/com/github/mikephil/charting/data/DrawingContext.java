@@ -6,11 +6,7 @@ import com.github.mikephil.charting.interfaces.OnDrawListener;
 import java.util.ArrayList;
 
 public class DrawingContext {
-
-  /**
-   * holds a DataSet that can be manipulated on the go, to allow users to draw into the chart
-   */
-  private DataSet mCurrentDrawingDataSet;
+  private LineDataSet mCurrentDrawingDataSet;
 
   private int mLastDrawnDataSetIndex = 0;
 
@@ -24,16 +20,16 @@ public class DrawingContext {
   /**
    * Call this method to create a new drawing DataSet
    *
-   * @param type the type of the new DataSet
+   * @param chartData the type of the new DataSet
    */
-  public void createNewDrawingDataSet(ChartData chartData) {
+  public void createNewDrawingDataSet(ChartData<LineDataSet> chartData) {
     if (mCurrentDrawingDataSet != null && mCurrentDrawingEntries != null) {
       // if an old one exist, finish the other one first
       finishNewDrawingEntry(chartData);
     }
 
     mCurrentDrawingEntries = new ArrayList<Entry>();
-    this.mCurrentDrawingDataSet = new DataSet(mCurrentDrawingEntries, "DS " + mLastDrawnDataSetIndex);
+    this.mCurrentDrawingDataSet = new LineDataSet(mCurrentDrawingEntries, "DS " + mLastDrawnDataSetIndex);
     chartData.getDataSets().add(mCurrentDrawingDataSet);
   }
 

@@ -1,7 +1,6 @@
 package com.github.mikephil.charting.charts;
 
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.ChartData.LabelFormatter;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
@@ -40,15 +39,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 /**
  * Baseclass of all Chart-Views.
  *
  * @author Philipp Jahoda
  */
-public abstract class Chart extends ViewGroup {
+public abstract class Chart<T extends DataSet> extends ViewGroup {
 
   public static final String LOG_TAG = "MPChart";
 
@@ -96,13 +93,13 @@ public abstract class Chart extends ViewGroup {
    * object that holds all data relevant for the chart (x-vals, y-vals, ...)
    * that are currently displayed
    */
-  protected ChartData mCurrentData = null;
+  protected ChartData<T> mCurrentData = null;
 
   /**
    * object that holds all data that was originally set for the chart, before
    * it was modified or any filtering algorithms had been applied
    */
-  protected ChartData mOriginalData = null;
+  protected ChartData<T> mOriginalData = null;
 
   /**
    * final bitmap that contains all information and is drawn to the screen
@@ -302,41 +299,6 @@ public abstract class Chart extends ViewGroup {
     mLegendLabelPaint.setTextSize(Utils.convertDpToPixel(9f));
   }
 
-  public void initWithDummyData() {
-    setDrawYValues(false);
-
-    ArrayList<Long> xVals = new ArrayList<Long>();
-    for (long i = 0; i < 12; i++) {
-      xVals.add(i);
-    }
-
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
-    for (int i = 0; i < 3; i++) {
-
-      ArrayList<Entry> yVals = new ArrayList<Entry>();
-
-      for (int j = 0; j < 12; j++) {
-        float val = (float) (Math.random() * 100);
-        yVals.add(new Entry(val, j));
-      }
-
-      DataSet set = new DataSet(yVals, "DataSet " + i);
-      dataSets.add(set); // add the datasets
-    }
-    // create a data object with the datasets
-    ChartData data = new ChartData(xVals, dataSets, new LabelFormatter() {
-      private Calendar calendar = Calendar.getInstance();
-
-      @Override
-      public String formatValue(long value) {
-        calendar.set(1999, (int) value, 1);
-        return calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
-      }
-    });
-    setData(data);
-    invalidate();
-  }
-
   protected float pixelYToValue(float y) {
     mHelperVec[0] = 0;
     mHelperVec[1] = y;
@@ -406,32 +368,6 @@ public abstract class Chart extends ViewGroup {
     }
 
     Log.i(LOG_TAG, "Data is set.");
-  }
-
-  /**
-   * Sets primitive data for the chart. Internally, this is converted into a
-   * ChartData object with one DataSet (type 0). If you have more specific
-   * requirements for your data, use the setData(ChartData data) method and
-   * create your own ChartData object with as many DataSets as you like.
-   *
-   * @param xVals
-   * @param yVals
-   */
-  public void setData(ArrayList<Long> xVals, ArrayList<Float> yVals) {
-
-    ArrayList<Entry> series = new ArrayList<Entry>();
-
-    for (int i = 0; i < yVals.size(); i++) {
-      series.add(new Entry(yVals.get(i), i));
-    }
-
-    DataSet set = new DataSet(series, "DataSet");
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
-    dataSets.add(set);
-
-    ChartData data = new ChartData(xVals, dataSets);
-
-    setData(data);
   }
 
   /**
@@ -1861,14 +1797,6 @@ public abstract class Chart extends ViewGroup {
     super.onSizeChanged(w, h, oldw, oldh);
   }
 
-  @Override
-  protected void onAttachedToWindow() {
-    super.onAttachedToWindow();
-    if (isInEditMode()) {
-      initWithDummyData();
-    }
-  }
-
   public void forceRedraw() {
     mOffsetsCalculated = false;
     requestLayout();
@@ -1881,4 +1809,6 @@ public abstract class Chart extends ViewGroup {
   public boolean isClippingEnabled() {
     return mClippingEnabled;
   }
+
+  protected abstract T createDataSet(ArrayList<Entry> approximated, String label);
 }

@@ -1,8 +1,8 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
@@ -181,19 +181,19 @@ public class BarChartActivityMultiDataset extends DemoBase implements OnSeekBarC
     }
 
     // create 3 datasets with different types
-    DataSet set1 = new DataSet(yVals1, "Company A");
+    BarDataSet set1 = new BarDataSet(yVals1, "Company A");
     set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[0]));
-    DataSet set2 = new DataSet(yVals2, "Company B");
+    BarDataSet set2 = new BarDataSet(yVals2, "Company B");
     set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[1]));
-    DataSet set3 = new DataSet(yVals3, "Company C");
+    BarDataSet set3 = new BarDataSet(yVals3, "Company C");
     set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[2]));
 
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
     dataSets.add(set1);
     dataSets.add(set2);
     dataSets.add(set3);
 
-    ChartData data = new ChartData(xVals, dataSets);
+    ChartData<BarDataSet> data = new ChartData<BarDataSet>(xVals, dataSets);
 
     mChart.setData(data);
     mChart.invalidate();

@@ -2,6 +2,7 @@ package com.github.mikephil.charting.charts;
 
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.ScatterDataSet;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
  *
  * @author Philipp Jahoda
  */
-public class ScatterChart extends BarLineChartBase {
+public class ScatterChart extends BarLineChartBase<ScatterDataSet> {
 
   /**
    * enum that defines the shape that is drawn where the values are
@@ -59,7 +60,7 @@ public class ScatterChart extends BarLineChartBase {
   @Override
   protected void drawData() {
 
-    ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+    ArrayList<ScatterDataSet> dataSets = mCurrentData.getDataSets();
 
     float shapeHalf = mShapeSize / 2f;
 
@@ -129,7 +130,7 @@ public class ScatterChart extends BarLineChartBase {
     // if values are drawn
     if (mDrawYValues && mCurrentData.getYValCount() < mMaxVisibleCount * mScaleX) {
 
-      ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+      ArrayList<ScatterDataSet> dataSets = mCurrentData.getDataSets();
 
       for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
 
@@ -187,6 +188,11 @@ public class ScatterChart extends BarLineChartBase {
         mDrawCanvas.drawLines(pts, mHighlightPaint);
       }
     }
+  }
+
+  @Override
+  protected ScatterDataSet createDataSet(ArrayList<Entry> approximated, String label) {
+    return new ScatterDataSet(approximated, label);
   }
 
   @Override

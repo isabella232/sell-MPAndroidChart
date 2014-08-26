@@ -3,8 +3,8 @@ package com.xxmassdeveloper.mpchartexample;
 import com.github.mikephil.charting.charts.BarLineChartBase.BorderStyle;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.filter.Approximator;
 import com.github.mikephil.charting.data.filter.Approximator.ApproximatorType;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
@@ -278,13 +278,13 @@ public class LineChartActivity extends DemoBase implements OnSeekBarChangeListen
     }
 
     // create a dataset and give it a type
-    DataSet set1 = new DataSet(yVals, "DataSet 1");
+    LineDataSet set1 = new LineDataSet(yVals, "DataSet 1");
     set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.COLORFUL_COLORS[0]));
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
     dataSets.add(set1); // add the datasets
 
     // create a data object with the datasets
-    ChartData data = new ChartData(xVals, dataSets);
+    ChartData<LineDataSet> data = new ChartData<LineDataSet>(xVals, dataSets);
 
     // set data
     mChart.setData(data);

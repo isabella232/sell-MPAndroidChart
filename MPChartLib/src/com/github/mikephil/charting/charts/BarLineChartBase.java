@@ -40,7 +40,7 @@ import java.util.ArrayList;
  *
  * @author Philipp Jahoda
  */
-public abstract class BarLineChartBase extends Chart {
+public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
 
   /**
    * string that is drawn next to the values in the chart, indicating their
@@ -1932,7 +1932,8 @@ public abstract class BarLineChartBase extends Chart {
       // do the filtering
       ArrayList<Entry> approximated = mApproximator.filter(old.getYVals());
 
-      DataSet set = new DataSet(approximated, old.getLabel());
+
+      T set = createDataSet(approximated, old.getLabel());
       dataSets.add(set);
     }
 

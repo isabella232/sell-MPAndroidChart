@@ -4,8 +4,8 @@ import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.ChartData.LabelFormatter;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.YLabels.YLabelPosition;
@@ -136,7 +136,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
 
   }
 
-  private DataSet createSet(String name, int count, float range, float rangeOffset) {
+  private LineDataSet createSet(String name, int count, float range, float rangeOffset) {
     ArrayList<Entry> yVals = new ArrayList<Entry>();
 
     for (int i = 0; i < count; i++) {
@@ -146,7 +146,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     }
 
     // create a dataset and give it a type
-    DataSet set = new DataSet(yVals, name);
+    LineDataSet set = new LineDataSet(yVals, name);
     set.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(R.color.neue_line));
     return set;
   }
@@ -160,12 +160,12 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
       ts += TimeUnit.DAYS.toMillis(2);
     }
 
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
     dataSets.add(createSet("Data 1", count, range, rangeOffset)); // add the datasets
     dataSets.add(createSet("Data 2", count, range, rangeOffset)); // add the datasets
 
     // create a data object with the datasets
-    ChartData data = new ChartData(xVals, dataSets, new LabelFormatter() {
+    ChartData<LineDataSet> data = new ChartData<LineDataSet>(xVals, dataSets, new LabelFormatter() {
       SimpleDateFormat sdf = new SimpleDateFormat("MMM dd", Locale.US);
 
       @Override

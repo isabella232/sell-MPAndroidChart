@@ -1,5 +1,6 @@
 package com.github.mikephil.charting.charts;
 
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  *
  * @author Philipp Jahoda
  */
-public class BarChart extends BarLineChartBase {
+public class BarChart extends BarLineChartBase<BarDataSet> {
 
   /**
    * space indicator between the bars 0.1f == 10 %
@@ -203,7 +204,7 @@ public class BarChart extends BarLineChartBase {
     ArrayList<Path> topPaths = new ArrayList<Path>();
     ArrayList<Path> sidePaths = new ArrayList<Path>();
 
-    ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+    ArrayList<BarDataSet> dataSets = mCurrentData.getDataSets();
 
     // preparations for 3D bars
     if (m3DEnabled) {
@@ -329,7 +330,7 @@ public class BarChart extends BarLineChartBase {
     // if values are drawn
     if (mDrawYValues && mCurrentData.getYValCount() < mMaxVisibleCount * mScaleX) {
 
-      ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+      ArrayList<BarDataSet> dataSets = mCurrentData.getDataSets();
 
       for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
 
@@ -489,6 +490,11 @@ public class BarChart extends BarLineChartBase {
     }
 
     return null;
+  }
+
+  @Override
+  protected BarDataSet createDataSet(ArrayList<Entry> approximated, String label) {
+    return new BarDataSet(approximated, label);
   }
 
   @Override

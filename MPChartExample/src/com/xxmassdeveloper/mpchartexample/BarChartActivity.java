@@ -1,8 +1,8 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.filter.Approximator;
 import com.github.mikephil.charting.data.filter.Approximator.ApproximatorType;
@@ -200,12 +200,12 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
       yVals1.add(new Entry(val, i));
     }
 
-    DataSet set1 = new DataSet(yVals1, "DataSet");
+    BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
     set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[0]));
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
     dataSets.add(set1);
 
-    ChartData data = new ChartData(xVals, dataSets);
+    ChartData<BarDataSet> data = new ChartData<BarDataSet>(xVals, dataSets);
 
     mChart.setData(data);
     mChart.invalidate();

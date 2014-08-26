@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author Philipp Jahoda
  */
-public class DataSet {
+public abstract class DataSet {
 
   /**
    * the entries that this dataset represents / holds together
@@ -73,16 +73,6 @@ public class DataSet {
   public void notifyDataSetChanged() {
     calcMinMax();
     calcYValueSum();
-  }
-
-  public DataSet cloneDataSet() {
-    ArrayList<Entry> duplicatedEntries = new ArrayList<Entry>();
-    for (int i = 0; i < mYVals.size(); i++) {
-      Entry entry = mYVals.get(i).copy();
-      duplicatedEntries.add(entry);
-    }
-    DataSet dataSet = new DataSet(duplicatedEntries, mLabel);
-    return dataSet;
   }
 
   /**
@@ -244,23 +234,6 @@ public class DataSet {
     }
 
     return -1;
-  }
-
-  /**
-   * provides an exact copy of the DataSet this method is used on
-   *
-   * @return
-   */
-  public DataSet copy() {
-
-    ArrayList<Entry> yVals = new ArrayList<Entry>();
-
-    for (int i = 0; i < mYVals.size(); i++) {
-      yVals.add(mYVals.get(i).copy());
-    }
-
-    DataSet copied = new DataSet(yVals, mLabel);
-    return copied;
   }
 
   @Override

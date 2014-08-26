@@ -3,8 +3,8 @@ package com.xxmassdeveloper.mpchartexample;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.ChartData.LabelFormatter;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.Legend;
@@ -160,13 +160,13 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
       xVals.add((long) (i + 1));
     }
 
-    DataSet set1 = new DataSet(yVals1, "Content");
+    PieDataSet set1 = new PieDataSet(yVals1, "Content");
     set1.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[0]));
 
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    ArrayList<PieDataSet> dataSets = new ArrayList<PieDataSet>();
     dataSets.add(set1);
 
-    ChartData data = new ChartData(xVals, dataSets, new LabelFormatter() {
+    ChartData<PieDataSet> data = new ChartData<PieDataSet>(xVals, dataSets, new LabelFormatter() {
       @Override
       public String formatValue(long value) {
         return "Text" + value;

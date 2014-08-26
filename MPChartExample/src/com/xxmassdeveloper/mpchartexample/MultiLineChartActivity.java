@@ -4,6 +4,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.filter.Approximator;
 import com.github.mikephil.charting.data.filter.Approximator.ApproximatorType;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
@@ -194,14 +195,14 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
       values.add(vals);
     }
 
-    ArrayList<DataSet> dataSets = makeDataSets(values);
+    ArrayList<LineDataSet> dataSets = makeDataSets(values);
     int i = 0;
     for (DataSet set : dataSets) {
       set.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.VORDIPLOM_COLORS[i % Colors.VORDIPLOM_COLORS.length]));
       i++;
     }
 
-    ChartData data = new ChartData(xVals, dataSets);
+    ChartData<LineDataSet> data = new ChartData<LineDataSet>(xVals, dataSets);
     mChart.setData(data);
     mChart.invalidate();
   }
@@ -237,9 +238,9 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
    * @param yValues
    * @return
    */
-  public static ArrayList<DataSet> makeDataSets(ArrayList<Double[]> yValues) {
+  public static ArrayList<LineDataSet> makeDataSets(ArrayList<Double[]> yValues) {
 
-    ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
+    ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
 
     for (int i = 0; i < yValues.size(); i++) {
 
@@ -251,7 +252,7 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
         entries.add(new Entry(curValues[j].floatValue(), j));
       }
 
-      dataSets.add(new DataSet(entries, "DS " + i));
+      dataSets.add(new LineDataSet(entries, "DS " + i));
     }
 
     return dataSets;

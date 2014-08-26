@@ -1,8 +1,9 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieDataSet;
 import com.xxmassdeveloper.mpchartexample.listviewitems.BarChartItem;
 import com.xxmassdeveloper.mpchartexample.listviewitems.ChartItem;
 import com.xxmassdeveloper.mpchartexample.listviewitems.LineChartItem;
@@ -88,7 +89,7 @@ public class ListViewMultiChartActivity extends DemoBase {
    *
    * @return
    */
-  private ChartData generateData(int idx, int cnt) {
+  private ChartData<LineDataSet> generateData(int idx, int cnt) {
 
     ArrayList<Entry> entries = new ArrayList<Entry>();
 
@@ -98,14 +99,14 @@ public class ListViewMultiChartActivity extends DemoBase {
 
     ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec" });
 
-    DataSet d = new DataSet(entries, "New DataSet " + cnt);
+    LineDataSet d = new LineDataSet(entries, "New DataSet " + cnt);
     d.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[idx % Colors.FRESH_COLORS.length]));
 
-    ChartData cd = new ChartData(formatter.getValues(), d, formatter);
+    ChartData<LineDataSet> cd = new ChartData<LineDataSet>(formatter.getValues(), d, formatter);
     return cd;
   }
 
-  private ChartData generatePieChartData(int idx, int cnt) {
+  private ChartData<PieDataSet> generatePieChartData(int idx, int cnt) {
 
     ArrayList<Entry> entries = new ArrayList<Entry>();
 
@@ -113,11 +114,11 @@ public class ListViewMultiChartActivity extends DemoBase {
       entries.add(new Entry((int) (Math.random() * 70) + 30, i));
     }
 
-    DataSet d = new DataSet(entries, "New DataSet " + cnt);
+    PieDataSet d = new PieDataSet(entries, "New DataSet " + cnt);
     d.getDrawingSpec().getBasicPaint().setColor(getResources().getColor(Colors.FRESH_COLORS[idx % Colors.FRESH_COLORS.length]));
 
     ArrayLabelFormatter formatter = new ArrayLabelFormatter(new String[] { "1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter" });
-    ChartData cd = new ChartData(formatter.getValues(), d, formatter);
+    ChartData<PieDataSet> cd = new ChartData<PieDataSet>(formatter.getValues(), d, formatter);
     return cd;
   }
 }

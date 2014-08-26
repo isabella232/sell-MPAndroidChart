@@ -2,6 +2,7 @@ package com.github.mikephil.charting.charts;
 
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.listener.PieChartTouchListener;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
 import com.github.mikephil.charting.utils.Utils;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
  *
  * @author Philipp Jahoda
  */
-public class PieChart extends Chart {
+public class PieChart extends Chart<PieDataSet> {
 
   /**
    * rect object that represents the bounds of the piechart, needed for
@@ -343,7 +344,7 @@ public class PieChart extends Chart {
     mDrawAngles = new float[mCurrentData.getYValCount()];
     mAbsoluteAngles = new float[mCurrentData.getYValCount()];
 
-    ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+    ArrayList<PieDataSet> dataSets = mCurrentData.getDataSets();
 
     int cnt = 0;
 
@@ -411,7 +412,7 @@ public class PieChart extends Chart {
 
     float angle = mChartAngle;
 
-    ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+    ArrayList<PieDataSet> dataSets = mCurrentData.getDataSets();
 
     int cnt = 0;
 
@@ -520,7 +521,7 @@ public class PieChart extends Chart {
 
     r -= off; // offset to keep things inside the chart
 
-    ArrayList<DataSet> dataSets = mCurrentData.getDataSets();
+    ArrayList<PieDataSet> dataSets = mCurrentData.getDataSets();
 
     int cnt = 0;
 
@@ -619,7 +620,7 @@ public class PieChart extends Chart {
    */
   public int getDataSetIndexForIndex(int xIndex) {
 
-    ArrayList<DataSet> sets = mCurrentData.getDataSets();
+    ArrayList<PieDataSet> sets = mCurrentData.getDataSets();
 
     for (int i = 0; i < sets.size(); i++) {
       if (sets.get(i).getEntryForXIndex(xIndex) != null)
@@ -998,5 +999,10 @@ public class PieChart extends Chart {
     }
 
     return null;
+  }
+
+  @Override
+  protected PieDataSet createDataSet(ArrayList<Entry> approximated, String label) {
+    return new PieDataSet(approximated, label);
   }
 }
