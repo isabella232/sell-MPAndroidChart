@@ -1,6 +1,7 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import com.github.mikephil.charting.data.ChartData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.MarkerView;
 import com.github.mikephil.charting.utils.Utils;
 
@@ -9,7 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
-public class MyMarkerView extends MarkerView {
+public class MyMarkerView extends MarkerView<LineDataSet> {
 
   private TextView tvContent;
 
@@ -20,7 +21,7 @@ public class MyMarkerView extends MarkerView {
   }
 
   @Override
-  public void onContentUpdate(int xIndex, float value, int dataSetIndex, ChartData data) {
+  public void onContentUpdate(int xIndex, float value, int dataSetIndex, ChartData<LineDataSet> data) {
     tvContent.setText(" " + Utils.formatNumber(value, 0, true));
   }
 

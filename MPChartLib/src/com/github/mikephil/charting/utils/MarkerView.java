@@ -1,6 +1,7 @@
 package com.github.mikephil.charting.utils;
 
 import com.github.mikephil.charting.data.ChartData;
+import com.github.mikephil.charting.data.DataSet;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ import android.widget.FrameLayout;
  *
  * @author Philipp Jahoda
  */
-public abstract class MarkerView extends FrameLayout {
+public abstract class MarkerView<T extends DataSet> extends FrameLayout {
 
   /**
    * draw offset on the x-axis
@@ -89,7 +90,7 @@ public abstract class MarkerView extends FrameLayout {
    * @param dataSetIndex
    * @param data
    */
-  public abstract void onContentUpdate(int xIndex, float value, int dataSetIndex, ChartData data);
+  public abstract void onContentUpdate(int xIndex, float value, int dataSetIndex, ChartData<T> data);
 
   public abstract void onFreeSpaceChanged(int left, int top, int right, int bottom);
 
