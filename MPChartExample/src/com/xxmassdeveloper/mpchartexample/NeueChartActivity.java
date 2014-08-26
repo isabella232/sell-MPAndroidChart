@@ -63,9 +63,6 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setMaxScaleY(1.0f);
     mChart.setPinchZoom(true);
     mChart.setDrawFilled(true);
-    Point size = new Point();
-    getWindowManager().getDefaultDisplay().getSize(size);
-    mChart.getPaint(Chart.PAINT_FILLED).setShader(new LinearGradient(0, 0, 0, size.y, r.getColor(R.color.neue_gradient_start), r.getColor(R.color.neue_gradient_end), TileMode.CLAMP));
     mChart.setDrawXLabels(false);
     mChart.setDrawYLabels(true);
     mChart.setDrawAxisLabelsInChart(true);
@@ -77,7 +74,6 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     mChart.setDrawValueXLabelsInChart(true);
     mChart.getYLabels().setPosition(YLabelPosition.RIGHT);
     mChart.getPaint(Chart.PAINT_YLABEL).setColor(r.getColor(R.color.neue_text));
-    mChart.getPaint(Chart.PAINT_CIRCLES_INNER).setColor(r.getColor(R.color.neue_fill));
 
     MyMarkerView mv = new MyMarkerView(this);
     mChart.setMarkerView(mv);
@@ -139,6 +135,7 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
   }
 
   private LineDataSet createSet(String name, int count, float range, float rangeOffset, boolean dashed) {
+    Resources r = getResources();
     ArrayList<Entry> yVals = new ArrayList<Entry>();
 
     for (int i = 0; i < count; i++) {
@@ -154,6 +151,10 @@ public class NeueChartActivity extends DemoBase implements OnChartValueSelectedL
     if (dashed) {
       paint.setPathEffect(new DashPathEffect(new float[] { 3, 3 }, 0));
     }
+    Point size = new Point();
+    getWindowManager().getDefaultDisplay().getSize(size);
+    set.getDrawingSpec().getFillPaint().setShader(new LinearGradient(0, 0, 0, size.y, r.getColor(R.color.neue_gradient_start), r.getColor(R.color.neue_gradient_end), TileMode.CLAMP));
+    set.getDrawingSpec().getDataPointInnerCirclePaint().setColor(r.getColor(R.color.neue_fill));
     return set;
   }
 

@@ -42,16 +42,6 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
   protected boolean mDrawCircles = true;
 
   /**
-   * paint for the filled are (if enabled) below the chart line
-   */
-  protected Paint mFilledPaint;
-
-  /**
-   * paint for the inner circle of the value indicators
-   */
-  protected Paint mCirclePaintInner;
-
-  /**
    * flag for cubic curves instead of lines
    */
   protected boolean mDrawCubic = false;
@@ -78,13 +68,6 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
     super.init();
 
     mCircleSize = Utils.convertDpToPixel(mCircleSize);
-
-    mFilledPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    mFilledPaint.setStyle(Paint.Style.FILL);
-
-    mCirclePaintInner = new Paint(Paint.ANTI_ALIAS_FLAG);
-    mCirclePaintInner.setStyle(Paint.Style.FILL);
-    mCirclePaintInner.setColor(Color.WHITE);
 
     mHighlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     mHighlightPaint.setStyle(Paint.Style.STROKE);
@@ -129,7 +112,7 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
       float heightOffset = pixelYToValue(mOffsetBottom + mOffsetTop);
       for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
 
-        DataSet dataSet = dataSets.get(i);
+        LineDataSet dataSet = dataSets.get(i);
         ArrayList<Entry> entries = dataSet.getYVals();
 
         // if drawing filled is enabled
@@ -150,7 +133,7 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
 
           transformPath(filled);
 
-          mDrawCanvas.drawPath(filled, mFilledPaint);
+          mDrawCanvas.drawPath(filled, dataSet.getDrawingSpec().getFillPaint());
         }
       }
     }
@@ -286,7 +269,7 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
 
       for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
 
-        DataSet dataSet = dataSets.get(i);
+        LineDataSet dataSet = dataSets.get(i);
         ArrayList<Entry> entries = dataSet.getYVals();
 
         float[] positions = generateTransformedValues(entries, 0f);
@@ -306,7 +289,7 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
           mDrawCanvas.drawCircle(positions[j], positions[j + 1], mCircleSize,
               dataSet.getDrawingSpec().getBasicPaint());
           mDrawCanvas.drawCircle(positions[j], positions[j + 1], mCircleSize / 2,
-              mCirclePaintInner);
+              dataSet.getDrawingSpec().getDataPointInnerCirclePaint());
         }
       }
     }
@@ -378,15 +361,6 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
   }
 
   /**
-   * sets the color for the fill-paint
-   *
-   * @param color
-   */
-  public void setFillColor(int color) {
-    mFilledPaint.setColor(color);
-  }
-
-  /**
    * set the width of the highlightning lines, default 3f
    *
    * @param width
@@ -407,14 +381,8 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
   @Override
   public void setPaint(Paint p, int which) {
     switch (which) {
-    case PAINT_CIRCLES_INNER:
-      mCirclePaintInner = p;
-      break;
     case PAINT_HIGHLIGHT_LINE:
       mHighlightPaint = p;
-      break;
-    case PAINT_FILLED:
-      mFilledPaint = p;
       break;
     default:
       super.setPaint(p, which);
@@ -425,12 +393,8 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
   @Override
   public Paint getPaint(int which) {
     switch (which) {
-    case PAINT_CIRCLES_INNER:
-      return mCirclePaintInner;
     case PAINT_HIGHLIGHT_LINE:
       return mHighlightPaint;
-    case PAINT_FILLED:
-      return mFilledPaint;
     default:
       return super.getPaint(which);
     }

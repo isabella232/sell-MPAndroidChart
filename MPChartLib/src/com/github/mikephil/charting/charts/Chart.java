@@ -1269,11 +1269,6 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
   public static final int PAINT_VALUES = 8;
 
   /**
-   * paint for the inner circle (linechart)
-   */
-  public static final int PAINT_CIRCLES_INNER = 10;
-
-  /**
    * paint for the description text in the bottom right corner
    */
   public static final int PAINT_DESCRIPTION = 11;
@@ -1304,19 +1299,9 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
   public static final int PAINT_HIGHLIGHT_BAR = 16;
 
   /**
-   * paint used for all rendering processes
-   */
-  public static final int PAINT_RENDER = 17;
-
-  /**
    * paint used for the legend
    */
   public static final int PAINT_LEGEND_LABEL = 18;
-
-  /*
-   * paint used for filling graph
-   */
-  public static final int PAINT_FILLED = 19;
 
   /**
    * set a new paint object for the specified parameter in the chart e.g.
