@@ -941,7 +941,7 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
    * @return
    */
   protected boolean isOffContentRight(float p) {
-    if (p > mContentRect.right)
+    if (p > mContentRect.right + 1)
       return true;
     else
       return false;
@@ -955,7 +955,7 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
    * @return
    */
   protected boolean isOffContentLeft(float p) {
-    if (p < mContentRect.left)
+    if (p < mContentRect.left - 1)
       return true;
     else
       return false;
@@ -969,7 +969,7 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
    * @return
    */
   protected boolean isOffContentTop(float p) {
-    if (p < mContentRect.top)
+    if (p < mContentRect.top - 1)
       return true;
     else
       return false;
@@ -983,7 +983,7 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
    * @return
    */
   protected boolean isOffContentBottom(float p) {
-    if (p > mContentRect.bottom)
+    if (p > mContentRect.bottom + 1)
       return true;
     else
       return false;
