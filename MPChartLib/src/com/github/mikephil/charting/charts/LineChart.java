@@ -109,7 +109,7 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
     ArrayList<LineDataSet> dataSets = mCurrentData.getDataSets();
 
     if (mDrawFilled) {
-      float heightOffset = pixelYToValue(mOffsetBottom + mOffsetTop);
+      float heightOffset = pixelHeightToValue(mOffsetBottom + mOffsetTop);
       for (int i = 0; i < mCurrentData.getDataSetCount(); i++) {
 
         LineDataSet dataSet = dataSets.get(i);
@@ -127,8 +127,9 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
           }
 
           // close up
-          filled.lineTo(entries.get(entries.size() - 1).getXIndex(), mYChartMin - heightOffset);
-          filled.lineTo(entries.get(0).getXIndex(), mYChartMin - heightOffset);
+          float y = mYChartMin - heightOffset;
+          filled.lineTo(entries.get(entries.size() - 1).getXIndex(), y);
+          filled.lineTo(entries.get(0).getXIndex(), y);
           filled.close();
 
           transformPath(filled);

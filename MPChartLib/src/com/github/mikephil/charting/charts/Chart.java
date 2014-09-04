@@ -303,14 +303,7 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
     mHelperVec[0] = 0;
     mHelperVec[1] = y;
 
-    mMatrixOffset.invert(mHelperMatrix);
-    mHelperMatrix.mapPoints(mHelperVec);
-
-    mMatrixTouch.invert(mHelperMatrix);
-    mHelperMatrix.mapPoints(mHelperVec);
-
-    mMatrixValueToPx.invert(mHelperMatrix);
-    mHelperMatrix.mapPoints(mHelperVec);
+    transformPixelToValue(mHelperVec);
 
     return mHelperVec[1];
   }
@@ -319,14 +312,7 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
     mHelperVec[0] = x;
     mHelperVec[1] = 0;
 
-    mMatrixOffset.invert(mHelperMatrix);
-    mHelperMatrix.mapPoints(mHelperVec);
-
-    mMatrixTouch.invert(mHelperMatrix);
-    mHelperMatrix.mapPoints(mHelperVec);
-
-    mMatrixValueToPx.invert(mHelperMatrix);
-    mHelperMatrix.mapPoints(mHelperVec);
+    transformPixelToValue(mHelperVec);
 
     return mHelperVec[0];
   }
