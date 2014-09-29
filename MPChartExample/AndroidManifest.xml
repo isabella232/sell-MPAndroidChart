@@ -26,6 +26,7 @@
         <activity android:name="LineChartActivity"></activity>
         <activity android:name="NeueChartActivity"></activity>
         <activity android:name="BarChartActivity"></activity>
+        <activity android:name=".VerticalBarChartActivity"></activity>
         <activity android:name="PieChartActivity"></activity>
         <activity android:name="MultiLineChartActivity"></activity>
         <activity android:name="BarChartActivityMultiDataset"></activity>
