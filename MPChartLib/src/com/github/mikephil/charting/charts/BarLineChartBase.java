@@ -233,7 +233,7 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
   /**
    * Horizontal label padding.
    */
-  private int mAxisYLabelPadding = 2;
+  protected int mAxisYLabelPadding = 2;
 
   public BarLineChartBase(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
@@ -1648,7 +1648,7 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
    * @param valsAtIndex all the values at a specific index
    * @return
    */
-  private int getClosestDataSetIndex(ArrayList<SelInfo> valsAtIndex, float val) {
+  protected int getClosestDataSetIndex(ArrayList<SelInfo> valsAtIndex, float val) {
 
     int index = -1;
     float distance = Float.MAX_VALUE;
