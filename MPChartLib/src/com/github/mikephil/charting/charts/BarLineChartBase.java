@@ -697,7 +697,7 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
    *
    * @param yPos
    */
-  private void drawXLabels(float yPos) {
+  protected void drawXLabels(float yPos) {
 
     // pre allocate to save performance (dont allocate in loop)
     float[] position = new float[] {

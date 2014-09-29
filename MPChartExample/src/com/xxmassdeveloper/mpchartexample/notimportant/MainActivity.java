@@ -3,6 +3,8 @@ package com.xxmassdeveloper.mpchartexample.notimportant;
 import com.newdesigns.experiment.GoalAttainmentActivity;
 import com.xxmassdeveloper.mpchartexample.BarChartActivity;
 import com.xxmassdeveloper.mpchartexample.BarChartActivityMultiDataset;
+import com.xxmassdeveloper.mpchartexample.BaseLineChartActivity;
+import com.xxmassdeveloper.mpchartexample.BasePieChartActivity;
 import com.xxmassdeveloper.mpchartexample.DrawChartActivity;
 import com.xxmassdeveloper.mpchartexample.LineChartActivity;
 import com.xxmassdeveloper.mpchartexample.ListViewBarChartActivity;
@@ -46,6 +48,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
     ArrayList<ContentItem> objects = new ArrayList<ContentItem>();
     objects.add(new ContentItem("Neue Chart", "We want it."));
     objects.add(new ContentItem("New Report View", "!"));
+    objects.add(new ContentItem("New design line", "!"));
+    objects.add(new ContentItem("Base pie", "!"));
     objects.add(new ContentItem("Line Chart", "A simple demonstration of the linechart."));
     objects.add(new ContentItem("Bar Chart", "A simple demonstration of the bar chart."));
     objects.add(new ContentItem("Pie Chart", "A simple demonstration of the pie chart."));
@@ -87,43 +91,50 @@ public class MainActivity extends Activity implements OnItemClickListener {
       startActivity(i);
       break;
     case 2:
-      i = new Intent(this, LineChartActivity.class);
+      i = new Intent(this, BaseLineChartActivity.class);
       startActivity(i);
       break;
     case 3:
-      i = new Intent(this, BarChartActivity.class);
+      i = new Intent(this, BasePieChartActivity.class);
       startActivity(i);
       break;
     case 4:
-      i = new Intent(this, PieChartActivity.class);
+      i = new Intent(this, LineChartActivity.class);
       startActivity(i);
       break;
     case 5:
-      i = new Intent(this, ScatterChartActivity.class);
+      i = new Intent(this, BarChartActivity.class);
       startActivity(i);
       break;
     case 6:
-      i = new Intent(this, MultiLineChartActivity.class);
+      i = new Intent(this, PieChartActivity.class);
       startActivity(i);
-
       break;
     case 7:
-      i = new Intent(this, BarChartActivityMultiDataset.class);
+      i = new Intent(this, ScatterChartActivity.class);
       startActivity(i);
       break;
     case 8:
-      i = new Intent(this, DrawChartActivity.class);
+      i = new Intent(this, MultiLineChartActivity.class);
       startActivity(i);
       break;
     case 9:
-      i = new Intent(this, ListViewBarChartActivity.class);
+      i = new Intent(this, BarChartActivityMultiDataset.class);
       startActivity(i);
       break;
     case 10:
-      i = new Intent(this, ListViewMultiChartActivity.class);
+      i = new Intent(this, DrawChartActivity.class);
       startActivity(i);
       break;
     case 11:
+      i = new Intent(this, ListViewBarChartActivity.class);
+      startActivity(i);
+      break;
+    case 12:
+      i = new Intent(this, ListViewMultiChartActivity.class);
+      startActivity(i);
+      break;
+    case 13:
       i = new Intent(this, VerticalBarChartActivity.class);
       startActivity(i);
       break;

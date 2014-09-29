@@ -34,4 +34,7 @@ public class Colors {
       R.color.vordiplom_1, R.color.vordiplom_2, R.color.vordiplom_3, R.color.vordiplom_4,
       R.color.vordiplom_5
   };
+  public static final int[] BASE_COLORS = {
+      R.color.base_1, R.color.base_2, R.color.base_3, R.color.base_4
+  };
 }

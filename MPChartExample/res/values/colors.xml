@@ -61,4 +61,9 @@
     <color name="neue_reports_text">#DDFFFFFF</color>
     <color name="neue_reports_barColor">#70FFFFFF</color>
 
+    <color name="base_1">#c7c7cc</color>
+    <color name="base_2">#929292</color>
+    <color name="base_3">#aaaaaa</color>
+    <color name="base_4">#7b7a7a</color>
+
 </resources>
