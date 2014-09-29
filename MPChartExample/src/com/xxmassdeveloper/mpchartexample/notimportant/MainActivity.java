@@ -11,6 +11,7 @@ import com.xxmassdeveloper.mpchartexample.NeueChartActivity;
 import com.xxmassdeveloper.mpchartexample.PieChartActivity;
 import com.xxmassdeveloper.mpchartexample.R;
 import com.xxmassdeveloper.mpchartexample.ScatterChartActivity;
+import com.xxmassdeveloper.mpchartexample.VerticalBarChartActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -59,6 +60,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
     objects.add(new ContentItem(
         "Multiple charts inside ListView",
         "Demonstrates the usage of different chart types inside a ListView."));
+    objects.add(new ContentItem("Vertical Bar Chart", "A simple demonstration of the bar chart."));
 
     MyAdapter adapter = new MyAdapter(this, objects);
 
@@ -113,6 +115,10 @@ public class MainActivity extends Activity implements OnItemClickListener {
       break;
     case 9:
       i = new Intent(this, ListViewMultiChartActivity.class);
+      startActivity(i);
+      break;
+    case 10:
+      i = new Intent(this, VerticalBarChartActivity.class);
       startActivity(i);
       break;
     }

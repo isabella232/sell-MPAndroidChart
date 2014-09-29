@@ -55,4 +55,10 @@
     <color name="vordiplom_3">#FFD08C</color>
     <color name="vordiplom_4">#8CEAFF</color>
     <color name="vordiplom_5">#FF8C9D</color>
+
+    <color name="neue_reports_fill">#FF00b691</color>
+    <color name="neue_reports_grid">#80FFFFFF</color>
+    <color name="neue_reports_text">#DDFFFFFF</color>
+    <color name="neue_reports_barColor">#70FFFFFF</color>
+
 </resources>
