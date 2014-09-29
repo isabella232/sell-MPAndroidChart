@@ -27,6 +27,9 @@
         <activity android:name="NeueChartActivity"></activity>
         <activity android:name="BarChartActivity"></activity>
         <activity android:name=".VerticalBarChartActivity"></activity>
+        <activity android:name="com.newdesigns.experiment.MyActivity"></activity>
+        <activity android:name=".BasePieChartActivity">
+        </activity>
         <activity android:name="PieChartActivity"></activity>
         <activity android:name="MultiLineChartActivity"></activity>
         <activity android:name="BarChartActivityMultiDataset"></activity>
@@ -35,6 +38,10 @@
         <activity android:name="com.xxmassdeveloper.mpchartexample.fragments.SimpleChartDemo"></activity>
         <activity android:name="ListViewBarChartActivity"></activity>
         <activity android:name="ListViewMultiChartActivity"></activity>
+
+        <activity android:name=".BaseLineChartActivity">
+
+        </activity>
     </application>
 
 </manifest>

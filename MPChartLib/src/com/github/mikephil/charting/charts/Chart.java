@@ -197,6 +197,8 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
    */
   protected boolean mTouchEnabled = true;
 
+  protected boolean mZoomingEnabled = true;
+
   /**
    * if true, y-values are drawn on the chart
    */
@@ -1156,6 +1158,14 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
    */
   public void setTouchEnabled(boolean enabled) {
     this.mTouchEnabled = enabled;
+  }
+
+  public void setZoomingEnabled(boolean enabled) {
+    this.mZoomingEnabled = enabled;
+  }
+
+  public boolean isZoomingEnabled() {
+    return mZoomingEnabled;
   }
 
   /**

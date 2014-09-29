@@ -116,7 +116,8 @@ public class BarLineChartTouchListener extends SimpleOnGestureListener implement
     case MotionEvent.ACTION_POINTER_DOWN:
       if (event.getPointerCount() == 2) {
         long deltaT = System.currentTimeMillis() - mStartTimestamp;
-        if ((mTouchMode == DRAWING && deltaT < 1000) || !mDrawingEnabled) {
+        if (mChart.isZoomingEnabled() &&
+            ((mTouchMode == DRAWING && deltaT < 1000) || !mDrawingEnabled)) {
           mDrawingContext.deleteLastDrawingEntry(data);
 
           // get the distance between the pointers on the x-axis
@@ -234,6 +235,8 @@ public class BarLineChartTouchListener extends SimpleOnGestureListener implement
           // take actions depending on the activated touch
           // mode
           if (mTouchMode == PINCH_ZOOM) {
+
+            Log.d("PINCH", "ACtioN MOve");
 
             float scale = totalDist / mSavedDist; // total
             // scale
@@ -440,6 +443,7 @@ public class BarLineChartTouchListener extends SimpleOnGestureListener implement
     if (mDragScroller.computeScrollOffset()) {
       mMatrix.postTranslate(mDragScroller.getCurrX() - mChart.getCurrentTranslateX(), mDragScroller.getCurrY() - mChart.getCurrentTranslateY());
       mMatrix = mChart.refreshTouch(mMatrix);
+      onFlingScroll();
     }
     if (!mDragScroller.isFinished()) {
       mScrollHandler.post(this);
@@ -450,4 +454,5 @@ public class BarLineChartTouchListener extends SimpleOnGestureListener implement
   public boolean onSingleTapUp(MotionEvent e) {
     return true;
   }
+  public void onFlingScroll(){}
 }

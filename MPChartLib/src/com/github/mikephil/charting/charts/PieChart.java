@@ -114,6 +114,8 @@ public class PieChart extends Chart<PieDataSet> {
    */
   private Paint mCenterTextPaint;
 
+  private RotaionListener mRotaionListener;
+
   public PieChart(Context context) {
     super(context);
   }
@@ -312,6 +314,10 @@ public class PieChart extends Chart<PieDataSet> {
 
     // keep the angle >= 0 and <= 360
     mChartAngle = (mChartAngle + 360f) % 360f;
+
+    if (mRotaionListener != null) {
+      mRotaionListener.onRotate();
+    }
   }
 
   @Override
@@ -1046,5 +1052,13 @@ public class PieChart extends Chart<PieDataSet> {
     }
 
     mLegend = l;
+  }
+
+  public void setRotationListener(RotaionListener rotationListener) {
+    mRotaionListener = rotationListener;
+  }
+
+  public interface RotaionListener {
+    public void onRotate();
   }
 }
