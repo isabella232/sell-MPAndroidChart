@@ -341,12 +341,13 @@ public class BaseLineChart extends LineChart {
 
   public void setSelectionRingWidth(float selectionRingWidth) {
     mSelectionRingWidth = selectionRingWidth;
-    mSelectionInternalCircleSize = mSelectionCircleSize - mSelectionRingWidth;
+    mSelectionCircleSize = mSelectionInternalCircleSize + mSelectionRingWidth;
   }
 
   public void setSelectionRingRadius(float radius) {
-    mSelectionCircleSize = radius;
-    mSelectionInternalCircleSize = mSelectionCircleSize - mSelectionRingWidth;
+
+    mSelectionInternalCircleSize = radius;
+    mSelectionCircleSize = mSelectionInternalCircleSize + mSelectionRingWidth;
   }
 
   @Override
