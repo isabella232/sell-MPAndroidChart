@@ -287,7 +287,9 @@ public class BaseLineChart extends LineChart {
 
   private Integer getHighlight() {
 
-    if (mValueToHighlight == null) {
+    if (getDataCurrent() == null) {
+      mValueToHighlight = 0;
+    } else if (mValueToHighlight == null) {
       mValueToHighlight = getDataCurrent().getXValCount() - mValuePadding * 2 - 1;
     } else if (mValueToHighlight < 0) {
       mValueToHighlight = 0;
