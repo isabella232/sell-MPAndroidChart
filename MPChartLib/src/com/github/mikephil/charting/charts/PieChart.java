@@ -1049,7 +1049,16 @@ public class PieChart extends Chart<PieDataSet> {
 
   public void startRotationAnimation(float angle, long duration) {
     stopRotationAnimation();
-    mRotationAnimator = ValueAnimator.ofFloat(mChartAngle, angle);
+    float startAngle = mChartAngle;
+    float endAngle = angle;
+    float distance = startAngle - endAngle;
+    if (distance > 180.0f) {
+      distance -= 360.0f;
+    } else if (distance < -180.0f) {
+      distance += 360.0f;
+    }
+    endAngle = startAngle - distance;
+    mRotationAnimator = ValueAnimator.ofFloat(startAngle, endAngle);
     mRotationAnimator.setDuration(duration);
     mRotationAnimator.addUpdateListener(new AnimatorUpdateListener() {
       @Override
