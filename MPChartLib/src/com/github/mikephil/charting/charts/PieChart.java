@@ -47,12 +47,12 @@ public class PieChart extends Chart<PieDataSet> {
   /**
    * array that holds the width of each pie-slice in degrees
    */
-  private float[] mDrawAngles;
+  private float[] mSlicesAngleWidth;
 
   /**
    * array that holds the absolute angle in degrees of each slice
    */
-  private float[] mAbsoluteAngles;
+  private float[] mSlicesAnglePosition;
 
   /**
    * if true, the white hole inside the chart will be drawn
@@ -129,14 +129,18 @@ public class PieChart extends Chart<PieDataSet> {
   }
 
   @Override
+  protected void onAttachedToWindow() {
+    super.onAttachedToWindow();
+  }
+
+  @Override
+  protected void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+  }
+
+  @Override
   protected void init() {
     super.init();
-
-    // // piechart has no offsets
-    // mOffsetTop = 0;
-    // mOffsetBottom = 0;
-    // mOffsetLeft = 0;
-    // mOffsetRight = 0;
 
     mShift = Utils.convertDpToPixel(mShift);
 
@@ -349,8 +353,8 @@ public class PieChart extends Chart<PieDataSet> {
    */
   private void calcAngles() {
 
-    mDrawAngles = new float[mCurrentData.getYValCount()];
-    mAbsoluteAngles = new float[mCurrentData.getYValCount()];
+    mSlicesAngleWidth = new float[mCurrentData.getYValCount()];
+    mSlicesAnglePosition = new float[mCurrentData.getYValCount()];
 
     ArrayList<PieDataSet> dataSets = mCurrentData.getDataSets();
 
@@ -363,12 +367,12 @@ public class PieChart extends Chart<PieDataSet> {
 
       for (int j = 0; j < entries.size(); j++) {
 
-        mDrawAngles[cnt] = calcAngle(entries.get(j).getVal());
+        mSlicesAngleWidth[cnt] = calcAngle(entries.get(j).getVal());
 
         if (cnt == 0) {
-          mAbsoluteAngles[cnt] = mDrawAngles[cnt];
+          mSlicesAnglePosition[cnt] = mSlicesAngleWidth[cnt];
         } else {
-          mAbsoluteAngles[cnt] = mAbsoluteAngles[cnt - 1] + mDrawAngles[cnt];
+          mSlicesAnglePosition[cnt] = mSlicesAnglePosition[cnt - 1] + mSlicesAngleWidth[cnt];
         }
 
         cnt++;
@@ -388,15 +392,15 @@ public class PieChart extends Chart<PieDataSet> {
 
         // get the index to highlight
         int xIndex = mIndicesToHightlight[i].getXIndex();
-        if (xIndex >= mDrawAngles.length || xIndex > mDeltaX)
+        if (xIndex >= mSlicesAngleWidth.length || xIndex > mDeltaX)
           continue;
 
         if (xIndex == 0)
           angle = mChartAngle;
         else
-          angle = mChartAngle + mAbsoluteAngles[xIndex - 1];
+          angle = mChartAngle + mSlicesAnglePosition[xIndex - 1];
 
-        float sliceDegrees = mDrawAngles[xIndex];
+        float sliceDegrees = mSlicesAngleWidth[xIndex];
 
         float shiftangle = (float) Math.toRadians(angle + sliceDegrees / 2f);
 
@@ -433,7 +437,7 @@ public class PieChart extends Chart<PieDataSet> {
 
       for (int j = 0; j < entries.size(); j++) {
 
-        float newAngle = mDrawAngles[cnt];
+        float newAngle = mSlicesAngleWidth[cnt];
 
         int originalColor = paint.getColor();
 
@@ -550,11 +554,11 @@ public class PieChart extends Chart<PieDataSet> {
       for (int j = 0; j < entries.size(); j++) {
 
         // offset needed to center the drawn text in the slice
-        float offset = mDrawAngles[cnt] / 2;
+        float offset = mSlicesAngleWidth[cnt] / 2;
 
         // calculate the text position
-        float x = (float) (r * Math.cos(Math.toRadians(mChartAngle + mAbsoluteAngles[cnt] - offset)) + center.x);
-        float y = (float) (r * Math.sin(Math.toRadians(mChartAngle + mAbsoluteAngles[cnt] - offset)) + center.y);
+        float x = (float) (r * Math.cos(Math.toRadians(mChartAngle + mSlicesAnglePosition[cnt] - offset)) + center.x);
+        float y = (float) (r * Math.sin(Math.toRadians(mChartAngle + mSlicesAnglePosition[cnt] - offset)) + center.y);
 
         String val = "";
         float value = entries.get(j).getVal();
@@ -615,8 +619,8 @@ public class PieChart extends Chart<PieDataSet> {
     // take the current angle of the chart into consideration
     float a = (angle - mChartAngle + 360) % 360f;
 
-    for (int i = 0; i < mAbsoluteAngles.length; i++) {
-      if (mAbsoluteAngles[i] > a)
+    for (int i = 0; i < mSlicesAnglePosition.length; i++) {
+      if (mSlicesAnglePosition[i] > a)
         return i;
     }
 
@@ -648,8 +652,8 @@ public class PieChart extends Chart<PieDataSet> {
    *
    * @return
    */
-  public float[] getDrawAngles() {
-    return mDrawAngles;
+  public float[] getSlicesAngleWidth() {
+    return mSlicesAngleWidth;
   }
 
   /**
@@ -658,8 +662,8 @@ public class PieChart extends Chart<PieDataSet> {
    *
    * @return
    */
-  public float[] getAbsoluteAngles() {
-    return mAbsoluteAngles;
+  public float[] getSlicesAnglePosition() {
+    return mSlicesAnglePosition;
   }
 
   /**
@@ -668,7 +672,7 @@ public class PieChart extends Chart<PieDataSet> {
    *
    * @param angle
    */
-  public void setStartAngle(float angle) {
+  public void setChartAngle(float angle) {
     mChartAngle = angle;
   }
 
@@ -677,7 +681,7 @@ public class PieChart extends Chart<PieDataSet> {
    *
    * @return
    */
-  public float getCurrentRotation() {
+  public float getChartAngle() {
     return mChartAngle;
   }
 
