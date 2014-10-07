@@ -50,12 +50,15 @@ public class PieChartTouchListener extends SimpleOnGestureListener implements On
 
     case MotionEvent.ACTION_DOWN:
       mChart.setStartAngle(x, y);
+      mChart.updateRotation(x, y);
+      mChart.invalidate();
       break;
     case MotionEvent.ACTION_MOVE:
       mChart.updateRotation(x, y);
       mChart.invalidate();
       break;
     case MotionEvent.ACTION_UP:
+      mode = NONE;
       break;
     }
 
@@ -67,14 +70,11 @@ public class PieChartTouchListener extends SimpleOnGestureListener implements On
   }
 
   @Override
-  public void onLongPress(MotionEvent arg0) {
+  public void onLongPress(MotionEvent e) {
     if (mode == NONE) {
       mode = LONGPRESS;
-      //            ctx.showValue(arg0, matrix);
     }
   }
-
-  ;
 
   @Override
   public boolean onSingleTapConfirmed(MotionEvent e) {
