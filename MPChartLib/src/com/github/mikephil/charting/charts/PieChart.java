@@ -114,7 +114,7 @@ public class PieChart extends Chart<PieDataSet> {
    */
   private Paint mCenterTextPaint;
 
-  private RotaionListener mRotaionListener;
+  private RotationListener mRotationListener;
 
   public PieChart(Context context) {
     super(context);
@@ -315,8 +315,8 @@ public class PieChart extends Chart<PieDataSet> {
     // keep the angle >= 0 and <= 360
     mChartAngle = (mChartAngle + 360f) % 360f;
 
-    if (mRotaionListener != null) {
-      mRotaionListener.onRotate();
+    if (mRotationListener != null) {
+      mRotationListener.onRotate();
     }
   }
 
@@ -850,20 +850,8 @@ public class PieChart extends Chart<PieDataSet> {
     PointF c = getCenterCircleBox();
 
     double tx = x - c.x, ty = y - c.y;
-    double length = Math.sqrt(tx * tx + ty * ty);
-    double r = Math.acos(ty / length);
 
-    float angle = (float) Math.toDegrees(r);
-
-    if (x > c.x)
-      angle = 360f - angle;
-
-    // add 90° because chart starts EAST
-    angle = angle + 90f;
-
-    // neutralize overflow
-    if (angle > 360f)
-      angle = angle - 360f;
+    float angle = (float) Math.toDegrees(Math.atan2(ty, tx));
 
     return angle;
   }
@@ -877,30 +865,12 @@ public class PieChart extends Chart<PieDataSet> {
    * @return
    */
   public float distanceToCenter(float x, float y) {
-
     PointF c = getCenterCircleBox();
 
-    float dist = 0f;
+    float xDist = x - c.x;
+    float yDist = y - c.y;
 
-    float xDist = 0f;
-    float yDist = 0f;
-
-    if (x > c.x) {
-      xDist = x - c.x;
-    } else {
-      xDist = c.x - x;
-    }
-
-    if (y > c.y) {
-      yDist = y - c.y;
-    } else {
-      yDist = c.y - y;
-    }
-
-    // pythagoras
-    dist = (float) Math.sqrt(Math.pow(xDist, 2.0) + Math.pow(yDist, 2.0));
-
-    return dist;
+    return (float) Math.sqrt(xDist * xDist + yDist * yDist);
   }
 
   /**
@@ -1054,11 +1024,11 @@ public class PieChart extends Chart<PieDataSet> {
     mLegend = l;
   }
 
-  public void setRotationListener(RotaionListener rotationListener) {
-    mRotaionListener = rotationListener;
+  public void setRotationListener(RotationListener rotationListener) {
+    mRotationListener = rotationListener;
   }
 
-  public interface RotaionListener {
+  public interface RotationListener {
     public void onRotate();
   }
 }
