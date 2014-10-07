@@ -44,6 +44,8 @@ public class PieChartTouchListener extends SimpleOnGestureListener implements On
     float x = e.getX();
     float y = e.getY();
 
+    mChart.stopRotationAnimation();
+
     switch (e.getAction()) {
 
     case MotionEvent.ACTION_DOWN:

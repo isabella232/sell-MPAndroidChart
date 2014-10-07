@@ -9,6 +9,8 @@ import com.github.mikephil.charting.utils.Legend.LegendPosition;
 import com.github.mikephil.charting.utils.MulticolorDrawingSpec;
 import com.github.mikephil.charting.utils.Utils;
 
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -109,6 +111,11 @@ public class PieChart extends Chart<PieDataSet> {
   private Paint mHolePaint;
 
   /**
+   * Let's animate rotation with this
+   */
+  private ValueAnimator mRotationAnimator;
+
+  /**
    * paint object for the text that can be displayed in the center of the
    * chart
    */
@@ -135,6 +142,7 @@ public class PieChart extends Chart<PieDataSet> {
 
   @Override
   protected void onDetachedFromWindow() {
+    stopRotationAnimation();
     super.onDetachedFromWindow();
   }
 
@@ -1030,6 +1038,27 @@ public class PieChart extends Chart<PieDataSet> {
 
   public void setRotationListener(RotationListener rotationListener) {
     mRotationListener = rotationListener;
+  }
+
+  public void stopRotationAnimation() {
+    if (mRotationAnimator != null) {
+      mRotationAnimator.cancel();
+      mRotationAnimator = null;
+    }
+  }
+
+  public void startRotationAnimation(float angle, long duration) {
+    stopRotationAnimation();
+    mRotationAnimator = ValueAnimator.ofFloat(mChartAngle, angle);
+    mRotationAnimator.setDuration(duration);
+    mRotationAnimator.addUpdateListener(new AnimatorUpdateListener() {
+      @Override
+      public void onAnimationUpdate(ValueAnimator animation) {
+        mChartAngle = (float) animation.getAnimatedValue();
+        invalidate();
+      }
+    });
+    mRotationAnimator.start();
   }
 
   public interface RotationListener {
