@@ -152,11 +152,11 @@ public class ScatterChart extends BarLineChartBase<ScatterDataSet> {
 
           if (mDrawUnitInChart) {
 
-            mDrawCanvas.drawText(mFormatValue.format(val) + mUnit, positions[j],
+            mDrawCanvas.drawText(mValueFormat.format(val) + mUnit, positions[j],
                 positions[j + 1] - mShapeSize, mValuePaint);
           } else {
 
-            mDrawCanvas.drawText(mFormatValue.format(val), positions[j],
+            mDrawCanvas.drawText(mValueFormat.format(val), positions[j],
                 positions[j + 1] - mShapeSize,
                 mValuePaint);
           }

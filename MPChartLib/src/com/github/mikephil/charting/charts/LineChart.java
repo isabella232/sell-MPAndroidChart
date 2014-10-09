@@ -242,7 +242,7 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
           if (mDrawValueXLabelsInChart) {
             label = mCurrentData.getXLabels().get(j / 2);
           } else {
-            label = mDrawUnitInChart ? mFormatValue.format(val) + mUnit : mFormatValue.format(val);
+            label = mDrawUnitInChart ? mValueFormat.format(val) + mUnit : mValueFormat.format(val);
           }
 
           float yPosition = positions[j + 1];

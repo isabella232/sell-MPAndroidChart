@@ -113,7 +113,7 @@ public class BaseLineChart extends LineChart {
       if (mDrawValueXLabelsInChart) {
         label = mCurrentData.getXLabels().get(internalIndex / 2);
       } else {
-        label = mDrawUnitInChart ? mUnit + mFormatValue.format(val) : mFormatValue.format(val);
+        label = mValueFormat.format(val);
       }
 
       position += Utils.calcTextWidth(mValuePaint, label) / 2 - mSelectionCircleSize;

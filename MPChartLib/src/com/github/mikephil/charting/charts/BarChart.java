@@ -288,12 +288,12 @@ public class BarChart extends BarLineChartBase<BarDataSet> {
 
           if (mDrawUnitInChart) {
 
-            mDrawCanvas.drawText(mFormatValue.format(val) + mUnit, valuePoints[j],
+            mDrawCanvas.drawText(mValueFormat.format(val) + mUnit, valuePoints[j],
                 valuePoints[j + 1] - 12,
                 mValuePaint);
           } else {
 
-            mDrawCanvas.drawText(mFormatValue.format(val), valuePoints[j],
+            mDrawCanvas.drawText(mValueFormat.format(val), valuePoints[j],
                 valuePoints[j + 1] - 12,
                 mValuePaint);
           }

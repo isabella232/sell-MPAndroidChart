@@ -542,7 +542,7 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
   /**
    * the decimalformat responsible for formatting the values in the chart
    */
-  protected NumberFormat mFormatValue = null;
+  protected NumberFormat mValueFormat = null;
 
   /**
    * the number of digits the y-labels are formatted with
@@ -566,8 +566,13 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
         b.append(".");
       b.append("0");
     }
+    if (mValueFormat == null) {
+      mValueFormat = new AbbreviatingNumberFormat(new DecimalFormat("###,###,###,##0" + b.toString()), 3, 0);
+    }
+  }
 
-    mFormatValue = new AbbreviatingNumberFormat(new DecimalFormat("###,###,###,##0" + b.toString()), 3, 0);
+  public void setValueFormat(NumberFormat valueFormat) {
+    mValueFormat = valueFormat;
   }
 
   @Override
@@ -803,7 +808,7 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
     // draw
     for (int i = 0; i < mYLabels.mEntryCount; i++) {
 
-      String text = mFormatValue.format(mYLabels.mEntries[i]);
+      String text = mValueFormat.format(mYLabels.mEntries[i]);
 
       if (!mYLabels.isDrawTopYLabelEntryEnabled() && i >= mYLabels.mEntryCount - 1)
         return;
