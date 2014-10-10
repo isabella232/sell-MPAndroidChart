@@ -321,7 +321,7 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
    * @param size
    */
   public void setCircleSize(float size) {
-    mCircleSize = Utils.convertDpToPixel(size);
+    mCircleSize = size;
   }
 
   /**
@@ -330,7 +330,7 @@ public class LineChart extends BarLineChartBase<LineDataSet> {
    * @param size
    */
   public float getCircleSize(float size) {
-    return Utils.convertPixelsToDp(mCircleSize);
+    return size;
   }
 
   /**
