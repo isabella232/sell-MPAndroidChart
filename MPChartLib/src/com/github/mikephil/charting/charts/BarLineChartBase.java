@@ -1078,14 +1078,6 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
    * @param yVal the value ont he y-axis to center to
    */
   public synchronized void centerViewPort(final int xIndex, final float yVal) {
-
-    // the post makes it possible that this call waits until the view has
-    // finisted setting up
-    post(new Runnable() {
-
-      @Override
-      public void run() {
-
         float indicesInView = mDeltaX / mScaleX;
         float valsInView = mDeltaY / mScaleY;
 
@@ -1108,11 +1100,6 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
 
         refreshTouch(save);
 
-        // Log.i(LOG_TAG, "ViewPort centered, xIndex: " + xIndex +
-        // ", yVal: " + yVal
-        // + ", transX: " + x + ", transY: " + y);
-      }
-    });
   }
 
   /**

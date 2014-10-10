@@ -365,6 +365,8 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
     if (mDataNotSet)
       return;
 
+    mOffsetsCalculated = false;
+
     mCurrentData.populateXLabels();
   }
 

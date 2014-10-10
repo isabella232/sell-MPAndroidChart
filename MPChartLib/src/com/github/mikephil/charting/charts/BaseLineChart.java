@@ -1,5 +1,6 @@
 package com.github.mikephil.charting.charts;
 
+import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -24,7 +25,7 @@ import java.util.Date;
 
 public class BaseLineChart extends LineChart {
 
-  private Integer mValueToHighlight = null;
+  private Integer mFocusedValueIndex = null;
   private Paint mSelectionCirclePaint;
   private Paint mYearXLabelTextPaint;
   private float mSelectionCircleSize = Utils.convertDpToPixel(10f);
@@ -89,7 +90,7 @@ public class BaseLineChart extends LineChart {
   @Override
   public void drawValues() {
 
-    int index = getHighlight();
+    int index = mFocusedValueIndex;
     int internalIndex = index * 2 + mValuePadding * 2;
 
     int valOffset = (int) (mSelectionCircleSize * 1.7f);
@@ -159,7 +160,7 @@ public class BaseLineChart extends LineChart {
 
         transformValueToPixel(position);
 
-        int valueToHighlight = getHighlight();
+        int valueToHighlight = mFocusedValueIndex;
         if (i == valueToHighlight + mValuePadding) {
           mXLabelPaint.setColor(mSelectionCirclePaint.getColor());
 
@@ -176,10 +177,6 @@ public class BaseLineChart extends LineChart {
           mXLabelPaint.setColor(labelPaintColor);
         }
     }
-  }
-
-  public void highlightValue(int index) {
-    mValueToHighlight = index - mValuePadding;
   }
 
   public void setValueTextSize(float textSize) {
@@ -209,10 +206,6 @@ public class BaseLineChart extends LineChart {
     double base = Math.floor(xTouchVal);
     int xIndex = (int) base;
 
-    if (xIndex == 0 || xIndex == mValuePadding - 1) {
-      highlightValue(xIndex);
-    }
-
     if (xTouchVal - base > 0.5) {
       xIndex = (int) base + 1;
     }
@@ -224,7 +217,14 @@ public class BaseLineChart extends LineChart {
       return;
     }
 
-    highlightValue(xIndex);
+    focusValue(xIndex);
+  }
+
+  private void focusValue(int xIndex) {
+    int newValueToHighlight = xIndex - mValuePadding;
+    if (mFocusedValueIndex != newValueToHighlight) {
+      highlightValues(new Highlight[] { new Highlight(xIndex, 0) });
+    }
   }
 
   @Override
@@ -277,7 +277,7 @@ public class BaseLineChart extends LineChart {
 
     if (mDrawCircles) {
 
-      Entry toHighlight = getDataCurrent().getDataSetByIndex(0).getEntryForXIndex(getHighlight() + mValuePadding);
+      Entry toHighlight = getDataCurrent().getDataSetByIndex(0).getEntryForXIndex(mFocusedValueIndex + mValuePadding);
       float[] entry = new float[] {toHighlight.getXIndex(), toHighlight.getVal()};
       transformValueToPixel(entry);
       mDrawCanvas.drawCircle(entry[0], entry[1], mSelectionCircleSize, mSelectionCirclePaint);
@@ -285,25 +285,22 @@ public class BaseLineChart extends LineChart {
     }
   }
 
-  private Integer getHighlight() {
-
-    if (getDataCurrent() == null) {
-      mValueToHighlight = 0;
-    } else if (mValueToHighlight == null) {
-      mValueToHighlight = getDataCurrent().getXValCount() - mValuePadding * 2 - 1;
-    } else if (mValueToHighlight < 0) {
-      mValueToHighlight = 0;
-    } else if (mValueToHighlight + mValuePadding >= getDataCurrent().getXValCount()) {
-      mValueToHighlight = getDataCurrent().getXValCount() - mValuePadding - 1;
-    }
-
-    return mValueToHighlight;
+  @Override
+  public void setData(ChartData data) {
+    super.setData(data);
   }
 
   @Override
   protected void calculateOffsets() {
 
     Log.i(LOG_TAG, "Offsets calculated.");
+    if (getDataCurrent() == null) {
+      mFocusedValueIndex = 0;
+    } else if (mFocusedValueIndex == null || mFocusedValueIndex <= 0) {
+      mFocusedValueIndex = getDataCurrent().getXValCount() - mValuePadding * 2 - 1;
+    } else if (mFocusedValueIndex + mValuePadding >= getDataCurrent().getXValCount()) {
+      mFocusedValueIndex = getDataCurrent().getXValCount() - mValuePadding - 1;
+    }
 
     mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, ((int) (mYChartMin >= 0 ? mDeltaY : -mDeltaY)) + mUnit) + mAxisYLabelPadding;
 
@@ -319,8 +316,8 @@ public class BaseLineChart extends LineChart {
 
     prepareContentRect();
 
-    float scaleX = (float) ((getWidth() - mOffsetLeft - mOffsetRight) / mDeltaX);
-    float scaleY = (float) ((getHeight() - mOffsetBottom - mOffsetTop) / mDeltaY);
+    float scaleX = (getWidth() - mOffsetLeft - mOffsetRight) / mDeltaX;
+    float scaleY = (getHeight() - mOffsetBottom - mOffsetTop) / mDeltaY;
 
     Matrix val = new Matrix();
     val.postTranslate(0, -mYChartMin);
@@ -332,13 +329,15 @@ public class BaseLineChart extends LineChart {
     offset.postTranslate(mOffsetLeft, getHeight() - mOffsetBottom);
 
     mMatrixOffset.set(offset);
+
+    centerViewPort(mFocusedValueIndex + mValuePadding, getHeight() / 2);
   }
 
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
     super.onLayout(changed, left, top, right, bottom);
     refreshTouch(mMatrixTouch);
-    centerViewPort(getHighlight() + mValuePadding, getHeight() / 2);
+    centerViewPort(mFocusedValueIndex + mValuePadding, getHeight() / 2);
   }
 
   public void setSelectionRingWidth(float selectionRingWidth) {
@@ -355,7 +354,7 @@ public class BaseLineChart extends LineChart {
   @Override
   public void highlightValues(Highlight[] highs) {
     if (highs != null && highs.length > 0) {
-      highlightValue(highs[0].getXIndex());
+      mFocusedValueIndex = highs[0].getXIndex() - mValuePadding;
       invalidate();
     }
     super.highlightValues(highs);
