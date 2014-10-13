@@ -625,7 +625,7 @@ public class PieChart extends Chart<PieDataSet> {
   public int getIndexForAngle(float angle) {
 
     // take the current angle of the chart into consideration
-    float a = (angle - mChartAngle + 360) % 360f;
+    float a = (angle - mChartAngle + 720) % 360f;
 
     for (int i = 0; i < mSlicesAnglePosition.length; i++) {
       if (mSlicesAnglePosition[i] > a)
