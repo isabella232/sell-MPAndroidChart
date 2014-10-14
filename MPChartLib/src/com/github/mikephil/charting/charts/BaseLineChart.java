@@ -124,9 +124,13 @@ public class BaseLineChart extends LineChart {
       }
 
       float yPosition = positions[internalIndex + 1];
-      if ((internalIndex - 1 >= 0 && internalIndex + 3 < positions.length &&
-          position < yPosition && positions[internalIndex + 3] < yPosition &&
-          yPosition + mOffsetBottom < getHeight() - mOffsetBottom) ||
+
+      if ((internalIndex - 1 >= 0
+          && internalIndex + 3 < positions.length
+          && positions[internalIndex - 1] < yPosition
+          && positions[internalIndex + 3] < yPosition
+          && yPosition + mOffsetBottom < getHeight() - mOffsetBottom)
+          ||
           yPosition - (valOffset + Utils.calcTextHeight(mValuePaint, label)) < 0) {
 
         yPosition += valOffset + mValuePaint.getTextSize();
