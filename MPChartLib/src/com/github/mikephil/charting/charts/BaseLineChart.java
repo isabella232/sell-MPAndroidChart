@@ -287,6 +287,7 @@ public class BaseLineChart extends LineChart {
 
   @Override
   public void setData(ChartData data) {
+    mFocusedValueIndex = 0;
     super.setData(data);
   }
 
