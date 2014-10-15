@@ -402,23 +402,26 @@ public class BarLineChartTouchListener extends SimpleOnGestureListener implement
   @Override
   public boolean onDoubleTap(MotionEvent e) {
 
-    PointF trans = getTrans(e.getX(), e.getY());
+    if (mChart.isZoomingEnabled()) {
+      PointF trans = getTrans(e.getX(), e.getY());
 
-    mChart.zoomIn(trans.x, trans.y);
+      mChart.zoomIn(trans.x, trans.y);
 
-    Log.i("BarlineChartTouch", "Double-Tap, Zooming In, x: " + trans.x + ", y: " + trans.y);
+      Log.i("BarlineChartTouch", "Double-Tap, Zooming In, x: " + trans.x + ", y: " + trans.y);
+    }
 
     return super.onDoubleTap(e);
   }
 
   @Override
   public void onLongPress(MotionEvent e) {
+    if (mChart.isZoomingEnabled()) {
+      PointF trans = getTrans(e.getX(), e.getY());
 
-    PointF trans = getTrans(e.getX(), e.getY());
+      mChart.zoomOut(trans.x, trans.y);
 
-    mChart.zoomOut(trans.x, trans.y);
-
-    Log.i("BarlineChartTouch", "Longpress, Zooming Out, x: " + trans.x + ", y: " + trans.y);
+      Log.i("BarlineChartTouch", "Longpress, Zooming Out, x: " + trans.x + ", y: " + trans.y);
+    }
   }
 
   @Override
