@@ -226,7 +226,7 @@ public class BaseLineChart extends LineChart {
 
   private void focusValue(int xIndex) {
     int newValueToHighlight = xIndex - mValuePadding;
-    if (mFocusedValueIndex != newValueToHighlight) {
+    if (mFocusedValueIndex == null || mFocusedValueIndex != newValueToHighlight) {
       highlightValues(new Highlight[] { new Highlight(xIndex, 0) });
     }
   }
@@ -299,13 +299,15 @@ public class BaseLineChart extends LineChart {
   protected void calculateOffsets() {
 
     Log.i(LOG_TAG, "Offsets calculated.");
+    int valueToFocus = 0;
     if (getDataCurrent() == null) {
-      mFocusedValueIndex = 0;
+      valueToFocus = 0;
     } else if (mFocusedValueIndex == null || mFocusedValueIndex <= 0) {
-      mFocusedValueIndex = getDataCurrent().getXValCount() - mValuePadding * 2 - 1;
+      valueToFocus = getDataCurrent().getXValCount() - mValuePadding * 2 - 1;
     } else if (mFocusedValueIndex + mValuePadding >= getDataCurrent().getXValCount()) {
-      mFocusedValueIndex = getDataCurrent().getXValCount() - mValuePadding - 1;
+      valueToFocus = getDataCurrent().getXValCount() - mValuePadding - 1;
     }
+    focusValue(valueToFocus);
 
     mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, ((int) (mYChartMin >= 0 ? mDeltaY : -mDeltaY)) + mUnit) + mAxisYLabelPadding;
 
