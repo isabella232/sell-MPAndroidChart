@@ -227,7 +227,7 @@ public class BaseLineChart extends LineChart {
   private void focusValue(int xIndex) {
     int newValueToHighlight = xIndex - mValuePadding;
     if (mFocusedValueIndex == null || mFocusedValueIndex != newValueToHighlight) {
-      highlightValues(new Highlight[] { new Highlight(xIndex, 0) });
+      highlightValues(new Highlight[] { new Highlight(xIndex, 0) }, false);
     }
   }
 
@@ -360,8 +360,15 @@ public class BaseLineChart extends LineChart {
 
   @Override
   public void highlightValues(Highlight[] highs) {
+    highlightValues(highs, true);
+  }
+
+  private void highlightValues(Highlight[] highs, boolean centerViewport) {
     if (highs != null && highs.length > 0) {
       mFocusedValueIndex = highs[0].getXIndex() - mValuePadding;
+      if (centerViewport) {
+        centerViewPort(mFocusedValueIndex + mValuePadding, getHeight() / 2);
+      }
       invalidate();
     }
     super.highlightValues(highs);
