@@ -320,13 +320,22 @@ public class PieChart extends Chart<PieDataSet> {
   public void updateRotation(float x, float y) {
 
     mChartAngle = getAngleForPoint(x, y);
-
     // take the offset into consideration
     mChartAngle -= mStartAngle;
+    doUpdateRotation();
+  }
+
+  public void updateRotation(float angle) {
+
+    mChartAngle += angle;
+    doUpdateRotation();
+  }
+
+  private void doUpdateRotation() {
 
     // keep the angle >= 0 and <= 360
     mChartAngle = (mChartAngle + 360f) % 360f;
-
+    Log.d("BBBBB", "" + mChartAngle + " -- ");
     if (mRotationListener != null) {
       mRotationListener.onRotate();
     }
