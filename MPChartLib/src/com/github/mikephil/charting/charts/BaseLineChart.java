@@ -226,6 +226,9 @@ public class BaseLineChart extends LineChart {
 
   private void focusValue(int xIndex) {
     int newValueToHighlight = xIndex - mValuePadding;
+    if (newValueToHighlight < 0) {
+      newValueToHighlight = 0;
+    }
     if (mFocusedValueIndex == null || mFocusedValueIndex != newValueToHighlight) {
       highlightValues(new Highlight[] { new Highlight(xIndex, 0) }, false);
     }
