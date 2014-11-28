@@ -434,7 +434,7 @@ public class BarLineChartTouchListener extends SimpleOnGestureListener implement
   public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
     mTouchMode = NONE;
     mDragScroller.fling((int) mChart.getCurrentTranslateX(), (int) mChart.getCurrentTranslateY(),
-        (int) (velocityX / mChart.getScaleX()) * 2, (int) (velocityY / mChart.getScaleY()) * 2,
+        (int) (velocityX / mChart.getScaleX()) * 3, (int) (velocityY / mChart.getScaleY()) * 3,
         (int) mChart.getMinTranslateX(), (int) mChart.getMaxTranslateX(),
         (int) mChart.getMinTranslateY(), (int) mChart.getMaxTranslateY());
     mScrollHandler.post(this);
