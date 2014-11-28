@@ -7,11 +7,11 @@ import com.github.mikephil.charting.listener.PieChartTouchListener;
 import com.github.mikephil.charting.utils.Legend;
 import com.github.mikephil.charting.utils.Legend.LegendPosition;
 import com.github.mikephil.charting.utils.MulticolorDrawingSpec;
+import com.github.mikephil.charting.utils.PieChartAnimator;
 import com.github.mikephil.charting.utils.Utils;
 
-import android.animation.ValueAnimator;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -23,6 +23,7 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import java.text.DecimalFormat;
@@ -110,10 +111,9 @@ public class PieChart extends Chart<PieDataSet> {
    */
   private Paint mHolePaint;
 
-  /**
-   * Let's animate rotation with this
-   */
-  private ValueAnimator mRotationAnimator;
+  private GestureDetector mGestureDetector;
+
+  private PieChartAnimator mAnimator;
 
   /**
    * paint object for the text that can be displayed in the center of the
@@ -164,10 +164,15 @@ public class PieChart extends Chart<PieDataSet> {
     mValuePaint.setColor(Color.WHITE);
     mValuePaint.setTextAlign(Align.CENTER);
 
-    mListener = new PieChartTouchListener(this);
+    mGestureDetector = new GestureDetector(this.getContext(), new PieChartTouchListener(this));
+    mAnimator = new PieChartAnimator(this);
 
     // for the piechart, drawing values is enabled
     mDrawYValues = true;
+  }
+
+  public PieChartAnimator getAnimator() {
+    return mAnimator;
   }
 
   @Override
@@ -285,9 +290,16 @@ public class PieChart extends Chart<PieDataSet> {
 
   @Override
   public boolean onTouchEvent(MotionEvent event) {
+    // Let the GestureDetector interpret this event
+    boolean result = mGestureDetector.onTouchEvent(event);
 
-    // use the piecharts own listener
-    return mListener.onTouch(this, event);
+    if (!result) {
+      if (event.getAction() == MotionEvent.ACTION_UP) {
+        centerOnHighlighted();
+        result = true;
+      }
+    }
+    return result;
   }
 
   /**
@@ -303,7 +315,6 @@ public class PieChart extends Chart<PieDataSet> {
    * @param y
    */
   public void setStartAngle(float x, float y) {
-
     mStartAngle = getAngleForPoint(x, y);
 
     // take the current angle into consideration when starting a new drag
@@ -318,7 +329,6 @@ public class PieChart extends Chart<PieDataSet> {
    * @param y
    */
   public void updateRotation(float x, float y) {
-
     mChartAngle = getAngleForPoint(x, y);
     // take the offset into consideration
     mChartAngle -= mStartAngle;
@@ -326,16 +336,14 @@ public class PieChart extends Chart<PieDataSet> {
   }
 
   public void updateRotation(float angle) {
-
-    mChartAngle += angle;
+    mChartAngle = angle;
     doUpdateRotation();
   }
 
   private void doUpdateRotation() {
-
     // keep the angle >= 0 and <= 360
     mChartAngle = (mChartAngle + 360f) % 360f;
-    Log.d("BBBBB", "" + mChartAngle + " -- ");
+    postInvalidate();
     if (mRotationListener != null) {
       mRotationListener.onRotate();
     }
@@ -1050,10 +1058,7 @@ public class PieChart extends Chart<PieDataSet> {
   }
 
   public void stopRotationAnimation() {
-    if (mRotationAnimator != null) {
-      mRotationAnimator.cancel();
-      mRotationAnimator = null;
-    }
+    mAnimator.stop();
   }
 
   public void startRotationAnimation(float angle, long duration) {
@@ -1067,19 +1072,18 @@ public class PieChart extends Chart<PieDataSet> {
       distance += 360.0f;
     }
     endAngle = startAngle - distance;
-    mRotationAnimator = ValueAnimator.ofFloat(startAngle, endAngle);
-    mRotationAnimator.setDuration(duration);
-    mRotationAnimator.addUpdateListener(new AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator animation) {
-        mChartAngle = (float) animation.getAnimatedValue();
-        invalidate();
-      }
-    });
-    mRotationAnimator.start();
+    mAnimator.smoothScroll(startAngle, endAngle, duration);
   }
 
   public interface RotationListener {
     public void onRotate();
   }
+
+  public void centerOnHighlighted() {
+    int mChartSelectionAngle = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? 90 : 0;
+    int index = getIndexForAngle(mChartSelectionAngle);
+    float angle = mChartSelectionAngle - getSlicesAnglePosition()[index] + getSlicesAngleWidth()[index] / 2;
+    startRotationAnimation(angle, 500);
+  }
+
 }
