@@ -302,15 +302,13 @@ public class BaseLineChart extends LineChart {
   protected void calculateOffsets() {
 
     Log.i(LOG_TAG, "Offsets calculated.");
-    int valueToFocus = 0;
     if (getDataCurrent() == null) {
-      valueToFocus = 0;
-    } else if (mFocusedValueIndex == null || mFocusedValueIndex <= 0) {
-      valueToFocus = getDataCurrent().getXValCount() - mValuePadding * 2 - 1;
+      mFocusedValueIndex = 0;
+    } else if (mFocusedValueIndex == null || mFocusedValueIndex < mValuePadding) {
+      mFocusedValueIndex = mValuePadding;
     } else if (mFocusedValueIndex + mValuePadding >= getDataCurrent().getXValCount()) {
-      valueToFocus = getDataCurrent().getXValCount() - mValuePadding - 1;
+      mFocusedValueIndex = getDataCurrent().getXValCount() - mValuePadding - 1;
     }
-    focusValue(valueToFocus);
 
     mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, ((int) (mYChartMin >= 0 ? mDeltaY : -mDeltaY)) + mUnit) + mAxisYLabelPadding;
 
