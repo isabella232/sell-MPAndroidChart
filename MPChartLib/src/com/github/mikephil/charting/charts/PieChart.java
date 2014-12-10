@@ -630,7 +630,11 @@ public class PieChart extends Chart<PieDataSet> {
    * @return
    */
   private float calcAngle(float value) {
-    return value / mCurrentData.getYValueSum() * 360f;
+    float yValueSum = mCurrentData.getYValueSum();
+    if (yValueSum == 0.0f) {
+      return 360f / mCurrentData.getYValCount();
+    }
+    return value / yValueSum * 360f;
   }
 
   /**
