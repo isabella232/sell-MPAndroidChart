@@ -304,10 +304,10 @@ public class BaseLineChart extends LineChart {
     Log.i(LOG_TAG, "Offsets calculated.");
     if (getDataCurrent() == null) {
       mFocusedValueIndex = 0;
-    } else if (mFocusedValueIndex == null || mFocusedValueIndex < mValuePadding) {
-      mFocusedValueIndex = mValuePadding;
-    } else if (mFocusedValueIndex + mValuePadding >= getDataCurrent().getXValCount()) {
-      mFocusedValueIndex = getDataCurrent().getXValCount() - mValuePadding - 1;
+    } else if (mFocusedValueIndex == null) {
+      mFocusedValueIndex = 0;
+    } else if (mFocusedValueIndex > getDataCurrent().getXValCount()) {
+      mFocusedValueIndex = getDataCurrent().getXValCount() - 1;
     }
 
     mAxisYLabelWidth = Utils.calcTextWidth(mYLabelPaint, ((int) (mYChartMin >= 0 ? mDeltaY : -mDeltaY)) + mUnit) + mAxisYLabelPadding;
@@ -365,13 +365,14 @@ public class BaseLineChart extends LineChart {
   }
 
   private void highlightValues(Highlight[] highs, boolean centerViewport) {
-    if (highs != null && highs.length > 0) {
+    if (highs != null && highs.length > 0 &&
+        (highs[0].getXIndex() >= mValuePadding && highs[0].getXIndex() < getDataCurrent().getXValCount() - mValuePadding)) {
       mFocusedValueIndex = highs[0].getXIndex() - mValuePadding;
       if (centerViewport) {
         centerViewPort(mFocusedValueIndex + mValuePadding, getHeight() / 2);
       }
       invalidate();
+      super.highlightValues(highs);
     }
-    super.highlightValues(highs);
   }
 }
