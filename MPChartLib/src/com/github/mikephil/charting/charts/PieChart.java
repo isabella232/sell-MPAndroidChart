@@ -22,7 +22,6 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -200,7 +199,6 @@ public class PieChart extends Chart<PieDataSet> {
 
     canvas.drawBitmap(mDrawBitmap, 0, 0, mDrawPaint);
 
-    Log.i(LOG_TAG, "PieChart DrawTime: " + (System.currentTimeMillis() - starttime) + " ms");
   }
 
   /**

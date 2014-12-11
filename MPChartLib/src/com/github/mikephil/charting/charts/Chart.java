@@ -1757,8 +1757,6 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
     prepareContentRect();
-    Log.i(LOG_TAG,
-        "onLayout(), width: " + mContentRect.width() + ", height: " + mContentRect.height());
 
     if (this instanceof BarLineChartBase) {
 

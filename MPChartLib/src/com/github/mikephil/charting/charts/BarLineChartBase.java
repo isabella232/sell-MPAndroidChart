@@ -299,9 +299,6 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
     // if data filtering is enabled
     if (mFilterData) {
       mCurrentData = getFilteredData();
-
-      Log.i(LOG_TAG, "FilterTime: " + (System.currentTimeMillis() -
-          starttime) + " ms");
       starttime = System.currentTimeMillis();
     } else {
       mCurrentData = getDataOriginal();
@@ -352,7 +349,6 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
 
     canvas.drawBitmap(mDrawBitmap, 0, 0, mDrawPaint);
 
-    Log.i(LOG_TAG, "DrawTime: " + (System.currentTimeMillis() - starttime) + " ms");
   }
 
   /**
