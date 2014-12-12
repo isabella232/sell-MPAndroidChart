@@ -41,6 +41,9 @@ public class BaseLineChart extends LineChart {
   float mTopMargin = Utils.convertDpToPixel(15);
   float mBottomMargin = Utils.convertDpToPixel(10);
 
+  private Paint mValueBackgroundPaint;
+  private float mValueRectPadding;
+
   public BaseLineChart(Context context) {
     super(context);
   }
@@ -87,13 +90,17 @@ public class BaseLineChart extends LineChart {
     }
   }
 
+  public void setValueRectPadding(float value) {
+    mValueRectPadding = value;
+  }
+
   @Override
   public void drawValues() {
 
     int index = mFocusedValueIndex;
     int internalIndex = index * 2 + mValuePadding * 2;
 
-    int valOffset = (int) (mSelectionCircleSize * 1.7f);
+    int valOffset = (int) (mSelectionCircleSize * 2.1f);
 
     if (!mDrawCircles)
       valOffset = valOffset / 2;
@@ -117,7 +124,7 @@ public class BaseLineChart extends LineChart {
         label = mValueFormat.format(val);
       }
 
-      position += Utils.calcTextWidth(mValuePaint, label) / 2 - mSelectionCircleSize;
+      position += Utils.calcTextWidth(mValuePaint, label) / 2 - mSelectionCircleSize + mValueRectPadding;
 
       if (isOffContentRight(position)) {
         break;
@@ -137,6 +144,16 @@ public class BaseLineChart extends LineChart {
       } else {
         yPosition -= valOffset;
       }
+
+      float textWidth = Utils.calcTextWidth(mValuePaint, label);
+      float textHeight = Utils.calcTextHeight(mValuePaint, label);
+
+      float rectLeft = position - textWidth / 2 - mValueRectPadding;
+      float rectTop = yPosition - textHeight / 2 - 2*mValueRectPadding;
+
+      mDrawCanvas.drawRect(rectLeft, rectTop,
+          rectLeft + textWidth + 2*mValueRectPadding, rectTop + textHeight + 2*mValueRectPadding,
+          mValueBackgroundPaint);
 
       mDrawCanvas.drawText(label, position, yPosition, mValuePaint);
     }
@@ -276,6 +293,10 @@ public class BaseLineChart extends LineChart {
   public void setSelectionCirclePaint(Paint paint) {
     mSelectionCirclePaint = paint;
     mYearXLabelTextPaint.setColor(mSelectionCirclePaint.getColor());
+  }
+
+  public void setValueBackgroundPaint(Paint paint) {
+    mValueBackgroundPaint = paint;
   }
 
   @Override
