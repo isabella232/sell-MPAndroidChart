@@ -186,8 +186,10 @@ public class BaseLineChart extends LineChart {
           mXLabelPaint.setColor(mSelectionCirclePaint.getColor());
 
           Date date = new Date(mCurrentData.getXVals().get(i));
-          mDrawCanvas.drawText(mYearFormatter.format(date), position[0],
-              yearHeight, mYearXLabelTextPaint);
+          String yearLabel = mYearFormatter.format(date);
+          if (!yearLabel.equals(mCurrentData.getXLabels().get(i))) {
+            mDrawCanvas.drawText(yearLabel, position[0], yearHeight, mYearXLabelTextPaint);
+          }
         }
 
         mDrawCanvas.drawText(mCurrentData.getXLabels().get(i), position[0],

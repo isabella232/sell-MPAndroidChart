@@ -391,6 +391,10 @@ public class ChartData<T extends DataSet> {
     }
   }
 
+  public LabelFormatter getLabelFormatter() {
+    return mLabelFormatter;
+  }
+
   public interface LabelFormatter {
     String formatValue(long value);
   }
