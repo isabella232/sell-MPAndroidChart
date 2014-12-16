@@ -8,17 +8,9 @@ public class AbbreviatingNumberFormat extends NumberFormat {
   private static final String[] SUFFIXES = new String[] { "", "K", "M", "B" };
   private static final long THOUSAND = 1000;
   private final NumberFormat mOriginalFormat;
-  private final int mMaxDigits;
-  private final int mFractionDigits;
 
-  public AbbreviatingNumberFormat(NumberFormat originalFormat, int maxDigits, int fractionDigits) {
+  public AbbreviatingNumberFormat(NumberFormat originalFormat) {
     mOriginalFormat = originalFormat;
-    mMaxDigits = maxDigits;
-    mFractionDigits = fractionDigits;
-  }
-
-  private static int getNumberOfNonFractionDigits(int number) {
-    return String.valueOf(number).length(); // apparently using log10 for this is an overkill
   }
 
   @Override
@@ -28,16 +20,25 @@ public class AbbreviatingNumberFormat extends NumberFormat {
 
   @Override
   public StringBuffer format(long value, StringBuffer buffer, FieldPosition field) {
-    float currency = value;
+    if (value == 0 || value < 1000) {
+      return new StringBuffer(mOriginalFormat.format(value));
+    }
+
+    // cut 0s by 3 (000)
     int suffix = 0;
-    while (currency >= THOUSAND
-        && (suffix == 0 || suffix < SUFFIXES.length - 1)) {
-      currency /= THOUSAND;
+    double fValue = value;
+    while (suffix < SUFFIXES.length) {
+      double fNext = fValue / THOUSAND;
+      if ((long)fNext*THOUSAND != fValue) {
+        break;
+      }
+      fValue = fNext;
       suffix++;
     }
-    mOriginalFormat.setMaximumFractionDigits(Math.min(mMaxDigits - getNumberOfNonFractionDigits((int) currency), mFractionDigits));
 
-    String currencyOut = mOriginalFormat.format(currency);
+    long cutValue = (long) fValue;
+
+    String currencyOut = mOriginalFormat.format(cutValue);
     if (suffix != 0) {
       for (int i = currencyOut.length() - 1; i >= 0; --i) {
         if (Character.isDigit(currencyOut.charAt(i))) {

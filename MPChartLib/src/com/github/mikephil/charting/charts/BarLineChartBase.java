@@ -563,7 +563,7 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
       b.append("0");
     }
     if (mValueFormat == null) {
-      mValueFormat = new AbbreviatingNumberFormat(new DecimalFormat("###,###,###,##0" + b.toString()), 3, 0);
+      mValueFormat = new AbbreviatingNumberFormat(new DecimalFormat("###,###,###,##0" + b.toString()));
     }
   }
 
