@@ -4,6 +4,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.PieChartAnimator;
 
+import android.graphics.PointF;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 
@@ -50,20 +51,22 @@ public class PieChartTouchListener extends SimpleOnGestureListener {
 
   @Override
   public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+    PointF p = findChartCenter();
     float theta = PieChartAnimator.vectorToScalarScroll(
         distanceX, distanceY,
-        e2.getX() - mChart.getWidth() / 4,
-        e2.getY() - mChart.getHeight() / 4);
+        e2.getX() - p.x,
+        e2.getY() - p.y);
     mChart.getAnimator().scroll(theta);
     return true;
   }
 
   @Override
   public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+    PointF p = findChartCenter();
     float theta = PieChartAnimator.vectorToScalarScroll(
         velocityX, velocityY,
-        e2.getX() - mChart.getWidth() / 4,
-        e2.getY() - mChart.getHeight() / 4);
+        e2.getX() - p.x,
+        e2.getY() - p.y);
     mChart.getAnimator().fling(theta);
     return true;
   }
@@ -72,6 +75,14 @@ public class PieChartTouchListener extends SimpleOnGestureListener {
   public boolean onDown(MotionEvent e) {
     mChart.getAnimator().stop();
     return true;
+  }
+
+  private PointF findChartCenter() {
+    PointF chartCenter = mChart.getCenterCircleBox();
+    // Relatively to the screen 0,0
+    int[] viewLocation = new int[2];
+    mChart.getLocationOnScreen(viewLocation);
+    return new PointF(viewLocation[0] + chartCenter.x, viewLocation[1] + chartCenter.y);
   }
 
 }
