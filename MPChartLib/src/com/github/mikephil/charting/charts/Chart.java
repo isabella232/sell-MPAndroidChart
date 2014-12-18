@@ -1780,6 +1780,7 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
 
   public void forceRedraw() {
     mOffsetsCalculated = false;
+    mDrawCanvas = null;
     requestLayout();
   }
 
