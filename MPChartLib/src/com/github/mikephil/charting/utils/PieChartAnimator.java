@@ -48,7 +48,7 @@ public class PieChartAnimator {
     animator.addUpdateListener(new AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {
-        mChart.updateRotation((float) animation.getAnimatedValue());
+        mChart.updateRotation((Float) animation.getAnimatedValue());
       }
     });
     animator.setDuration(duration);
