@@ -78,11 +78,7 @@ public class PieChartTouchListener extends SimpleOnGestureListener {
   }
 
   private PointF findChartCenter() {
-    PointF chartCenter = mChart.getCenterCircleBox();
-    // Relatively to the screen 0,0
-    int[] viewLocation = new int[2];
-    mChart.getLocationOnScreen(viewLocation);
-    return new PointF(viewLocation[0] + chartCenter.x, viewLocation[1] + chartCenter.y);
+    return mChart.getCenterCircleBox();
   }
 
 }
