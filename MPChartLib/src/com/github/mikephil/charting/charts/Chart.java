@@ -409,9 +409,6 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
     }
 
     if (mDataNotSet) { // check if there is data
-
-      // if no data, inform the user
-      canvas.drawText("No chart data available.", getWidth() / 2, getHeight() / 2, mInfoPaint);
       return;
     }
 
