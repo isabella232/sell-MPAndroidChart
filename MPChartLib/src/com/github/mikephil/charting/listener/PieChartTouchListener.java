@@ -20,6 +20,9 @@ public class PieChartTouchListener extends SimpleOnGestureListener {
 
   @Override
   public boolean onSingleTapUp(MotionEvent e) {
+    if (mChart.getSlicesAnglePosition() == null) {
+      return true;
+    }
 
     float distance = mChart.distanceToCenter(e.getX(), e.getY());
 

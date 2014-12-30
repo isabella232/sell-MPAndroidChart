@@ -61,7 +61,9 @@ public class PieChartAnimator {
   }
 
   private void doScroll() {
-    if (!mScroller.isFinished()) {
+    if (mChart.getSlicesAnglePosition() == null) {
+      mScrollAnimator.cancel();
+    } else if (!mScroller.isFinished()) {
       mScroller.computeScrollOffset();
       mChart.updateRotation(mScroller.getCurrY());
     } else {
