@@ -292,7 +292,7 @@ public class PieChart extends Chart<PieDataSet> {
     boolean result = mGestureDetector.onTouchEvent(event);
 
     if (!result) {
-      if (event.getAction() == MotionEvent.ACTION_UP) {
+      if (event.getAction() == MotionEvent.ACTION_UP && getSlicesAnglePosition() != null) {
         centerOnHighlighted();
         result = true;
       }
