@@ -414,8 +414,7 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
 
     if (mDrawBitmap == null || mDrawCanvas == null) {
 
-      // use RGB_565 for best performance
-      mDrawBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.RGB_565);
+      mDrawBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
       mDrawCanvas = new Canvas(mDrawBitmap);
     }
 
