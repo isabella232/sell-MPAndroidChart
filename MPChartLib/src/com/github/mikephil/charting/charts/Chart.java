@@ -56,7 +56,7 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
    * flag that holds the background color of the view and the color the canvas
    * is cleared with
    */
-  private int mBackgroundColor = Color.WHITE;
+  protected int mBackgroundColor = Color.WHITE;
 
   /**
    * defines the number of digits to use for all printed values, -1 means

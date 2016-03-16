@@ -152,7 +152,6 @@ public class PieChart extends Chart<PieDataSet> {
     mShift = Utils.convertDpToPixel(mShift);
 
     mHolePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    mHolePaint.setColor(Color.WHITE);
 
     mCenterTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     mCenterTextPaint.setColor(mColorDarkBlue);
@@ -492,7 +491,9 @@ public class PieChart extends Chart<PieDataSet> {
 
       PointF c = getCenterCircleBox();
 
-      int color = mHolePaint.getColor();
+      int color = mBackgroundColor;
+
+      mHolePaint.setColor(color);
 
       // draw the hole-circle
       mDrawCanvas.drawCircle(c.x, c.y,
