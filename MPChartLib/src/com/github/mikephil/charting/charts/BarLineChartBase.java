@@ -42,6 +42,10 @@ import java.util.ArrayList;
  */
 public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
 
+  public interface ValueFormatter {
+    String format(double value);
+  }
+
   /**
    * string that is drawn next to the values in the chart, indicating their
    * unit
@@ -536,9 +540,9 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
   }
 
   /**
-   * the decimalformat responsible for formatting the values in the chart
+   * the formatter responsible for formatting the values in the chart
    */
-  protected NumberFormat mValueFormat = null;
+  protected ValueFormatter mValueFormat = null;
 
   /**
    * the number of digits the y-labels are formatted with
@@ -563,11 +567,20 @@ public abstract class BarLineChartBase<T extends DataSet> extends Chart<T> {
       b.append("0");
     }
     if (mValueFormat == null) {
-      mValueFormat = new AbbreviatingNumberFormat(new DecimalFormat("###,###,###,##0" + b.toString()));
+      setValueFormat(new AbbreviatingNumberFormat(new DecimalFormat("###,###,###,##0" + b.toString())));
     }
   }
 
-  public void setValueFormat(NumberFormat valueFormat) {
+  public void setValueFormat(final NumberFormat valueFormat) {
+    setValueFormat(new ValueFormatter() {
+      @Override
+      public String format(double value) {
+        return valueFormat.format(value);
+      }
+    });
+  }
+
+  public void setValueFormat(ValueFormatter valueFormat) {
     mValueFormat = valueFormat;
   }
 
