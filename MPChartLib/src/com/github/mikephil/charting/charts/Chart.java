@@ -11,10 +11,8 @@ import com.github.mikephil.charting.utils.SelInfo;
 import com.github.mikephil.charting.utils.Utils;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -25,8 +23,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.os.Environment;
-import android.provider.MediaStore.Images;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -34,10 +30,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 /**
@@ -1632,98 +1624,6 @@ public abstract class Chart<T extends DataSet> extends ViewGroup {
     super.setBackgroundColor(color);
 
     mBackgroundColor = color;
-  }
-
-  /**
-   * Saves the chart with the given name to the given path on the sdcard
-   * leaving the path empty "" will put the saved file directly on the SD card
-   * chart is saved as a PNG image, example: saveToPath("myfilename",
-   * "foldername1/foldername2");
-   *
-   * @param title
-   * @param pathOnSD e.g. "folder1/folder2/folder3"
-   * @return returns true on success, false on error
-   */
-  public boolean saveToPath(String title, String pathOnSD) {
-
-    OutputStream stream = null;
-    try {
-      stream = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()
-          + pathOnSD + "/" + title
-          + ".png");
-
-            /*
-             * Write bitmap to file using JPEG or PNG and 40% quality hint for
-             * JPEG.
-             */
-      mDrawBitmap.compress(CompressFormat.PNG, 40, stream);
-
-      stream.close();
-    } catch (Exception e) {
-      e.printStackTrace();
-      return false;
-    }
-
-    return true;
-  }
-
-  /**
-   * Saves the current state of the chart to the gallery as a JPEG image. The
-   * filename and compression can be set. 0 == maximum compression, 100 = low
-   * compression (high quality). NOTE: Needs permission WRITE_EXTERNAL_STORAGE
-   *
-   * @param fileName e.g. "my_image"
-   * @param quality e.g. 50, min = 0, max = 100
-   * @return returns true if saving was successfull, false if not
-   */
-  public boolean saveToGallery(String fileName, int quality) {
-
-    // restrain quality
-    if (quality < 0 || quality > 100)
-      quality = 50;
-
-    long currentTime = System.currentTimeMillis();
-
-    File extBaseDir = Environment.getExternalStorageDirectory();
-    File file = new File(extBaseDir.getAbsolutePath() + "/DCIM");
-    if (!file.exists()) {
-      if (!file.mkdirs()) {
-        return false;
-      }
-    }
-
-    String filePath = file.getAbsolutePath() + "/" + fileName;
-    FileOutputStream out = null;
-    try {
-      out = new FileOutputStream(filePath);
-
-      mDrawBitmap.compress(Bitmap.CompressFormat.JPEG, quality, out); // control
-      // the jpeg
-      // quality
-
-      out.flush();
-      out.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-
-      return false;
-    }
-
-    long size = new File(filePath).length();
-
-    ContentValues values = new ContentValues(8);
-
-    values.put(Images.Media.TITLE, fileName);
-    values.put(Images.Media.DISPLAY_NAME, fileName);
-    values.put(Images.Media.DATE_ADDED, currentTime);
-    values.put(Images.Media.MIME_TYPE, "image/jpeg");
-    values.put(Images.Media.DESCRIPTION, "MPAndroidChart-Library Save");
-    values.put(Images.Media.ORIENTATION, 0);
-    values.put(Images.Media.DATA, filePath);
-    values.put(Images.Media.SIZE, size);
-
-    return getContext().getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values) == null
-        ? false : true;
   }
 
   public void reset() {
